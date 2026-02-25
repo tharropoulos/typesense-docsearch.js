@@ -2,7 +2,10 @@ import type { SearchResponses } from 'algoliasearch/lite';
 import React from 'react';
 import { SearchClient as TypesenseSearchClient } from 'typesense';
 import type { ConfigurationOptions as TypesenseConfigurationOptions } from 'typesense/lib/Typesense/Configuration';
-import type { SearchResponse as TypesenseSearchResponse, DocumentSchema } from 'typesense/lib/Typesense/Documents';
+import type {
+  SearchResponse as TypesenseSearchResponse,
+  DocumentSchema,
+} from 'typesense/lib/Typesense/Documents';
 import type { MultiSearchRequestSchema } from 'typesense/lib/Typesense/Types';
 import { SearchResponseAdapter as TypesenseSearchResponseAdapter } from 'typesense-instantsearch-adapter/lib/SearchResponseAdapter';
 
@@ -40,8 +43,10 @@ type AdaptedHit<T extends DocumentSchema> = T & {
 };
 
 export function useSearchClient(
-  transformSearchClient: (searchClient: TypesenseDocsearchTransformClient) => TypesenseDocsearchTransformClient,
-  typesenseServerConfig: TypesenseConfigurationOptions,
+  transformSearchClient: (
+    searchClient: TypesenseDocsearchTransformClient
+  ) => TypesenseDocsearchTransformClient,
+  typesenseServerConfig: TypesenseConfigurationOptions
 ): TypesenseDocsearchTransformClient {
   const searchClient = React.useMemo(() => {
     const typesense = new TypesenseSearchClient(typesenseServerConfig);
@@ -60,21 +65,23 @@ export function useSearchClient(
         const response = await typesense.multiSearch.perform<[T]>({
           searches: [request],
         });
-        const typesenseSearchResponseAdapter = new TypesenseSearchResponseAdapter(
-          response.results[0],
-          {
-            params: {
-              ...request,
-              highlightPreTag: '<mark>',
-              highlightPostTag: '</mark>',
+        const typesenseSearchResponseAdapter =
+          new TypesenseSearchResponseAdapter(
+            response.results[0],
+            {
+              params: {
+                ...request,
+                highlightPreTag: '<mark>',
+                highlightPostTag: '</mark>',
+              },
             },
-          },
-          {
-            geoLocationField: '',
-          },
-        );
+            {
+              geoLocationField: '',
+            }
+          );
 
-        const adapted: AdaptedSearchResponse<T> = typesenseSearchResponseAdapter.adapt();
+        const adapted: AdaptedSearchResponse<T> =
+          typesenseSearchResponseAdapter.adapt();
 
         return {
           results: [

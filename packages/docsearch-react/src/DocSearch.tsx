@@ -229,8 +229,8 @@ export interface DocSearchProps {
    * Hook to wrap or modify the algolia search client.
    */
   transformSearchClient?: (
-    searchClient: DocSearchTransformClient
-  ) => DocSearchTransformClient;
+    searchClient: TypesenseDocsearchTransformClient
+  ) => TypesenseDocsearchTransformClient;
   /**
    * Disable storage and usage of recent and favorite searches.
    */
