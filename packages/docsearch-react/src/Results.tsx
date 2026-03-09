@@ -7,6 +7,21 @@ import { Snippet } from './Snippet';
 import type { InternalDocSearchHit, StoredDocSearchHit } from './types';
 import { sanitizeUserInput } from './utils/sanitize';
 
+type HierarchyLevel = 'lvl0' | 'lvl1' | 'lvl2' | 'lvl3' | 'lvl4' | 'lvl5' | 'lvl6';
+type FlatHierarchyKey = `hierarchy.${HierarchyLevel}`;
+
+function getHierarchyValue(item: StoredDocSearchHit, level: HierarchyLevel): string | null {
+  const fromNested = item.hierarchy?.[level];
+  const flatKey: FlatHierarchyKey = `hierarchy.${level}`;
+  const fromFlat = item[flatKey];
+
+  if (typeof fromNested === 'string') {
+    return fromNested;
+  }
+
+  return typeof fromFlat === 'string' ? fromFlat : null;
+}
+
 export type ResultsTranslations = Partial<{
   askAiPlaceholder: string;
   noResultsAskAiPlaceholder: string;
@@ -115,7 +130,13 @@ function Result<TItem extends StoredDocSearchHit>({
         <div className="DocSearch-Hit-Container">
           {renderIcon({ item, index })}
 
-          {item.hierarchy[item.type] && item.type === 'lvl1' && (
+          {item.type === 'lvl0' && getHierarchyValue(item, 'lvl0') && (
+            <div className="DocSearch-Hit-content-wrapper">
+              <Snippet className="DocSearch-Hit-title" hit={item} attribute="hierarchy.lvl0" />
+            </div>
+          )}
+
+          {item.type === 'lvl1' && getHierarchyValue(item, 'lvl1') && (
             <div className="DocSearch-Hit-content-wrapper">
               <Snippet className="DocSearch-Hit-title" hit={item} attribute="hierarchy.lvl1" />
               {item.content && <Snippet className="DocSearch-Hit-path" hit={item} attribute="content" />}
@@ -128,12 +149,12 @@ function Result<TItem extends StoredDocSearchHit>({
             </div>
           )}
 
-          {item.hierarchy[item.type] &&
-            (item.type === 'lvl2' ||
+          {(item.type === 'lvl2' ||
               item.type === 'lvl3' ||
               item.type === 'lvl4' ||
               item.type === 'lvl5' ||
-              item.type === 'lvl6') && (
+              item.type === 'lvl6') &&
+            getHierarchyValue(item, item.type) && (
               <div className="DocSearch-Hit-content-wrapper">
                 <Snippet className="DocSearch-Hit-title" hit={item} attribute={`hierarchy.${item.type}`} />
                 <Snippet className="DocSearch-Hit-path" hit={item} attribute="hierarchy.lvl1" />
