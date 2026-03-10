@@ -221,21 +221,21 @@ function AskAiExchangeCard({
             </p>
           )}
         </div>
-        <div className="DocSearch-AskAiScreen-Answer-Footer">
-          <SourcesPanel
-            links={urlsToDisplay}
-            titleText={relatedSourcesText}
-            pluralTitleText={relatedSourcesTextPlural}
-          />
-          <FeedbackActions
-            id={messageId}
-            showActions={showActions}
-            latestAssistantMessageContent={assistantContent || null}
-            translations={translations}
-            conversations={conversations}
-            onFeedback={onFeedback}
-          />
-        </div>
+      </div>
+      <div className="DocSearch-AskAiScreen-Answer-Footer">
+        <SourcesPanel
+          links={urlsToDisplay}
+          titleText={relatedSourcesText}
+          pluralTitleText={relatedSourcesTextPlural}
+        />
+        <FeedbackActions
+          id={messageId}
+          showActions={showActions}
+          latestAssistantMessageContent={assistantContent || null}
+          translations={translations}
+          conversations={conversations}
+          onFeedback={onFeedback}
+        />
       </div>
     </div>
   );
