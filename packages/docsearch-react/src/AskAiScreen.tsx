@@ -1,16 +1,12 @@
-import type { UseChatHelpers } from '@ai-sdk/react';
 import React, { type JSX, useMemo, useState, useEffect } from 'react';
 
-import { AggregatedSearchBlock } from './AggregatedSearchBlock';
-import { AlertIcon, LoadingIcon } from './icons';
+import { AlertIcon } from './icons';
 import { MemoizedMarkdown } from './MemoizedMarkdown';
 import type { ScreenStateProps } from './ScreenState';
 import type { StoredSearchPlugin } from './stored-searches';
-import { ToolCall } from './ToolCall';
 import type { InternalDocSearchHit, StoredAskAiState } from './types';
-import type { AIMessage } from './types/AskiAi';
+import type { AIMessage, AskAiStatus } from './types/AskiAi';
 import { extractLinksFromMessage, getMessageContent, isThreadDepthError } from './utils/ai';
-import { groupConsecutiveToolResults } from './utils/groupConsecutiveToolResults';
 
 export type AskAiScreenTranslations = Partial<{
   // Misc texts
@@ -24,27 +20,6 @@ export type AskAiScreenTranslations = Partial<{
   likeButtonTitle: string;
   dislikeButtonTitle: string;
   thanksForFeedbackText: string;
-  // Tool call texts
-  preToolCallText: string;
-  duringToolCallText: string;
-  afterToolCallText: string;
-  /**
-   * Build the full jsx element for the aggregated search block.
-   * If provided, completely overrides the default english renderer.
-   */
-  aggregatedToolCallNode?: (queries: string[], onSearchQueryClick: (query: string) => void) => React.ReactNode;
-
-  /**
-   * Generate the list connective parts only (backwards compatibility).
-   * Receives full list of queries and should return translation parts for before/after/separators.
-   * Example: (qs) => ({ before: 'searched for ', separator: ', ', lastSeparator: ' and ', after: '' }).
-   */
-  aggregatedToolCallText?: (queries: string[]) => {
-    before?: string;
-    separator?: string;
-    lastSeparator?: string;
-    after?: string;
-  };
   /**
    * Message that's shown when user has stopped the streaming of a message.
    */
@@ -65,11 +40,10 @@ export type AskAiScreenTranslations = Partial<{
 
 type AskAiScreenProps = Omit<ScreenStateProps<InternalDocSearchHit>, 'translations'> & {
   messages: AIMessage[];
-  status: UseChatHelpers<AIMessage>['status'];
+  status: AskAiStatus;
   askAiError?: Error;
   translations?: AskAiScreenTranslations;
   onNewConversation: () => void;
-  agentStudio?: boolean;
 };
 
 interface AskAiScreenHeaderProps {
@@ -90,12 +64,9 @@ interface AskAiExchangeCardProps {
   exchange: Exchange;
   askAiError?: Error;
   isLastExchange: boolean;
-  loadingStatus: UseChatHelpers<AIMessage>['status'];
-  onSearchQueryClick: (query: string) => void;
+  loadingStatus: AskAiStatus;
   translations: AskAiScreenTranslations;
   conversations: StoredSearchPlugin<StoredAskAiState>;
-  onFeedback?: (messageId: string, thumbs: 0 | 1) => Promise<void>;
-  agentStudio?: boolean;
 }
 
 function AskAiExchangeCard({
@@ -103,21 +74,12 @@ function AskAiExchangeCard({
   askAiError,
   isLastExchange,
   loadingStatus,
-  onSearchQueryClick,
   translations,
   conversations,
-  onFeedback,
-  agentStudio,
 }: AskAiExchangeCardProps): JSX.Element {
   const { userMessage, assistantMessage } = exchange;
 
-  const {
-    stoppedStreamingText = 'You stopped this response',
-    errorTitleText = 'Chat error',
-    preToolCallText = 'Searching...',
-    afterToolCallText = 'Searched for',
-    duringToolCallText = 'Searching...',
-  } = translations;
+  const { stoppedStreamingText = 'You stopped this response', errorTitleText = 'Chat error' } = translations;
 
   const isThreadDepth = isThreadDepthError(askAiError);
 
@@ -125,20 +87,14 @@ function AskAiExchangeCard({
   const userContent = useMemo(() => getMessageContent(userMessage), [userMessage]);
 
   const urlsToDisplay = React.useMemo(() => extractLinksFromMessage(assistantMessage), [assistantMessage]);
-
-  const displayParts = React.useMemo(() => {
-    return groupConsecutiveToolResults(assistantMessage?.parts || []);
-  }, [assistantMessage]);
+  const displayParts = assistantMessage?.parts || [];
 
   const wasStopped = userMessage.metadata?.stopped || assistantMessage?.metadata?.stopped;
 
   const showActions =
     !wasStopped && (!isLastExchange || (isLastExchange && loadingStatus === 'ready' && Boolean(assistantMessage)));
 
-  const isThinking =
-    ['submitted', 'streaming'].includes(loadingStatus) &&
-    isLastExchange &&
-    !displayParts.some((part) => part.type !== 'step-start');
+  const isThinking = ['submitted', 'streaming'].includes(loadingStatus) && isLastExchange && displayParts.length === 0;
 
   return (
     <div className="DocSearch-AskAiScreen-Response-Container">
@@ -170,38 +126,6 @@ function AskAiExchangeCard({
             {displayParts.map((part, idx) => {
               const index = idx;
 
-              if (typeof part === 'string') {
-                return (
-                  <MemoizedMarkdown
-                    key={index}
-                    content={part}
-                    copyButtonText={translations.copyButtonText || 'Copy'}
-                    copyButtonCopiedText={translations.copyButtonCopiedText || 'Copied!'}
-                    isStreaming={loadingStatus === 'streaming'}
-                  />
-                );
-              }
-
-              if (part.type === 'aggregated-tool-call') {
-                return (
-                  <AggregatedSearchBlock
-                    key={index}
-                    queries={part.queries}
-                    translations={translations}
-                    onSearchQueryClick={onSearchQueryClick}
-                  />
-                );
-              }
-
-              if (part.type === 'reasoning' && part.state === 'streaming') {
-                return (
-                  <div key={index} className="DocSearch-AskAiScreen-MessageContent-Reasoning shimmer">
-                    <LoadingIcon className="DocSearch-AskAiScreen-SmallerLoadingIcon" />
-                    <span className="shimmer">Reasoning...</span>
-                  </div>
-                );
-              }
-
               if (part.type === 'text') {
                 return (
                   <MemoizedMarkdown
@@ -213,20 +137,7 @@ function AskAiExchangeCard({
                   />
                 );
               }
-              if (part.type === 'tool-searchIndex' || part.type === 'tool-algolia_search_index') {
-                return (
-                  <ToolCall
-                    key={index}
-                    translations={{
-                      preToolCallText,
-                      searchingText: duringToolCallText,
-                      toolCallResultText: afterToolCallText,
-                    }}
-                    part={part}
-                    onSearchQueryClick={onSearchQueryClick}
-                  />
-                );
-              }
+
               // fallback for unknown part type
               return null;
             })}
@@ -241,8 +152,6 @@ function AskAiExchangeCard({
             latestAssistantMessageContent={assistantContent?.text || null}
             translations={translations}
             conversations={conversations}
-            agentStudio={agentStudio}
-            onFeedback={onFeedback}
           />
         </div>
       </div>
@@ -261,8 +170,6 @@ interface AskAiScreenFooterActionsProps {
   latestAssistantMessageContent: string | null;
   translations: AskAiScreenTranslations;
   conversations: StoredSearchPlugin<StoredAskAiState>;
-  onFeedback?: (messageId: string, thumbs: 0 | 1) => Promise<void>;
-  agentStudio?: boolean;
 }
 
 export function AskAiScreenFooterActions({
@@ -271,38 +178,9 @@ export function AskAiScreenFooterActions({
   latestAssistantMessageContent,
   translations,
   conversations,
-  onFeedback,
-  agentStudio,
 }: AskAiScreenFooterActionsProps): JSX.Element | null {
-  // local state for feedback, initialised from stored conversations
-  const initialFeedback = React.useMemo(() => {
-    const message = conversations.getOne?.(id);
-    return message?.feedback ?? null;
-  }, [conversations, id]);
-
-  const [feedback, setFeedback] = React.useState<'dislike' | 'like' | null>(initialFeedback);
-  const [saving, setSaving] = React.useState(false);
-  const [savingError, setSavingError] = React.useState<Error | null>(null);
-
-  const handleFeedback = async (value: 'dislike' | 'like'): Promise<void> => {
-    if (saving) return;
-    setSavingError(null);
-    setSaving(true);
-    try {
-      await onFeedback?.(id, value === 'like' ? 1 : 0);
-      setFeedback(value);
-    } catch (error) {
-      setSavingError(error as Error);
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const {
-    likeButtonTitle = 'Like',
-    dislikeButtonTitle = 'Dislike',
-    thanksForFeedbackText = 'Thanks for your feedback!',
-  } = translations;
+  void id;
+  void conversations;
 
   if (!showActions || !latestAssistantMessageContent) {
     return null;
@@ -310,26 +188,6 @@ export function AskAiScreenFooterActions({
 
   return (
     <div className="DocSearch-AskAiScreen-Actions">
-      {!agentStudio &&
-        (feedback === null ? (
-          <>
-            {saving ? (
-              <LoadingIcon className="DocSearch-AskAiScreen-SmallerLoadingIcon" />
-            ) : (
-              <>
-                <LikeButton title={likeButtonTitle} onClick={() => handleFeedback('like')} />
-                <DislikeButton title={dislikeButtonTitle} onClick={() => handleFeedback('dislike')} />
-              </>
-            )}
-            {savingError && (
-              <p className="DocSearch-AskAiScreen-FeedbackText">{savingError.message || 'An error occured'}</p>
-            )}
-          </>
-        ) : (
-          <p className="DocSearch-AskAiScreen-FeedbackText DocSearch-AskAiScreen-FeedbackText--visible">
-            {thanksForFeedbackText}
-          </p>
-        ))}
       <CopyButton
         translations={translations}
         onClick={() => navigator.clipboard.writeText(latestAssistantMessageContent)}
@@ -407,11 +265,6 @@ export function AskAiScreen({ translations = {}, ...props }: AskAiScreenProps): 
     return grouped;
   }, [messages, hasThreadDepthError]);
 
-  const handleSearchQueryClick = (query: string): void => {
-    props.onAskAiToggle(false);
-    props.setQuery(query);
-  };
-
   // Only show the thread depth error if we have assistant messages
   const showThreadDepthError = hasThreadDepthError && messages.some((m) => m.role === 'assistant');
 
@@ -448,9 +301,6 @@ export function AskAiScreen({ translations = {}, ...props }: AskAiScreenProps): 
                 loadingStatus={props.status}
                 translations={translations}
                 conversations={props.conversations}
-                agentStudio={props.agentStudio}
-                onSearchQueryClick={handleSearchQueryClick}
-                onFeedback={props.onFeedback}
               />
             ))}
         </div>
@@ -547,60 +397,6 @@ export function CopyButton({
           <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
         </svg>
       )}
-    </button>
-  );
-}
-
-export function LikeButton({ title, onClick }: { title: string; onClick: () => void }): JSX.Element {
-  return (
-    <button
-      type="button"
-      className="DocSearch-AskAiScreen-ActionButton DocSearch-AskAiScreen-LikeButton"
-      title={title}
-      onClick={onClick}
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="lucide lucide-thumbs-up-icon lucide-thumbs-up"
-      >
-        <path d="M7 10v12" />
-        <path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z" />
-      </svg>
-    </button>
-  );
-}
-
-export function DislikeButton({ title, onClick }: { title: string; onClick: () => void }): JSX.Element {
-  return (
-    <button
-      type="button"
-      className="DocSearch-AskAiScreen-ActionButton DocSearch-AskAiScreen-DislikeButton"
-      title={title}
-      onClick={onClick}
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="lucide lucide-thumbs-down-icon lucide-thumbs-down"
-      >
-        <path d="M17 14V2" />
-        <path d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22a3.13 3.13 0 0 1-3-3.88Z" />
-      </svg>
     </button>
   );
 }
