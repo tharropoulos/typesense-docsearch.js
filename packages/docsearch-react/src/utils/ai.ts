@@ -1,7 +1,5 @@
-import type { TextUIPart } from 'ai';
-
 import type { StoredAskAiState } from '../types';
-import type { AIMessage } from '../types/AskiAi';
+import type { AIMessage, AITextPart } from '../types/AskiAi';
 
 import { sanitizeUserInput } from './sanitize';
 
@@ -69,11 +67,16 @@ export function extractLinksFromMessage(message: AIMessage | null): ExtractedLin
   return links;
 }
 
-export const buildDummyAskAiHit = (query: string, messages: AIMessage[]): StoredAskAiState => {
+export const buildDummyAskAiHit = (
+  query: string,
+  messages: AIMessage[],
+  conversationId?: string
+): StoredAskAiState => {
   const textPart = messages[0].parts.find((part) => part.type === 'text');
   const sanitizedText = textPart?.text ? sanitizeUserInput(textPart.text) : '';
 
   return {
+    conversationId,
     query,
     objectID: sanitizedText,
     messages,
@@ -96,7 +99,7 @@ export const buildDummyAskAiHit = (query: string, messages: AIMessage[]): Stored
   };
 };
 
-export const getMessageContent = (message: AIMessage | null): TextUIPart | undefined =>
+export const getMessageContent = (message: AIMessage | null): AITextPart | undefined =>
   message?.parts.find((part) => part.type === 'text');
 
 /**

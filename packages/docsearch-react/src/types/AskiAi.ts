@@ -1,39 +1,40 @@
-import type { UIMessage } from '@ai-sdk/react';
-import type { ToolUIPart, UIDataTypes, UIMessagePart } from 'ai';
+import type { MultiSearchRequestSchema } from 'typesense/lib/Typesense/Types';
 
 export type AskAiState = 'conversation-history' | 'conversation' | 'initial' | 'new-conversation';
 
-export interface SearchIndexTool {
-  input: {
-    query: string;
-  };
-  output: {
-    query?: string;
-    hits?: any[];
-  };
+export type AskAiStatus = 'error' | 'ready' | 'streaming' | 'submitted';
+
+export interface AITextPart {
+  type: 'text';
+  text: string;
+  state?: 'done' | 'streaming';
 }
 
-export interface AgentStudioSearchTool {
-  input: {
-    index: string;
-    query: string;
-    number_of_results: number;
-    facet_filters: any | null;
-  };
-  output: {
-    hits?: any[];
-    nbHits?: number;
-    queryID?: string;
-  };
-}
+export type AIMessagePart = AITextPart;
 
-type Tools = {
-  searchIndex: SearchIndexTool;
-  algolia_search_index: AgentStudioSearchTool;
+export type AIMessage = {
+  id: string;
+  role: 'assistant' | 'user';
+  parts: AIMessagePart[];
+  metadata?: {
+    stopped?: boolean;
+    conversationId?: string;
+  };
 };
 
-export type AIMessage = UIMessage<{ stopped?: boolean }, UIDataTypes, Tools>;
+export type UseAskAiSendMessageOptions = {
+  suggestedQuestionId?: string;
+};
 
-export type AIMessagePart = UIMessagePart<UIDataTypes, Tools>;
+export type TypesenseAskAiSearchParameters = Omit<
+  Partial<MultiSearchRequestSchema<Record<string, unknown>, string>>,
+  'collection' | 'exclude_fields' | 'q' | 'query_by'
+>;
 
-export type AIToolPart = ToolUIPart<Tools>;
+export type TypesenseAskAiParams = {
+  collection: string;
+  conversationModelId: string;
+  excludeFields?: string;
+  queryBy: string;
+  searchParameters?: TypesenseAskAiSearchParameters;
+};
