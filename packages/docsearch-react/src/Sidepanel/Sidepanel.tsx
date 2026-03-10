@@ -2,18 +2,12 @@ import type { SidepanelShortcuts, InitialAskAiMessage } from '@docsearch/core';
 import React, { useCallback } from 'react';
 import type { JSX } from 'react';
 
-import { AlgoliaLogo, type AlgoliaLogoTranslations } from '../AlgoliaLogo';
-import type {
-  DocSearchSidepanelProps,
-  SidepanelSearchParameters,
-} from '../Sidepanel';
+import type { DocSearchSidepanelProps } from '../Sidepanel';
 import type { StoredAskAiState, SuggestedQuestionHit } from '../types';
+import { TypesenseLogo, type TypesenseLogoTranslations } from '../TypesenseLogo';
 import { useAskAi } from '../useAskAi';
 import { useIsMobile } from '../useIsMobile';
-import { useSearchClient } from '../useSearchClient';
-import { useSuggestedQuestions } from '../useSuggestedQuestions';
 import {
-  EMPTY_TOOLS,
   buildDummyAskAiHit,
   getAskAiBlockingBannerMessage,
   isAskAiPromptBlockingError,
@@ -27,7 +21,6 @@ import { ConversationScreen } from './ConversationScreen';
 import type { NewConversationScreenTranslations } from './NewConversationScreen';
 import { NewConversationScreen } from './NewConversationScreen';
 import { PromptForm, type PromptFormTranslations } from './PromptForm';
-import { setSidepanelSearchClient } from './setSidepanelSearchClient';
 import type { HeaderTranslations } from './SidepanelHeader';
 import { SidepanelHeader } from './SidepanelHeader';
 import type { PanelSide, PanelVariant, SidepanelState } from './types';
@@ -59,14 +52,11 @@ export type SidepanelTranslations = Partial<{
   conversationScreen: ConversationScreenTranslations;
   /** Translation texts for the new conversation/starting screen. */
   newConversationScreen: NewConversationScreenTranslations;
-  /** Translation text for the Algolia logo. */
-  logo: AlgoliaLogoTranslations;
+  /** Translation text for the Typesense logo. */
+  logo: TypesenseLogoTranslations;
 }>;
 
-export type SidepanelProps = Pick<
-  DocSearchSidepanelProps,
-  'indices' | 'memory' | 'tools'
-> & {
+export type SidepanelProps = {
   /**
    * Variant of the Sidepanel positioning.
    *
@@ -109,8 +99,7 @@ export type SidepanelProps = Pick<
   portalContainer?: DocumentFragment | Element | null;
   /**
    * Enables displaying suggested questions on new conversation screen.
-   *
-   * @default false
+   * Reserved for a future Typesense-native suggestions source.
    */
   suggestedQuestions?: boolean;
   /** Translations specific to the Sidepanel panel. */
@@ -124,12 +113,8 @@ export type SidepanelProps = Pick<
   keyboardShortcuts?: SidepanelShortcuts;
 };
 
-type Props = Omit<
-  DocSearchSidepanelProps,
-  'button' | 'indices' | 'memory' | 'panel' | 'tools'
-> &
-  SidepanelProps &
-  SidepanelSearchParameters & {
+type Props = Omit<DocSearchSidepanelProps, 'button' | 'panel'> &
+  SidepanelProps & {
     isOpen?: boolean;
     onOpen: () => void;
     onClose: () => void;
@@ -141,22 +126,17 @@ function SidepanelInner(
     isOpen = false,
     onOpen,
     onClose,
-    agentId,
-    apiKey,
-    appId,
+    typesenseServerConfig,
+    typesenseCollectionName,
+    askAi,
     variant = 'floating',
-    searchParameters,
     pushSelector,
     width,
     expandedWidth,
-    suggestedQuestions: suggestedQuestionsEnabled = false,
     translations = {},
     keyboardShortcuts,
     side = 'right',
     initialMessage,
-    tools = EMPTY_TOOLS,
-    memory,
-    indices,
   }: Props,
   ref: React.ForwardedRef<SidepanelRef>
 ): JSX.Element {
@@ -183,8 +163,6 @@ function SidepanelInner(
     setIsExpanded(!isExpanded);
   }, [isExpanded]);
 
-  const searchClient = useSearchClient(appId, apiKey, setSidepanelSearchClient);
-
   const {
     chatId,
     status,
@@ -194,25 +172,19 @@ function SidepanelInner(
     exchanges,
     conversations,
     messages,
-    sendFeedback,
     askAiError,
     startNewConversation,
     restoreConversation,
   } = useAskAi({
-    appId,
-    agentId,
-    apiKey,
-    searchParameters,
-    tools,
-    memory,
-    indices,
+    typesenseServerConfig,
+    storageKey: `__DOCSEARCH_ASKAI_CONVERSATIONS__${typesenseCollectionName}`,
+    collection: askAi.collection || typesenseCollectionName,
+    conversationModelId: askAi.conversationModelId,
+    queryBy: askAi.queryBy || 'embedding',
+    excludeFields: askAi.excludeFields || 'embedding',
+    searchParameters: askAi.searchParameters,
   });
-
-  const suggestedQuestions = useSuggestedQuestions({
-    agentId,
-    suggestedQuestionsEnabled,
-    searchClient,
-  });
+  const suggestedQuestions: SuggestedQuestionHit[] = [];
 
   const prevStatus = React.useRef(status);
   const showPromptBlockingError =
@@ -226,7 +198,7 @@ function SidepanelInner(
     (prompt: string): void => {
       setStoppedStreaming(false);
 
-      sendMessage({ text: prompt });
+      void sendMessage(prompt);
       setSidepanelState('conversation');
     },
     [sendMessage]
@@ -240,14 +212,9 @@ function SidepanelInner(
   const handleSelectQuestion = (question: SuggestedQuestionHit): void => {
     setStoppedStreaming(false);
     startNewConversation();
-    sendMessage(
-      { text: question.question },
-      {
-        body: {
-          suggestedQuestionId: question.objectID,
-        },
-      }
-    );
+    void sendMessage(question.question, {
+      suggestedQuestionId: question.objectID,
+    });
     setSidepanelState('conversation');
   };
 
@@ -261,7 +228,7 @@ function SidepanelInner(
       if (conversation.messages) {
         restoreConversation(conversation.messages, conversation.chatId);
       } else if (conversation.query) {
-        sendMessage({ text: conversation.query });
+        void sendMessage(conversation.query);
       }
 
       setSidepanelState('conversation');
@@ -304,6 +271,7 @@ function SidepanelInner(
     if (prevStatus.current === 'streaming' && status === 'ready') {
       if (stoppedStreaming && messages.at(-1)) {
         messages.at(-1)!.metadata = {
+          ...messages.at(-1)!.metadata,
           stopped: true,
         };
       }
@@ -350,18 +318,9 @@ function SidepanelInner(
       handleSelectConversation(selectedConversation);
     } else {
       startNewConversation();
-      sendMessage(
-        {
-          text: initialMessage.query,
-        },
-        initialMessage.suggestedQuestionId
-          ? {
-              body: {
-                suggestedQuestionId: initialMessage.suggestedQuestionId,
-              },
-            }
-          : {}
-      );
+      void sendMessage(initialMessage.query, {
+        suggestedQuestionId: initialMessage.suggestedQuestionId,
+      });
       setSidepanelState('conversation');
     }
   }, [
@@ -425,11 +384,8 @@ function SidepanelInner(
               exchanges={exchanges}
               status={status}
               conversations={conversations}
-              handleFeedback={sendFeedback}
               translations={translations.conversationScreen}
               streamError={askAiError}
-              memoryEnabled={memory?.enabled ?? false}
-              tools={tools}
               onSelectPromptSuggestion={handleSend}
             />
           )}
@@ -456,7 +412,7 @@ function SidepanelInner(
         />
         <footer className="DocSearch-Sidepanel-Footer">
           <span className="DocSearch-Logo DocSearch-Sidepanel--powered-by">
-            <AlgoliaLogo translations={translations.logo} />
+            <TypesenseLogo translations={translations.logo} />
           </span>
         </footer>
       </aside>

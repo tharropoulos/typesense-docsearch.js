@@ -23,6 +23,15 @@ type UseAskAiReturn = {
   isStreaming: boolean;
   exchanges: Exchange[];
   conversations: StoredSearchPlugin<StoredAskAiState>;
+  /**
+   * Identifier of the active Typesense conversation. Named `chatId` to keep the
+   * same surface the modal and sidepanel already consume.
+   */
+  chatId?: string;
+  /** Clears the transcript so the next prompt opens a fresh conversation. */
+  startNewConversation: () => void;
+  /** Rehydrates a stored conversation into the live transcript. */
+  restoreConversation: (messages: AIMessage[], conversationId?: string) => void;
 };
 
 type TypesenseNodeConfig = {
@@ -362,6 +371,30 @@ export const useAskAi = ({
     setStatus('ready');
   }, []);
 
+  const startNewConversation = useCallback((): void => {
+    abortControllerRef.current?.abort();
+    abortControllerRef.current = null;
+    conversationIdRef.current = undefined;
+    setAskAiError(undefined);
+    setStatus('ready');
+    setMessages([]);
+  }, [setMessages]);
+
+  const restoreConversation = useCallback(
+    (restoredMessages: AIMessage[], conversationId?: string): void => {
+      abortControllerRef.current?.abort();
+      abortControllerRef.current = null;
+      setAskAiError(undefined);
+      setStatus('ready');
+      setMessages(restoredMessages);
+
+      if (conversationId) {
+        conversationIdRef.current = conversationId;
+      }
+    },
+    [setMessages]
+  );
+
   const exchanges = useMemo(() => {
     const grouped: Exchange[] = [];
 
@@ -393,5 +426,8 @@ export const useAskAi = ({
     isStreaming,
     exchanges,
     conversations,
+    chatId: getConversationId(messages),
+    startNewConversation,
+    restoreConversation,
   };
 };
