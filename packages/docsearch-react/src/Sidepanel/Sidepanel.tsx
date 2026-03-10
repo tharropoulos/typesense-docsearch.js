@@ -386,7 +386,6 @@ function SidepanelInner(
               conversations={conversations}
               translations={translations.conversationScreen}
               streamError={askAiError}
-              onSelectPromptSuggestion={handleSend}
             />
           )}
           {sidepanelState === 'conversation-history' && (

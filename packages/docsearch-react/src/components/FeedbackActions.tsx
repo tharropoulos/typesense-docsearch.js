@@ -218,7 +218,7 @@ export function FeedbackActions({
       <div className="DocSearch-AskAiScreen-Actions-Controls">
         {isSidepanel ? copyButton : null}
 
-        {view === 'thanks' ? (
+        {!onFeedback ? null : view === 'thanks' ? (
           <p className="DocSearch-AskAiScreen-FeedbackText DocSearch-AskAiScreen-FeedbackText--visible">
             {thanksForFeedbackText}
           </p>

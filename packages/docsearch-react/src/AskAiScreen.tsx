@@ -1,13 +1,9 @@
-import type { UseChatHelpers } from '@ai-sdk/react';
 import React, { type JSX, useMemo } from 'react';
 
-import { AggregatedSearchBlock } from './AggregatedSearchBlock';
 import type { AskAiScreenStateProps } from './AskAiScreenState';
-import { ConversationPromptSuggestions } from './components/ConversationPromptSuggestions';
 import { FeedbackActions } from './components/FeedbackActions';
 import { SourcesPanel } from './components/SourcesPanel';
-import { ToolCall, type ToolCallTranslations } from './components/ToolCall';
-import { AlertIcon, LoadingIcon, SparklesIcon } from './icons';
+import { AlertIcon, SparklesIcon } from './icons';
 import { MemoizedMarkdown } from './MemoizedMarkdown';
 import type { StoredSearchPlugin } from './stored-searches';
 import type {
@@ -15,7 +11,7 @@ import type {
   OnAskAiFeedback,
   StoredAskAiState,
 } from './types';
-import { type AIMessage, type ToolCalls } from './types/AskiAi';
+import { type AIMessage, type AskAiStatus } from './types/AskiAi';
 import {
   extractLinksFromMessage,
   getAskAiBlockingBannerMessage,
@@ -23,15 +19,10 @@ import {
   isAskAiPromptBlockingError,
   isThreadDepthError,
   showAskAiBlockingBannerNewConversationLink,
-  isAIToolPart,
-  getAgentPromptSuggestions,
 } from './utils/ai';
-import { groupConsecutiveToolResults } from './utils/groupConsecutiveToolResults';
 
 export type AskAiScreenTranslations = Partial<
-  // Inherit the shared tool-call translations, but expose the search-related
-  // keys under AskAiScreen's own public names (see mapping below).
-  Omit<ToolCallTranslations, 'searchingText' | 'toolCallResultText'> & {
+  {
     // Misc texts
     disclaimerText: string;
     /** Text shown describing a singular related source. */
@@ -58,37 +49,6 @@ export type AskAiScreenTranslations = Partial<
     feedbackTagStyleOrTone: string;
     feedbackTagSafetyOrLegal: string;
     feedbackTagOther: string;
-    // Tool call texts
-    /**
-     * Text shown while assistant is performing search tool call. Maps to
-     * `ToolCallTranslations.searchingText`.
-     */
-    duringToolCallText: string;
-    /**
-     * Text shown while assistant is finished performing tool call. Maps to
-     * `ToolCallTranslations.toolCallResultText`.
-     */
-    afterToolCallText: string;
-    /**
-     * Build the full jsx element for the aggregated search block. If provided,
-     * completely overrides the default english renderer.
-     */
-    aggregatedToolCallNode?: (
-      queries: string[],
-      onSearchQueryClick: (query: string) => void
-    ) => React.ReactNode;
-    /**
-     * Generate the list connective parts only (backwards compatibility).
-     * Receives full list of queries and should return translation parts for
-     * before/after/separators. Example: (qs) => ({ before: 'searched for ',
-     * separator: ', ', lastSeparator: ' and ', after: '' }).
-     */
-    aggregatedToolCallText?: (queries: string[]) => {
-      before?: string;
-      separator?: string;
-      lastSeparator?: string;
-      after?: string;
-    };
     /** Message that's shown when user has stopped the streaming of a message. */
     stoppedStreamingText: string;
     /** Error title shown if there is an error while chatting. */
@@ -97,47 +57,18 @@ export type AskAiScreenTranslations = Partial<
     threadDepthExceededMessage: string;
     /** Button text for starting a new conversation after thread depth error. */
     startNewConversationButtonText: string;
-    suggestedPromptsTitleText: string;
   }
 >;
-
-/**
- * Maps AskAiScreen's public translation keys to the shared
- * `ToolCallTranslations` shape consumed by the `ToolCall` component, applying
- * default English values.
- */
-function toToolCallTranslations(
-  translations: AskAiScreenTranslations
-): ToolCallTranslations {
-  const {
-    preToolCallText = 'Searching...',
-    duringToolCallText = 'Searching...',
-    afterToolCallText = 'Searched for',
-    savedMemoryToolResultText = 'Saved to memory',
-    memoryToolResultText = 'Used memory to enhance results',
-  } = translations;
-
-  return {
-    preToolCallText,
-    searchingText: duringToolCallText,
-    toolCallResultText: afterToolCallText,
-    savedMemoryToolResultText,
-    memoryToolResultText,
-  };
-}
 
 type AskAiScreenProps = Omit<
   AskAiScreenStateProps<InternalDocSearchHit>,
   'translations'
 > & {
   messages: AIMessage[];
-  tools: ToolCalls;
-  status: UseChatHelpers<AIMessage>['status'];
+  status: AskAiStatus;
   askAiError?: Error;
   translations?: AskAiScreenTranslations;
   onNewConversation: () => void;
-  onSelectPromptSuggestion: (prompt: string) => void;
-  memoryEnabled?: boolean;
 };
 
 interface AskAiScreenHeaderProps {
@@ -164,14 +95,10 @@ interface AskAiExchangeCardProps {
   exchange: Exchange;
   askAiError?: Error;
   isLastExchange: boolean;
-  loadingStatus: UseChatHelpers<AIMessage>['status'];
-  onSearchQueryClick: (query: string) => void;
+  loadingStatus: AskAiStatus;
   translations: AskAiScreenTranslations;
-  tools: ToolCalls;
   conversations: StoredSearchPlugin<StoredAskAiState>;
   onFeedback?: OnAskAiFeedback;
-  memoryEnabled?: boolean;
-  onSelectPromptSuggestion: (prompt: string) => void;
 }
 
 function AskAiExchangeCard({
@@ -179,13 +106,9 @@ function AskAiExchangeCard({
   askAiError,
   isLastExchange,
   loadingStatus,
-  onSearchQueryClick,
   translations,
-  tools,
   conversations,
   onFeedback,
-  memoryEnabled,
-  onSelectPromptSuggestion,
 }: AskAiExchangeCardProps): JSX.Element {
   const { userMessage, assistantMessage } = exchange;
 
@@ -194,13 +117,7 @@ function AskAiExchangeCard({
     errorTitleText = 'Chat error',
     relatedSourcesText,
     relatedSourcesTextPlural,
-    suggestedPromptsTitleText = 'Suggested prompts',
   } = translations;
-
-  const toolCallTranslations = useMemo(
-    () => toToolCallTranslations(translations),
-    [translations]
-  );
 
   const isPromptBlockingError = isAskAiPromptBlockingError(askAiError);
 
@@ -218,14 +135,7 @@ function AskAiExchangeCard({
     [assistantMessage]
   );
 
-  const displayParts = React.useMemo(() => {
-    return groupConsecutiveToolResults(assistantMessage?.parts || []);
-  }, [assistantMessage]);
-
-  const promptSuggestions = useMemo(() => {
-    if (!isLastExchange) return [];
-    return getAgentPromptSuggestions(assistantMessage?.parts || []);
-  }, [assistantMessage, isLastExchange]);
+  const displayParts = assistantMessage?.parts ?? [];
 
   const wasStopped =
     userMessage.metadata?.stopped || assistantMessage?.metadata?.stopped;
@@ -240,7 +150,7 @@ function AskAiExchangeCard({
   const isThinking =
     ['submitted', 'streaming'].includes(loadingStatus) &&
     isLastExchange &&
-    !displayParts.some((part) => part.type !== 'step-start');
+    displayParts.length === 0;
 
   const messageId = assistantMessage?.id || exchange.id;
 
@@ -286,56 +196,6 @@ function AskAiExchangeCard({
             {displayParts.map((part, idx) => {
               const index = idx;
 
-              if (typeof part === 'string') {
-                return (
-                  <MemoizedMarkdown
-                    key={index}
-                    content={part}
-                    copyButtonText={translations.copyButtonText || 'Copy'}
-                    copyButtonCopiedText={
-                      translations.copyButtonCopiedText || 'Copied!'
-                    }
-                    isStreaming={loadingStatus === 'streaming'}
-                  />
-                );
-              }
-
-              if (isAIToolPart(part)) {
-                return (
-                  <ToolCall
-                    key={index}
-                    translations={toolCallTranslations}
-                    part={part}
-                    tools={tools}
-                    memoryEnabled={memoryEnabled}
-                    onSearchQueryClick={onSearchQueryClick}
-                  />
-                );
-              }
-
-              if (part.type === 'aggregated-tool-call') {
-                return (
-                  <AggregatedSearchBlock
-                    key={index}
-                    queries={part.queries}
-                    translations={translations}
-                    onSearchQueryClick={onSearchQueryClick}
-                  />
-                );
-              }
-
-              if (part.type === 'reasoning' && part.state === 'streaming') {
-                return (
-                  <div
-                    key={index}
-                    className="DocSearch-AskAiScreen-MessageContent-Reasoning DocSearch-shimmer"
-                  >
-                    <LoadingIcon className="DocSearch-AskAiScreen-SmallerLoadingIcon" />
-                    <span className="DocSearch-shimmer">Reasoning...</span>
-                  </div>
-                );
-              }
-
               if (part.type === 'text') {
                 return (
                   <MemoizedMarkdown
@@ -376,14 +236,6 @@ function AskAiExchangeCard({
             onFeedback={onFeedback}
           />
         </div>
-
-        {promptSuggestions.length > 0 && (
-          <ConversationPromptSuggestions
-            title={suggestedPromptsTitleText}
-            suggestions={promptSuggestions}
-            onSelectPromptSuggestion={onSelectPromptSuggestion}
-          />
-        )}
       </div>
     </div>
   );
@@ -399,7 +251,7 @@ export function AskAiScreen({
     startNewConversationButtonText = 'Start a new conversation',
   } = translations;
 
-  const { messages, tools, askAiError, status, memoryEnabled } = props;
+  const { messages, askAiError, status } = props;
 
   const hasPromptBlockingError = useMemo(() => {
     return status === 'error' && isAskAiPromptBlockingError(askAiError);
@@ -428,11 +280,6 @@ export function AskAiScreen({
 
     return grouped;
   }, [messages]);
-
-  const handleSearchQueryClick = (query: string): void => {
-    props.onAskAiToggle(false);
-    props.setQuery(query);
-  };
 
   const showBlockingBanner =
     hasPromptBlockingError &&
@@ -483,12 +330,8 @@ export function AskAiScreen({
                 isLastExchange={index === 0}
                 loadingStatus={props.status}
                 translations={translations}
-                tools={tools}
                 conversations={props.conversations}
-                memoryEnabled={memoryEnabled}
-                onSearchQueryClick={handleSearchQueryClick}
                 onFeedback={props.onFeedback}
-                onSelectPromptSuggestion={props.onSelectPromptSuggestion}
               />
             ))}
         </div>

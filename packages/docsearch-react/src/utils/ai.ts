@@ -112,23 +112,11 @@ export const buildDummyAskAiHit = (
 // answers can interleave text with other parts, so join every text part
 // instead of stopping at the first one
 // see https://github.com/algolia/docsearch/issues/2782
-export const getMessageContent = (
-  message: AIMessage | null
-): AITextPart | undefined => {
-  const textParts = (message?.parts ?? []).filter(
-    (part): part is AITextPart => part.type === 'text'
-  );
-
-  if (textParts.length === 0) {
-    return undefined;
-  }
-
-  return {
-    type: 'text',
-    text: textParts.map((part) => part.text).join('\n\n'),
-    state: textParts[textParts.length - 1].state,
-  };
-};
+export const getMessageContent = (message: AIMessage | null): string =>
+  (message?.parts ?? [])
+    .filter((part): part is AITextPart => part.type === 'text')
+    .map((part) => part.text)
+    .join('\n\n');
 
 /** Helper function to check if an error reports the conversation depth limit. */
 export function isThreadDepthError(error?: Error): boolean {

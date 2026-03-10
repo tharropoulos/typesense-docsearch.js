@@ -1,35 +1,24 @@
-import type { UseChatHelpers } from '@ai-sdk/react';
 import type { JSX } from 'react';
 import React, { memo, useMemo } from 'react';
 
 import { type Exchange } from '../AskAiScreen';
-import { ConversationPromptSuggestions } from '../components/ConversationPromptSuggestions';
 import { FeedbackActions } from '../components/FeedbackActions';
 import { SourcesPanel } from '../components/SourcesPanel';
-import { ToolCall, type ToolCallTranslations } from '../components/ToolCall';
-import { AlertIcon, LoadingIcon } from '../icons';
+import { AlertIcon } from '../icons';
 import { MemoizedMarkdown } from '../MemoizedMarkdown';
 import type { StoredSearchPlugin } from '../stored-searches';
 import type { OnAskAiFeedback, StoredAskAiState } from '../types';
-import { type AIMessage, type ToolCalls } from '../types/AskiAi';
+import type { AskAiStatus } from '../types/AskiAi';
 import {
   extractLinksFromMessage,
   getMessageContent,
-  EMPTY_TOOLS,
-  isAIToolPart,
-  getAgentPromptSuggestions,
   isAskAiPromptBlockingError,
 } from '../utils/ai';
-import { groupConsecutiveToolResults } from '../utils/groupConsecutiveToolResults';
-
-import { AggregatedSearchBlock } from './AggregatedSearchBlock';
 
 export type ConversationScreenTranslations = Partial<
-  ToolCallTranslations & {
+  {
     /** Text shown as an LLM disclaimer. */
     conversationDisclaimer: string;
-    /** Text shown while assistant is reasoning. */
-    reasoningText: string;
     /** Text show while assistant is thinking. */
     thinkingText: string;
     /** Text shown describing a singular related source. */
@@ -67,7 +56,6 @@ export type ConversationScreenTranslations = Partial<
     feedbackTagOther: string;
     /** Error title shown if there is an error while chatting. */
     errorTitleText: string;
-    suggestedPromptsTitleText: string;
   }
 >;
 
@@ -75,12 +63,9 @@ export type ConversationScreenProps = {
   exchanges: Exchange[];
   conversations: StoredSearchPlugin<StoredAskAiState>;
   translations?: ConversationScreenTranslations;
-  status: UseChatHelpers<AIMessage>['status'];
+  status: AskAiStatus;
   handleFeedback?: OnAskAiFeedback;
   streamError?: Error;
-  memoryEnabled?: boolean;
-  tools?: ToolCalls;
-  onSelectPromptSuggestion: (prompt: string) => void;
 };
 
 type ConversationnExchangeProps = {
@@ -91,9 +76,6 @@ type ConversationnExchangeProps = {
   translations?: ConversationScreenTranslations;
   onFeedback?: ConversationScreenProps['handleFeedback'];
   streamError?: ConversationScreenProps['streamError'];
-  memoryEnabled?: boolean;
-  tools: ToolCalls;
-  onSelectPromptSuggestion: (prompt: string) => void;
 };
 
 const ConversationExchange = React.forwardRef<
@@ -109,29 +91,19 @@ const ConversationExchange = React.forwardRef<
       onFeedback,
       status,
       streamError,
-      memoryEnabled,
-      tools,
-      onSelectPromptSuggestion,
     },
     conversationRef
   ): JSX.Element => {
     const { userMessage, assistantMessage } = exchange;
 
     const {
-      reasoningText = 'Reasoning...',
       thinkingText = 'Thinking...',
-      searchingText = 'Searching...',
       relatedSourcesText,
       relatedSourcesTextPlural,
       stoppedStreamingText = 'You stopped this response',
-      preToolCallText = 'Searching...',
-      toolCallResultText = 'Searched for',
       copyButtonText = 'Copy',
       copyButtonCopiedText = 'Copied!',
       errorTitleText = 'Chat error',
-      savedMemoryToolResultText = 'Saved to memory',
-      memoryToolResultText = 'Used memory to enhance results',
-      suggestedPromptsTitleText = 'Suggested prompts',
     } = translations;
 
     const assistantContent = useMemo(
@@ -143,24 +115,16 @@ const ConversationExchange = React.forwardRef<
       [userMessage]
     );
 
-    const assistantParts = useMemo(
-      () => groupConsecutiveToolResults(assistantMessage?.parts || []),
-      [assistantMessage]
-    );
+    const assistantParts = assistantMessage?.parts ?? [];
     const urlsToDisplay = React.useMemo(
       () => extractLinksFromMessage(assistantMessage),
       [assistantMessage]
     );
-    const suggestedPrompts = React.useMemo(() => {
-      if (!isLastExchange) return [];
-      return getAgentPromptSuggestions(assistantMessage?.parts || []);
-    }, [assistantMessage, isLastExchange]);
 
     const wasStopped =
       userMessage.metadata?.stopped || assistantMessage?.metadata?.stopped;
     const isThinking =
-      ['submitted', 'streaming'].includes(status) &&
-      !assistantParts.some((part) => part.type !== 'step-start');
+      ['submitted', 'streaming'].includes(status) && assistantParts.length === 0;
     const showActions =
       !wasStopped &&
       (!isLastExchange ||
@@ -201,54 +165,6 @@ const ConversationExchange = React.forwardRef<
 
               {assistantParts.map((part, idx) => {
                 const index = idx;
-
-                if (part.type === 'reasoning' && part.state === 'streaming') {
-                  return (
-                    <div
-                      key={index}
-                      className="DocSearch-AskAiScreen-MessageContent-Reasoning DocSearch-shimmer"
-                    >
-                      <LoadingIcon className="DocSearch-AskAiScreen-SmallerLoadingIcon" />
-                      <span className="DocSearch-shimmer">{reasoningText}</span>
-                    </div>
-                  );
-                }
-
-                if (part.type === 'aggregated-tool-call') {
-                  return (
-                    <AggregatedSearchBlock key={index} queries={part.queries} />
-                  );
-                }
-
-                if (isAIToolPart(part)) {
-                  return (
-                    <ToolCall
-                      key={index}
-                      part={part}
-                      translations={{
-                        preToolCallText,
-                        searchingText,
-                        toolCallResultText,
-                        savedMemoryToolResultText,
-                        memoryToolResultText,
-                      }}
-                      tools={tools}
-                      memoryEnabled={memoryEnabled}
-                    />
-                  );
-                }
-
-                if (typeof part === 'string') {
-                  return (
-                    <MemoizedMarkdown
-                      key={index}
-                      content={part}
-                      copyButtonText={copyButtonText}
-                      copyButtonCopiedText={copyButtonCopiedText}
-                      isStreaming={false}
-                    />
-                  );
-                }
 
                 if (part.type === 'text') {
                   return (
@@ -300,14 +216,6 @@ const ConversationExchange = React.forwardRef<
               onFeedback={onFeedback}
             />
           </div>
-
-          {suggestedPrompts.length > 0 && (
-            <ConversationPromptSuggestions
-              title={suggestedPromptsTitleText}
-              suggestions={suggestedPrompts}
-              onSelectPromptSuggestion={onSelectPromptSuggestion}
-            />
-          )}
         </div>
       </div>
     );
@@ -319,12 +227,9 @@ export const ConversationScreen = memo(
     exchanges,
     translations = {},
     handleFeedback,
-    tools = EMPTY_TOOLS,
     status,
     conversations,
     streamError,
-    memoryEnabled,
-    onSelectPromptSuggestion,
   }: ConversationScreenProps): JSX.Element => {
     const {
       conversationDisclaimer = 'Answers are generated with AI which can make mistakes. Verify responses.',
@@ -358,13 +263,10 @@ export const ConversationScreen = memo(
               translations={translations}
               isLastExchange={isLastExchange}
               ref={isLastExchange ? mostRecentExchangeRef : null}
-              tools={tools}
               status={status}
               conversations={conversations}
               streamError={streamError}
-              memoryEnabled={memoryEnabled}
               onFeedback={handleFeedback}
-              onSelectPromptSuggestion={onSelectPromptSuggestion}
             />
           );
         })}
