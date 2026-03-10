@@ -42,7 +42,7 @@ export interface ScreenStateProps<
   ) => void;
   inputRef: React.MutableRefObject<HTMLInputElement | null>;
   hitComponent: DocSearchProps['hitComponent'];
-  indexName: string;
+  indexName: DocSearchProps['typesenseCollectionName'];
   disableUserPersonalization: boolean;
   resultsFooterComponent: DocSearchProps['resultsFooterComponent'];
   translations: ScreenStateTranslations;

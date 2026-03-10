@@ -111,10 +111,10 @@ export interface DocSearchProps {
    * className="DocSearch-Footer-Action" />`.
    */
   footerAction?: React.ReactNode;
-  /** Hook to wrap or modify the algolia search client. */
+  /** Hook to wrap or modify the Typesense search client. */
   transformSearchClient?: (
-    searchClient: DocSearchTransformClient
-  ) => DocSearchTransformClient;
+    searchClient: TypesenseDocsearchTransformClient
+  ) => TypesenseDocsearchTransformClient;
   /** Disable storage and usage of recent and favorite searches. */
   disableUserPersonalization?: boolean;
   /** Query string to prefill when opening the modal. */
