@@ -30,6 +30,13 @@ interface DocSearchHitHighlightResult {
   content: DocSearchHitAttributeHighlightResult;
   hierarchy: DocSearchHitHighlightResultHierarchy;
   hierarchy_camel: DocSearchHitHighlightResultHierarchy[];
+  'hierarchy.lvl0'?: DocSearchHitAttributeHighlightResult;
+  'hierarchy.lvl1'?: DocSearchHitAttributeHighlightResult;
+  'hierarchy.lvl2'?: DocSearchHitAttributeHighlightResult;
+  'hierarchy.lvl3'?: DocSearchHitAttributeHighlightResult;
+  'hierarchy.lvl4'?: DocSearchHitAttributeHighlightResult;
+  'hierarchy.lvl5'?: DocSearchHitAttributeHighlightResult;
+  'hierarchy.lvl6'?: DocSearchHitAttributeHighlightResult;
 }
 
 interface DocSearchHitAttributeSnippetResult {
@@ -41,6 +48,13 @@ interface DocSearchHitSnippetResult {
   content: DocSearchHitAttributeSnippetResult;
   hierarchy: DocSearchHitHighlightResultHierarchy;
   hierarchy_camel: DocSearchHitHighlightResultHierarchy[];
+  'hierarchy.lvl0'?: DocSearchHitAttributeSnippetResult;
+  'hierarchy.lvl1'?: DocSearchHitAttributeSnippetResult;
+  'hierarchy.lvl2'?: DocSearchHitAttributeSnippetResult;
+  'hierarchy.lvl3'?: DocSearchHitAttributeSnippetResult;
+  'hierarchy.lvl4'?: DocSearchHitAttributeSnippetResult;
+  'hierarchy.lvl5'?: DocSearchHitAttributeSnippetResult;
+  'hierarchy.lvl6'?: DocSearchHitAttributeSnippetResult;
 }
 
 export declare type DocSearchHit = {
@@ -60,6 +74,13 @@ export declare type DocSearchHit = {
     lvl5: string | null;
     lvl6: string | null;
   };
+  'hierarchy.lvl0'?: string;
+  'hierarchy.lvl1'?: string;
+  'hierarchy.lvl2'?: string | null;
+  'hierarchy.lvl3'?: string | null;
+  'hierarchy.lvl4'?: string | null;
+  'hierarchy.lvl5'?: string | null;
+  'hierarchy.lvl6'?: string | null;
   _highlightResult: DocSearchHitHighlightResult;
   _snippetResult: DocSearchHitSnippetResult;
   _rankingInfo?: {

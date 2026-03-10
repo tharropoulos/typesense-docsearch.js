@@ -12,6 +12,23 @@ const LEVELS = [
   'lvl6',
 ] as const;
 
+/**
+ * Typesense returns hierarchy levels as flat `hierarchy.lvlN` keys rather than
+ * the nested `hierarchy` object Algolia returns, so read both shapes.
+ */
+function getHierarchyValue<TItem extends StoredDocSearchHit>(
+  item: TItem,
+  lvl: (typeof LEVELS)[number]
+): string | null {
+  const nested = item.hierarchy?.[lvl];
+  if (typeof nested === 'string') {
+    return nested;
+  }
+
+  const flat = (item as Record<string, unknown>)[`hierarchy.${lvl}`];
+  return typeof flat === 'string' ? flat : null;
+}
+
 export function getHitItemBreadcrumbs<TItem extends StoredDocSearchHit>(
   item: TItem
 ): string {
@@ -20,9 +37,10 @@ export function getHitItemBreadcrumbs<TItem extends StoredDocSearchHit>(
       ? LEVELS.length
       : LEVELS.indexOf(item.type);
   return LEVELS.slice(0, currentIndex)
-    .map((lvl) =>
-      item.hierarchy[lvl] ? decodeHtmlEntities(item.hierarchy[lvl]) : null
-    )
+    .map((lvl) => {
+      const value = getHierarchyValue(item, lvl);
+      return value ? decodeHtmlEntities(value) : null;
+    })
     .filter(Boolean)
     .join(' > ');
 }
