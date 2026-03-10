@@ -1,4 +1,3 @@
-import type { UseChatHelpers } from '@ai-sdk/react';
 import type { AutocompleteApi, AutocompleteState } from '@algolia/autocomplete-core';
 import React, { type JSX, type RefObject } from 'react';
 
@@ -16,7 +15,7 @@ import { BackIcon } from './icons/BackIcon';
 import { Menu } from './Menu';
 import { ModalHeading } from './ModalHeading';
 import type { InternalDocSearchHit } from './types';
-import type { AIMessage, AskAiState } from './types/AskiAi';
+import type { AskAiState, AskAiStatus } from './types/AskiAi';
 
 export type SearchBoxTranslations = Partial<{
   clearButtonTitle: string;
@@ -49,7 +48,7 @@ interface SearchBoxProps
   onStopAskAiStreaming: () => Promise<void>;
   placeholder: string;
   isAskAiActive: boolean;
-  askAiStatus: UseChatHelpers<AIMessage>['status'];
+  askAiStatus: AskAiStatus;
   askAiError?: Error;
   isFromSelection: boolean;
   translations?: SearchBoxTranslations;
