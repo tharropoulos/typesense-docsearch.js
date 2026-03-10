@@ -18,6 +18,8 @@ export type StoredAskAiMessage = AIMessage & {
 
 export type StoredAskAiState = StoredDocSearchHit & {
   chatId?: string;
+  /** Typesense conversation id backing this stored conversation. */
+  conversationId?: string;
   stopped?: boolean;
   messages?: StoredAskAiMessage[];
 };

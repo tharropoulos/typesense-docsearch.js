@@ -1,17 +1,5 @@
-import { isDataUIPart, isToolOrDynamicToolUIPart, type TextUIPart } from 'ai';
-
 import type { StoredAskAiState } from '../types';
-import type {
-  AggregatedToolCallPart,
-  AIMessage,
-  AIMessagePart,
-  AIToolPart,
-  AlgoliaMCPSearchOutputPart,
-  SearchIndexOutputPart,
-  SearchOutputPart,
-  SearchToolPart,
-  ToolCalls,
-} from '../types/AskiAi';
+import type { AIMessage, AIMessagePart, AITextPart } from '../types/AskiAi';
 
 import {
   isTokenOutputLimitError,
@@ -89,15 +77,18 @@ export function extractLinksFromMessage(
 export const buildDummyAskAiHit = (
   query: string,
   messages: AIMessage[],
-  chatId?: string
+  conversationId?: string
 ): StoredAskAiState => {
   const textPart = messages[0].parts.find((part) => part.type === 'text');
   const sanitizedText = textPart?.text ? sanitizeUserInput(textPart.text) : '';
 
   return {
+    conversationId,
     query,
     objectID: sanitizedText,
-    chatId,
+    // Keep `chatId` populated so conversation restore keeps working for the
+    // upstream call sites that still look it up by that name.
+    chatId: conversationId,
     messages,
     type: 'askAI',
     anchor: 'stored',
@@ -118,14 +109,26 @@ export const buildDummyAskAiHit = (
   };
 };
 
-// answers can interleave text with tool calls, so join every text part
+// answers can interleave text with other parts, so join every text part
 // instead of stopping at the first one
 // see https://github.com/algolia/docsearch/issues/2782
-export const getMessageContent = (message: AIMessage | null): string =>
-  (message?.parts ?? [])
-    .filter((part): part is TextUIPart => part.type === 'text')
-    .map((part) => part.text)
-    .join('\n\n');
+export const getMessageContent = (
+  message: AIMessage | null
+): AITextPart | undefined => {
+  const textParts = (message?.parts ?? []).filter(
+    (part): part is AITextPart => part.type === 'text'
+  );
+
+  if (textParts.length === 0) {
+    return undefined;
+  }
+
+  return {
+    type: 'text',
+    text: textParts.map((part) => part.text).join('\n\n'),
+    state: textParts[textParts.length - 1].state,
+  };
+};
 
 /** Helper function to check if an error reports the conversation depth limit. */
 export function isThreadDepthError(error?: Error): boolean {
