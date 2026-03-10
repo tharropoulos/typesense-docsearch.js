@@ -14,19 +14,29 @@ import type { DocSearchProps } from '../DocSearch';
 import { DocSearchAI as DocSearchAIComponent } from '../DocSearchAI';
 import type { DocSearchAIProps } from '../DocSearchAI';
 
+const typesenseServerConfig = {
+  apiKey: 'test-key',
+  nodes: [{ host: 'localhost', port: 8108, protocol: 'http' as const }],
+};
+
 function DocSearch(props: Partial<DocSearchProps>): JSX.Element {
   return (
-    <DocSearchComponent appId="woo" apiKey="foo" indices={['bar']} {...props} />
+    <DocSearchComponent
+      typesenseCollectionName="docs"
+      typesenseServerConfig={typesenseServerConfig}
+      typesenseSearchParameters={{}}
+      {...props}
+    />
   );
 }
 
 function DocSearchAI(props: Partial<DocSearchAIProps>): JSX.Element {
   return (
     <DocSearchAIComponent
-      appId="woo"
-      apiKey="foo"
-      indices={['bar']}
-      askAi="assistant"
+      typesenseCollectionName="docs"
+      typesenseServerConfig={typesenseServerConfig}
+      typesenseSearchParameters={{}}
+      askAi={{ conversationModelId: 'conv-model-1' }}
       {...props}
     />
   );

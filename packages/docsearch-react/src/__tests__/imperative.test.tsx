@@ -10,6 +10,11 @@ import {
   type DocSearchRef,
 } from '../DocSearch';
 
+const typesenseServerConfig = {
+  apiKey: 'test-key',
+  nodes: [{ host: 'localhost', port: 8108, protocol: 'http' as const }],
+};
+
 type TestDocSearchProps = DocSearchCallbacks &
   Partial<DocSearchProps> & { refObj?: RefObject<DocSearchRef | null> };
 
@@ -20,9 +25,9 @@ function DocSearch(props: TestDocSearchProps): JSX.Element {
   return (
     <DocSearchComponent
       ref={ref}
-      appId="woo"
-      apiKey="foo"
-      indices={['bar']}
+      typesenseCollectionName="docs"
+      typesenseServerConfig={typesenseServerConfig}
+      typesenseSearchParameters={{}}
       {...props}
     />
   );

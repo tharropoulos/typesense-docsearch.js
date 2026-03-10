@@ -12,9 +12,19 @@ import '@testing-library/jest-dom/vitest';
 import { DocSearch as DocSearchComponent } from '../DocSearch';
 import type { DocSearchProps } from '../DocSearch';
 
+const typesenseServerConfig = {
+  apiKey: 'test-key',
+  nodes: [{ host: 'localhost', port: 8108, protocol: 'http' as const }],
+};
+
 function DocSearch(props: Partial<DocSearchProps>): JSX.Element {
   return (
-    <DocSearchComponent appId="woo" apiKey="foo" indices={['bar']} {...props} />
+    <DocSearchComponent
+      typesenseCollectionName="docs"
+      typesenseServerConfig={typesenseServerConfig}
+      typesenseSearchParameters={{}}
+      {...props}
+    />
   );
 }
 
