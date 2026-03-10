@@ -3,11 +3,11 @@ import { useEffect, useState } from 'react';
 
 import { SUGGESTED_QUETIONS_INDEX_NAME } from './constants';
 
-import type { DocSearchTransformClient, SuggestedQuestion, SuggestedQuestionHit } from '.';
+import type { SuggestedQuestion, SuggestedQuestionHit, TypesenseDocsearchTransformClient } from '.';
 
 type UseSuggestedQuestionsProps = {
   assistantId: string | null;
-  searchClient: DocSearchTransformClient;
+  searchClient: TypesenseDocsearchTransformClient;
   suggestedQuestionsEnabled?: boolean;
 };
 
@@ -19,13 +19,15 @@ export const useSuggestedQuestions = ({
   const [suggestedQuestions, setSuggestedQuestions] = useState<SuggestedQuestionHit[]>([]);
 
   useEffect(() => {
+    // eslint-disable-next-line no-warning-comments
+    // TODO: add typesense search parameters
     const getSuggestedQuestions = async (): Promise<void> => {
       const { results } = await searchClient.search<SuggestedQuestion>({
         requests: [
           {
-            indexName: SUGGESTED_QUETIONS_INDEX_NAME,
-            filters: `state:published AND assistantId:${assistantId}`,
-            hitsPerPage: 3,
+            collection: SUGGESTED_QUETIONS_INDEX_NAME,
+            filter_by: `state:published && assistantId:${assistantId}`,
+            per_page: 3,
           },
         ],
       });

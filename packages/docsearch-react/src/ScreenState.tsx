@@ -41,7 +41,7 @@ export interface ScreenStateProps<TItem extends BaseItem>
   canHandleAskAi: boolean;
   inputRef: React.MutableRefObject<HTMLInputElement | null>;
   hitComponent: DocSearchProps['hitComponent'];
-  indexName: DocSearchProps['indexName'];
+  indexName: DocSearchProps['typesenseCollectionName'];
   messages: UseChatHelpers<AIMessage>['messages'];
   status: UseChatHelpers<AIMessage>['status'];
   askAiError?: Error;
