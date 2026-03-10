@@ -1,6 +1,6 @@
 import React, { type JSX } from 'react';
 
-import { AlgoliaLogo } from './AlgoliaLogo';
+import { TypesenseLogo } from './TypesenseLogo';
 
 export type FooterTranslations = Partial<{
   selectText: string;
@@ -13,6 +13,7 @@ export type FooterTranslations = Partial<{
   backToSearchText: string;
   closeKeyAriaLabel: string;
   poweredByText: string;
+  searchByText: string;
 }>;
 
 type FooterProps = Partial<{
@@ -64,6 +65,7 @@ export function Footer({
     backToSearchText = 'Back to search',
     closeKeyAriaLabel = 'Escape key',
     poweredByText = 'Powered by',
+    searchByText = 'Search by',
   } = translations;
 
   const hasFooterAction =
@@ -114,7 +116,9 @@ export function Footer({
           <div className="DocSearch-Footer-Action">{footerAction}</div>
         )}
         <div className="DocSearch-Logo">
-          <AlgoliaLogo translations={{ poweredByText }} />
+          <TypesenseLogo
+            translations={{ searchByText: searchByText || poweredByText }}
+          />
         </div>
       </div>
     </>
