@@ -1,13 +1,36 @@
-import type { AutocompleteOptions, AutocompleteState } from '@algolia/autocomplete-core';
+/* eslint-disable prettier/prettier */
+import type {
+  AutocompleteOptions,
+  AutocompleteState,
+} from '@algolia/autocomplete-core';
 import { DocSearch as DocSearchProvider, useDocSearch } from '@docsearch/core';
-import type { DocSearchModalShortcuts, DocSearchRef, InitialAskAiMessage } from '@docsearch/core';
-import type { LiteClient, SearchParamsObject } from 'algoliasearch/lite';
+import type {
+  DocSearchModalShortcuts,
+  DocSearchRef,
+  InitialAskAiMessage,
+} from '@docsearch/core';
+import type {
+  LiteClient,
+  SearchParamsObject,
+  SearchResponses,
+} from 'algoliasearch/lite';
 import React, { type JSX } from 'react';
 import { createPortal } from 'react-dom';
+import type { ConfigurationOptions as TypesenseConfigurationOptions } from 'typesense/lib/Typesense/Configuration';
+import type {
+  DocumentSchema,
+  SearchParams as TypesenseSearchParams,
+} from 'typesense/lib/Typesense/Documents';
+import type { MultiSearchRequestSchema } from "typesense/lib/Typesense/Types"
 
 import { DocSearchButton } from './DocSearchButton';
 import { DocSearchModal } from './DocSearchModal';
-import type { DocSearchHit, DocSearchTheme, InternalDocSearchHit, StoredDocSearchHit } from './types';
+import type {
+  DocSearchHit,
+  DocSearchTheme,
+  InternalDocSearchHit,
+  StoredDocSearchHit,
+} from './types';
 
 import type { ButtonTranslations, ModalTranslations } from '.';
 
@@ -19,6 +42,12 @@ export type DocSearchTranslations = Partial<{
 }>;
 
 // The interface that describes the minimal implementation required for the algoliasearch client, when using the [`transformSearchClient`](https://docsearch.algolia.com/docs/api/#transformsearchclient) option.
+export type TypesenseDocsearchTransformClient = {
+  search: <T extends DocumentSchema>(searchMethodParams: {
+    requests: Array<MultiSearchRequestSchema<T, string>>;
+  }) => Promise<SearchResponses<T>>;
+};
+
 export type DocSearchTransformClient = {
   search: LiteClient['search'];
   addAlgoliaAgent: LiteClient['addAlgoliaAgent'];
@@ -34,7 +63,10 @@ export type AskAiSearchParameters = {
   distinct?: boolean | number | string;
 };
 
-export type AgentStudioSearchParameters = Record<string, Omit<AskAiSearchParameters, 'facetFilters'>>;
+export type AgentStudioSearchParameters = Record<
+  string,
+  Omit<AskAiSearchParameters, 'facetFilters'>
+>;
 
 export type DocSearchAskAi = {
   /**
@@ -65,7 +97,7 @@ export type DocSearchAskAi = {
   // HACK: This is a hack for testing staging, remove before releasing
   useStagingEnv?: boolean;
 } & (
-  | {
+    | {
       /**
        * **Experimental:** Whether to use Agent Studio as the chat backend.
        *
@@ -83,11 +115,11 @@ export type DocSearchAskAi = {
        */
       searchParameters?: AskAiSearchParameters;
     }
-  | {
+    | {
       agentStudio: false;
       searchParameters?: AskAiSearchParameters;
     }
-  | {
+    | {
       agentStudio: true;
       /**
        * The search parameters to use for the ask AI feature.
@@ -100,7 +132,7 @@ export type DocSearchAskAi = {
        */
       searchParameters?: AgentStudioSearchParameters;
     }
-);
+  );
 
 export interface DocSearchIndex {
   name: string;
@@ -109,19 +141,20 @@ export interface DocSearchIndex {
 
 export interface DocSearchProps {
   /**
-   * Algolia application id used by the search client.
+   * Typesense collection name to query.
    */
-  appId: string;
+  typesenseCollectionName: string;
   /**
-   * Public api key with search permissions for the index.
+   * Typesense server configuration for the client.
    */
-  apiKey: string;
+  typesenseServerConfig: TypesenseConfigurationOptions;
   /**
-   * Name of the algolia index to query.
-   *
-   * @deprecated `indexName` will be removed in a future version. Please use `indices` property going forward.
+   * Additional Typesense search parameters to merge into each query.
    */
-  indexName?: string;
+  typesenseSearchParameters: TypesenseSearchParams<
+    Record<string, unknown>,
+    string
+  >;
   /**
    * List of indices and _optional_ searchParameters to be used for search.
    *
@@ -175,7 +208,7 @@ export interface DocSearchProps {
     },
     helpers?: {
       html: (template: TemplateStringsArray, ...values: any[]) => any;
-    },
+    }
   ) => JSX.Element;
   /**
    * Custom component rendered at the bottom of the results panel.
@@ -190,12 +223,14 @@ export interface DocSearchProps {
     },
     helpers?: {
       html: (template: TemplateStringsArray, ...values: any[]) => any;
-    },
+    }
   ) => JSX.Element | null;
   /**
    * Hook to wrap or modify the algolia search client.
    */
-  transformSearchClient?: (searchClient: DocSearchTransformClient) => DocSearchTransformClient;
+  transformSearchClient?: (
+    searchClient: DocSearchTransformClient
+  ) => DocSearchTransformClient;
   /**
    * Disable storage and usage of recent and favorite searches.
    */
@@ -244,7 +279,10 @@ export interface DocSearchProps {
   keyboardShortcuts?: DocSearchModalShortcuts;
 }
 
-function DocSearchComponent(props: DocSearchProps, ref: React.ForwardedRef<DocSearchRef>): JSX.Element {
+function DocSearchComponent(
+  props: DocSearchProps,
+  ref: React.ForwardedRef<DocSearchRef>
+): JSX.Element {
   return (
     <DocSearchProvider {...props} ref={ref}>
       <DocSearchInner {...props} />
@@ -285,7 +323,7 @@ export function DocSearchInner(props: DocSearchProps): JSX.Element {
             onAskAiToggle={onAskAiToggle}
             onClose={closeModal}
           />,
-          props.portalContainer ?? document.body,
+          props.portalContainer ?? document.body
         )}
     </>
   );
