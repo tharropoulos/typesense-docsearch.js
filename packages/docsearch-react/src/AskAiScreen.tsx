@@ -145,15 +145,15 @@ function AskAiExchangeCard({
 
           {wasStopped && <p className="DocSearck-AskAiScreen-MessageContent-Stopped">{stoppedStreamingText}</p>}
         </div>
-        <div className="DocSearch-AskAiScreen-Answer-Footer">
-          <AskAiScreenFooterActions
-            id={userMessage?.id || exchange.id}
-            showActions={showActions}
-            latestAssistantMessageContent={assistantContent?.text || null}
-            translations={translations}
-            conversations={conversations}
-          />
-        </div>
+      </div>
+      <div className="DocSearch-AskAiScreen-Answer-Footer">
+        <AskAiScreenFooterActions
+          id={userMessage?.id || exchange.id}
+          showActions={showActions}
+          latestAssistantMessageContent={assistantContent?.text || null}
+          translations={translations}
+          conversations={conversations}
+        />
       </div>
 
       {/* Sources for this exchange */}
