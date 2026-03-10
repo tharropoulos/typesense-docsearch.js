@@ -117,14 +117,13 @@ const ConversationExchange = React.forwardRef<HTMLDivElement, ConversationnExcha
 
             {wasStopped && <p className="DocSearck-AskAiScreen-MessageContent-Stopped">{stoppedStreamingText}</p>}
           </div>
-
-          <div className="DocSearch-AskAiScreen-Answer-Footer">
-            <ConversationActions
-              showActions={showActions}
-              latestAssistantMessageContent={assistantContent?.text || null}
-              translations={translations}
-            />
-          </div>
+        </div>
+        <div className="DocSearch-AskAiScreen-Answer-Footer">
+          <ConversationActions
+            showActions={showActions}
+            latestAssistantMessageContent={assistantContent?.text || null}
+            translations={translations}
+          />
         </div>
 
         {urlsToDisplay.length > 0 ? (
