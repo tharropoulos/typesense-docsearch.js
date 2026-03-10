@@ -21,7 +21,7 @@ import type {
   DocumentSchema,
   SearchParams as TypesenseSearchParams,
 } from 'typesense/lib/Typesense/Documents';
-import type { MultiSearchRequestSchema } from "typesense/lib/Typesense/Types"
+import type { MultiSearchRequestSchema } from 'typesense/lib/Typesense/Types';
 
 import { DocSearchButton } from './DocSearchButton';
 import { DocSearchModal } from './DocSearchModal';
@@ -33,6 +33,7 @@ import type {
 } from './types';
 
 import type { ButtonTranslations, ModalTranslations } from '.';
+import type { TypesenseAskAiSearchParameters } from './types/AskiAi';
 
 export type { DocSearchRef } from '@docsearch/core';
 
@@ -54,85 +55,33 @@ export type DocSearchTransformClient = {
   transporter: Pick<LiteClient['transporter'], 'algoliaAgent'>;
 };
 
-// Define the specific search parameters allowed for Ask AI
-export type AskAiSearchParameters = {
-  facetFilters?: string[];
-  filters?: string;
-  attributesToRetrieve?: string[];
-  restrictSearchableAttributes?: string[];
-  distinct?: boolean | number | string;
-};
-
-export type AgentStudioSearchParameters = Record<
-  string,
-  Omit<AskAiSearchParameters, 'facetFilters'>
->;
-
 export type DocSearchAskAi = {
   /**
-   * The index name to use for the ask AI feature. Your assistant will search this index for relevant documents.
-   * If not provided, the index name will be used.
+   * Typesense conversational model id.
    */
-  indexName?: string;
+  conversationModelId: string;
   /**
-   * The API key to use for the ask AI feature. Your assistant will use this API key to search the index.
-   * If not provided, the API key will be used.
+   * Collection to query for conversational retrieval.
+   * Defaults to `typesenseCollectionName`.
    */
-  apiKey?: string;
+  collection?: string;
   /**
-   * The app ID to use for the ask AI feature. Your assistant will use this app ID to search the index.
-   * If not provided, the app ID will be used.
-   */
-  appId?: string;
-  /**
-   * The assistant ID to use for the ask AI feature.
-   */
-  assistantId: string;
-  /**
-   * Enables displaying suggested questions on Ask AI's new conversation screen.
+   * Query field to use for conversational retrieval.
    *
-   * @default false
+   * @default 'embedding'
    */
-  suggestedQuestions?: boolean;
-  // HACK: This is a hack for testing staging, remove before releasing
-  useStagingEnv?: boolean;
-} & (
-    | {
-      /**
-       * **Experimental:** Whether to use Agent Studio as the chat backend.
-       *
-       * This is an experimental feature and its API may change without notice in future releases.
-       * Use with caution in production environments.
-       *
-       * @default false
-       */
-      agentStudio?: never;
-      /**
-       * The search parameters to use for the ask AI feature.
-       *
-       * **NOTE**: If using `agentStudio = true`, the `searchParameters` object is
-       * keyed by the index name.
-       */
-      searchParameters?: AskAiSearchParameters;
-    }
-    | {
-      agentStudio: false;
-      searchParameters?: AskAiSearchParameters;
-    }
-    | {
-      agentStudio: true;
-      /**
-       * The search parameters to use for the ask AI feature.
-       * Keyed by the index name.
-       *
-       * @example
-       * {
-       *   "INDEX_NAME": { distinct: false }
-       * }
-       */
-      searchParameters?: AgentStudioSearchParameters;
-    }
-  );
+  queryBy?: string;
+  /**
+   * Fields excluded from the conversational payload.
+   *
+   * @default 'embedding'
+   */
+  excludeFields?: string;
+  /**
+   * Additional Typesense search parameters for the conversational retrieval request.
+   */
+  searchParameters?: TypesenseAskAiSearchParameters;
+};
 
 export interface DocSearchIndex {
   name: string;
@@ -162,9 +111,9 @@ export interface DocSearchProps {
    */
   indices?: Array<DocSearchIndex | string>;
   /**
-   * Configuration or assistant id to enable ask ai mode. Pass a string assistant id or a full config object.
+   * Configuration to enable Typesense conversational search.
    */
-  askAi?: DocSearchAskAi | string;
+  askAi?: DocSearchAskAi;
   /**
    * Intercept Ask AI requests (e.g. Submitting a prompt or selecting a suggested question).
    *

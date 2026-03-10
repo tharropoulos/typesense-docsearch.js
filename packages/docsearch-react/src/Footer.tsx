@@ -48,13 +48,13 @@ export function Footer({ translations = {}, isAskAiActive = false }: FooterProps
     backToSearchText = 'Back to search',
     closeKeyAriaLabel = 'Escape key',
     poweredByText = 'Powered by',
-    searchByText = 'Search by',
+    searchByText,
   } = translations;
 
   return (
     <>
       <div className="DocSearch-Logo">
-        <TypesenseLogo translations={{ searchByText: searchByText || poweredByText }} />
+        <TypesenseLogo translations={{ searchByText: searchByText ?? poweredByText }} />
       </div>
       <ul className="DocSearch-Commands">
         <li>
