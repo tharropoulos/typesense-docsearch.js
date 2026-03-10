@@ -6,7 +6,6 @@ import {
 } from '@algolia/autocomplete-core';
 import type { InitialAskAiMessage, OnAskAiToggle } from '@docsearch/core';
 import { useTheme } from '@docsearch/core/useTheme';
-import type { ChatRequestOptions } from 'ai';
 import type { SearchResponse } from 'algoliasearch/lite';
 import React, { type JSX } from 'react';
 import type { MultiSearchRequestSchema } from 'typesense/lib/Typesense/Types';
@@ -34,7 +33,6 @@ import type {
 import type { AIMessage, AskAiState } from './types/AskiAi';
 import { useAskAi } from './useAskAi';
 import { useSearchClient } from './useSearchClient';
-import { useSuggestedQuestions } from './useSuggestedQuestions';
 import { useTouchEvents } from './useTouchEvents';
 import { useTrapFocus } from './useTrapFocus';
 import { groupBy, identity, noop, removeHighlightTags, isModifierEvent, scrollTo as scrollToUtils } from './utils';
@@ -468,17 +466,8 @@ export function DocSearchModal({
 
   const searchClient = useSearchClient(transformSearchClient, typesenseServerConfig);
 
-  const askAiConfig = typeof askAi === 'object' ? askAi : null;
-  const askAiConfigurationId = typeof askAi === 'string' ? askAi : askAiConfig?.assistantId || null;
-  const askAiSearchParameters = askAiConfig?.searchParameters;
-  const askAiUseStagingEnv = askAiConfig?.useStagingEnv || false;
+  const askAiConfig = askAi ?? null;
   const [askAiState, setAskAiState] = React.useState<AskAiState>('initial');
-  const suggestedQuestions = useSuggestedQuestions({
-    assistantId: askAiConfigurationId,
-    searchClient,
-    suggestedQuestionsEnabled: askAiConfig?.suggestedQuestions,
-  });
-  const agentStudio = askAiConfig?.agentStudio ?? false;
 
   // Format the `indexes` to be used until `indexName` and `searchParameters` props are fully removed.
   const indexes: DocSearchIndex[] = [];
@@ -505,7 +494,7 @@ export function DocSearchModal({
   // storage
   const conversations = React.useRef(
     createStoredConversations<StoredAskAiState>({
-      key: `__DOCSEARCH_ASKAI_CONVERSATIONS__${askAiConfig?.indexName || defaultIndexName}`,
+      key: `__DOCSEARCH_ASKAI_CONVERSATIONS__${defaultIndexName}`,
       limit: 10,
     }),
   ).current;
@@ -524,14 +513,14 @@ export function DocSearchModal({
 
   const [stoppedStream, setStoppedStream] = React.useState(false);
 
-  const { messages, status, setMessages, sendMessage, stopAskAiStreaming, askAiError, sendFeedback } = useAskAi({
-    assistantId: askAiConfigurationId,
-    apiKey: askAiConfig?.apiKey ?? 'testkey',
-    appId: askAiConfig?.appId ?? 'testappid',
-    indexName: askAiConfig?.indexName || defaultIndexName,
-    searchParameters: askAiSearchParameters,
-    useStagingEnv: askAiUseStagingEnv,
-    agentStudio,
+  const { messages, status, setMessages, sendMessage, stopAskAiStreaming, askAiError } = useAskAi({
+    typesenseServerConfig,
+    storageKey: `__DOCSEARCH_ASKAI_CONVERSATIONS__${defaultIndexName}`,
+    collection: askAiConfig?.collection || defaultIndexName,
+    conversationModelId: askAiConfig?.conversationModelId || '',
+    queryBy: askAiConfig?.queryBy || 'embedding',
+    excludeFields: askAiConfig?.excludeFields || 'embedding',
+    searchParameters: askAiConfig?.searchParameters,
   });
 
   const prevStatus = React.useRef(status);
@@ -544,13 +533,14 @@ export function DocSearchModal({
       // if we stopped the stream, store it on the most recent message
       if (stoppedStream && messages.at(-1)) {
         messages.at(-1)!.metadata = {
+          ...messages.at(-1)!.metadata,
           stopped: true,
         };
       }
 
       for (const part of messages[0].parts) {
         if (part.type === 'text') {
-          conversations.add(buildDummyAskAiHit(part.text, messages));
+          conversations.add(buildDummyAskAiHit(part.text, messages, messages.at(-1)?.metadata?.conversationId));
         }
       }
     }
@@ -659,26 +649,9 @@ export function DocSearchModal({
 
       setStoppedStream(false);
 
-      const messageOptions: ChatRequestOptions = {};
-
-      if (suggestedQuestion) {
-        messageOptions.body = {
-          suggestedQuestionId: suggestedQuestion.objectID,
-        };
-      }
-
-      sendMessage(
-        {
-          role: 'user',
-          parts: [
-            {
-              type: 'text',
-              text: query,
-            },
-          ],
-        },
-        messageOptions,
-      );
+      void sendMessage(query, {
+        suggestedQuestionId: suggestedQuestion?.objectID,
+      });
 
       if (dropdownRef.current) {
         // some test environments (like jsdom) don't implement element.scrollTo
@@ -700,13 +673,9 @@ export function DocSearchModal({
   );
 
   // feedback handler
-  const handleFeedbackSubmit = React.useCallback(
-    async (messageId: string, thumbs: 0 | 1): Promise<void> => {
-      if (!askAiConfigurationId) return;
-      await sendFeedback(messageId, thumbs);
-    },
-    [askAiConfigurationId, sendFeedback],
-  );
+  const handleFeedbackSubmit = React.useCallback(async (_messageId: string, _thumbs: 0 | 1): Promise<void> => {
+    return;
+  }, []);
 
   if (!autocompleteRef.current) {
     autocompleteRef.current = createAutocomplete({
@@ -1041,9 +1010,8 @@ export function DocSearchModal({
               hasCollections={hasCollections}
               askAiState={askAiState}
               selectAskAiQuestion={handleSelectAskAiQuestion}
-              suggestedQuestions={suggestedQuestions}
+              suggestedQuestions={[]}
               selectSuggestedQuestion={selectSuggestedQuestion}
-              agentStudio={agentStudio}
               onAskAiToggle={onAskAiToggle}
               onNewConversation={handleNewConversation}
               onItemClick={(item, event) => {
