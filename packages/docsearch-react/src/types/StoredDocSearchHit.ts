@@ -9,6 +9,7 @@ export type StoredAskAiMessage = AIMessage & {
 };
 
 export type StoredAskAiState = StoredDocSearchHit & {
+  conversationId?: string;
   stopped?: boolean;
   messages?: StoredAskAiMessage[];
 };

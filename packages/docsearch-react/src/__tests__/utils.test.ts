@@ -95,33 +95,17 @@ describe('utils', () => {
 
     it('ignores parts that arent text', () => {
       const text = 'See [DocSearch](https://docsearch.algolia.com)';
-      const message: AIMessage = {
+      const message = {
         id: '123',
         role: 'assistant',
         parts: [
-          {
-            type: 'reasoning',
-            state: 'done',
-            text: 'Need to search using the [Algolia](https://algolia.com) searchIndex tool',
-          },
-          {
-            type: 'tool-searchIndex',
-            input: {
-              query: 'What is DocSearch',
-            },
-            state: 'output-available',
-            output: {
-              query: 'DocSearch',
-              hits: [],
-            },
-            toolCallId: 'searchIndex-testing',
-          },
+          { type: 'reasoning', text: 'Need to search using the [Algolia](https://algolia.com) searchIndex tool' },
           {
             type: 'text',
             text,
           },
         ],
-      };
+      } as unknown as AIMessage;
 
       expect(extractLinksFromMessage(message)).toEqual([{ url: 'https://docsearch.algolia.com', title: 'DocSearch' }]);
     });

@@ -1,6 +1,6 @@
 import React, { type JSX } from 'react';
 
-type TypesenseLogoTranslations = Partial<{
+export type TypesenseLogoTranslations = Partial<{
   searchByText: string;
 }>;
 

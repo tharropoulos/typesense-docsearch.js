@@ -2,12 +2,11 @@ import type { SidepanelShortcuts, InitialAskAiMessage } from '@docsearch/core';
 import React, { useCallback } from 'react';
 import type { JSX } from 'react';
 
-import { AlgoliaLogo, type AlgoliaLogoTranslations } from '../AlgoliaLogo';
-import type { DocSearchSidepanelProps, SidepanelSearchParameters } from '../Sidepanel';
+import type { DocSearchSidepanelProps } from '../Sidepanel';
 import type { StoredAskAiState, SuggestedQuestionHit } from '../types';
+import { TypesenseLogo, type TypesenseLogoTranslations } from '../TypesenseLogo';
 import { useAskAi } from '../useAskAi';
-import { useSearchClient } from '../useSearchClient';
-import { useSuggestedQuestions } from '../useSuggestedQuestions';
+import { useIsMobile } from '../useIsMobile';
 import { buildDummyAskAiHit } from '../utils/ai';
 
 import { ConversationHistoryScreen } from './ConversationHistoryScreen';
@@ -16,7 +15,6 @@ import { ConversationScreen } from './ConversationScreen';
 import type { NewConversationScreenTranslations } from './NewConversationScreen';
 import { NewConversationScreen } from './NewConversationScreen';
 import { PromptForm, type PromptFormTranslations } from './PromptForm';
-import { setSidepanelSearchClient } from './setSidepanelSearchClient';
 import type { HeaderTranslations } from './SidepanelHeader';
 import { SidepanelHeader } from './SidepanelHeader';
 import type { PanelSide, PanelVariant, SidepanelState } from './types';
@@ -56,9 +54,9 @@ export type SidepanelTranslations = Partial<{
    **/
   newConversationScreen: NewConversationScreenTranslations;
   /**
-   * Translation text for the Algolia logo.
+   * Translation text for the Typesense logo.
    **/
-  logo: AlgoliaLogoTranslations;
+  logo: TypesenseLogoTranslations;
 }>;
 
 export type SidepanelProps = {
@@ -103,8 +101,7 @@ export type SidepanelProps = {
   portalContainer?: DocumentFragment | Element | null;
   /**
    * Enables displaying suggested questions on new conversation screen.
-   *
-   * @default false
+   * Reserved for a future Typesense-native suggestions source.
    */
   suggestedQuestions?: boolean;
   /**
@@ -117,13 +114,10 @@ export type SidepanelProps = {
    * @default `{ 'Ctrl/Cmd+I': true }`
    */
   keyboardShortcuts?: SidepanelShortcuts;
-  // HACK: This is a hack for testing staging, remove before releasing
-  useStagingEnv?: boolean;
 };
 
 type Props = Omit<DocSearchSidepanelProps, 'button' | 'panel'> &
-  SidepanelProps &
-  SidepanelSearchParameters & {
+  SidepanelProps & {
     isOpen?: boolean;
     onOpen: () => void;
     onClose: () => void;
@@ -135,22 +129,17 @@ function SidepanelInner(
     isOpen = false,
     onOpen,
     onClose,
-    assistantId,
-    apiKey,
-    appId,
-    indexName,
+    typesenseServerConfig,
+    typesenseCollectionName,
+    askAi,
     variant = 'floating',
-    searchParameters,
     pushSelector,
     width,
     expandedWidth,
-    suggestedQuestions: suggestedQuestionsEnabled = false,
     translations = {},
     keyboardShortcuts,
     side = 'right',
     initialMessage,
-    useStagingEnv = false,
-    agentStudio = false,
   }: Props,
   ref: React.ForwardedRef<SidepanelRef>,
 ): JSX.Element {
@@ -159,6 +148,7 @@ function SidepanelInner(
   const [stoppedStreaming, setStoppedStreaming] = React.useState(false);
   const sidepanelContainerRef = React.useRef<HTMLDivElement>(null);
   const promptInputRef = React.useRef<HTMLTextAreaElement>(null);
+  const isMobile = useIsMobile();
 
   const expectedWidth = useSidepanelWidth({
     isExpanded,
@@ -172,8 +162,6 @@ function SidepanelInner(
     setIsExpanded(!isExpanded);
   }, [isExpanded]);
 
-  const searchClient = useSearchClient(appId, apiKey, setSidepanelSearchClient);
-
   const {
     status,
     sendMessage,
@@ -183,30 +171,24 @@ function SidepanelInner(
     setMessages,
     conversations,
     messages,
-    sendFeedback,
     askAiError,
   } = useAskAi({
-    appId,
-    indexName,
-    assistantId,
-    apiKey,
-    searchParameters,
-    useStagingEnv,
-    agentStudio,
+    typesenseServerConfig,
+    storageKey: `__DOCSEARCH_ASKAI_CONVERSATIONS__${typesenseCollectionName}`,
+    collection: askAi.collection || typesenseCollectionName,
+    conversationModelId: askAi.conversationModelId,
+    queryBy: askAi.queryBy || 'embedding',
+    excludeFields: askAi.excludeFields || 'embedding',
+    searchParameters: askAi.searchParameters,
   });
-
-  const suggestedQuestions = useSuggestedQuestions({
-    assistantId,
-    suggestedQuestionsEnabled,
-    searchClient,
-  });
+  const suggestedQuestions: SuggestedQuestionHit[] = [];
 
   const prevStatus = React.useRef(status);
 
   const handleSend = (prompt: string): void => {
     setStoppedStreaming(false);
 
-    sendMessage({ text: prompt });
+    void sendMessage(prompt);
     setSidepanelState('conversation');
   };
 
@@ -218,14 +200,7 @@ function SidepanelInner(
   const handleSelectQuestion = (question: SuggestedQuestionHit): void => {
     setStoppedStreaming(false);
     setMessages([]);
-    sendMessage(
-      { text: question.question },
-      {
-        body: {
-          suggestedQuestionId: question.objectID,
-        },
-      },
-    );
+    void sendMessage(question.question, { suggestedQuestionId: question.objectID });
     setSidepanelState('conversation');
   };
 
@@ -239,7 +214,7 @@ function SidepanelInner(
       if (conversation.messages) {
         setMessages(conversation.messages);
       } else if (conversation.query) {
-        sendMessage({ text: conversation.query });
+        void sendMessage(conversation.query);
       }
 
       setSidepanelState('conversation');
@@ -282,13 +257,14 @@ function SidepanelInner(
     if (prevStatus.current === 'streaming' && status === 'ready') {
       if (stoppedStreaming && messages.at(-1)) {
         messages.at(-1)!.metadata = {
+          ...messages.at(-1)!.metadata,
           stopped: true,
         };
       }
 
       for (const part of messages[0].parts) {
         if (part.type === 'text') {
-          conversations.add(buildDummyAskAiHit(part.text, messages));
+          conversations.add(buildDummyAskAiHit(part.text, messages, messages.at(-1)?.metadata?.conversationId));
         }
       }
     }
@@ -326,27 +302,26 @@ function SidepanelInner(
       handleSelectConversation(selectedConversation);
     } else {
       setMessages([]);
-      sendMessage(
-        {
-          text: initialMessage.query,
-        },
-        initialMessage.suggestedQuestionId
-          ? {
-              body: {
-                suggestedQuestionId: initialMessage.suggestedQuestionId,
-              },
-            }
-          : {},
-      );
+      void sendMessage(initialMessage.query, {
+        suggestedQuestionId: initialMessage.suggestedQuestionId,
+      });
       setSidepanelState('conversation');
     }
   }, [initialMessage, sendMessage, conversations, handleSelectConversation, setMessages]);
 
-  // eslint-disable-next-line no-warning-comments
-  // FIX: Renable autofocus on open once mobile focus issue is solved
-  // React.useEffect(() => {
-  //   promptInputRef.current?.focus();
-  // }, [isOpen]);
+  // Autofocus the prompt input when the sidepanel opens and blur it when
+  // it closes. Disabled on mobile because focusing the textarea triggers the
+  // virtual keyboard which disrupts the layout — this is a known issue that
+  // has not been resolved yet.
+  React.useEffect(() => {
+    if (isOpen && !isMobile) {
+      promptInputRef.current?.focus();
+    }
+
+    if (!isOpen) {
+      promptInputRef.current?.blur();
+    }
+  }, [isOpen, isMobile]);
 
   return (
     <div
@@ -384,10 +359,8 @@ function SidepanelInner(
               exchanges={exchanges}
               status={status}
               conversations={conversations}
-              handleFeedback={sendFeedback}
               translations={translations.conversationScreen}
               streamError={askAiError}
-              agentStudio={agentStudio}
             />
           )}
           {sidepanelState === 'conversation-history' && (
@@ -404,7 +377,7 @@ function SidepanelInner(
         />
         <footer className="DocSearch-Sidepanel-Footer">
           <span className="DocSearch-Logo DocSearch-Sidepanel--powered-by">
-            <AlgoliaLogo translations={translations.logo} />
+            <TypesenseLogo translations={translations.logo} />
           </span>
         </footer>
       </aside>

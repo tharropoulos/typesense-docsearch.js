@@ -7,13 +7,26 @@ import '@testing-library/jest-dom/vitest';
 
 import { type DocSearchProps, DocSearch as DocSearchComponent, type DocSearchRef } from '../DocSearch';
 
+const typesenseServerConfig = {
+  apiKey: 'test-key',
+  nodes: [{ host: 'localhost', port: 8108, protocol: 'http' as const }],
+};
+
 type TestDocSearchProps = DocSearchCallbacks & Partial<DocSearchProps> & { refObj?: RefObject<DocSearchRef | null> };
 
 function DocSearch(props: TestDocSearchProps): JSX.Element {
   const internalRef = useRef<DocSearchRef>(null);
   const ref = props.refObj ?? internalRef;
 
-  return <DocSearchComponent ref={ref} appId="woo" apiKey="foo" indexName="bar" {...props} />;
+  return (
+    <DocSearchComponent
+      ref={ref}
+      typesenseCollectionName="docs"
+      typesenseServerConfig={typesenseServerConfig}
+      typesenseSearchParameters={{}}
+      {...props}
+    />
+  );
 }
 
 describe('imperative handle', () => {

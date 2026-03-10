@@ -7,8 +7,20 @@ import '@testing-library/jest-dom/vitest';
 import { DocSearch as DocSearchComponent } from '../DocSearch';
 import type { DocSearchProps } from '../DocSearch';
 
+const typesenseServerConfig = {
+  apiKey: 'test-key',
+  nodes: [{ host: 'localhost', port: 8108, protocol: 'http' as const }],
+};
+
 function DocSearch(props: Partial<DocSearchProps>): JSX.Element {
-  return <DocSearchComponent appId="woo" apiKey="foo" indexName="bar" {...props} />;
+  return (
+    <DocSearchComponent
+      typesenseCollectionName="docs"
+      typesenseServerConfig={typesenseServerConfig}
+      typesenseSearchParameters={{}}
+      {...props}
+    />
+  );
 }
 
 // mock empty response
@@ -264,7 +276,7 @@ describe('api', () => {
 
   describe('ask AI integration', () => {
     it('updates placeholder when ask AI is available', async () => {
-      render(<DocSearch askAi="assistant" />);
+      render(<DocSearch askAi={{ conversationModelId: 'conv-model-1' }} />);
 
       await act(async () => {
         fireEvent.click(await screen.findByText('Search'));
@@ -276,7 +288,7 @@ describe('api', () => {
     it('opens ask AI screen and returns to search', async () => {
       render(
         <DocSearch
-          askAi="assistant"
+          askAi={{ conversationModelId: 'conv-model-1' }}
           transformSearchClient={(searchClient) => ({
             ...searchClient,
             search: noResultSearch,
@@ -300,8 +312,9 @@ describe('api', () => {
 
       expect(document.querySelector('.DocSearch-AskAiScreen')).toBeInTheDocument();
 
-      // could be "Answering..." or "Ask another question..."
-      expect(screen.getByText('Answering...')).toBeInTheDocument();
+      expect(
+        screen.queryByText('Answering...') ?? screen.getByPlaceholderText('Ask another question...'),
+      ).toBeInTheDocument();
     });
   });
 

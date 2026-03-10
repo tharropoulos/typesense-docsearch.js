@@ -1,4 +1,3 @@
-import type { UseChatHelpers } from '@ai-sdk/react';
 import type { AutocompleteApi, AutocompleteState, BaseItem } from '@algolia/autocomplete-core';
 import React from 'react';
 
@@ -18,7 +17,7 @@ import type { StartScreenTranslations } from './StartScreen';
 import { StartScreen } from './StartScreen';
 import type { StoredSearchPlugin } from './stored-searches';
 import type { InternalDocSearchHit, StoredAskAiState, StoredDocSearchHit, SuggestedQuestionHit } from './types';
-import type { AIMessage, AskAiState } from './types/AskiAi';
+import type { AIMessage, AskAiState, AskAiStatus } from './types/AskiAi';
 
 export type ScreenStateTranslations = Partial<{
   errorScreen: ErrorScreenTranslations;
@@ -42,8 +41,8 @@ export interface ScreenStateProps<TItem extends BaseItem>
   inputRef: React.MutableRefObject<HTMLInputElement | null>;
   hitComponent: DocSearchProps['hitComponent'];
   indexName: DocSearchProps['typesenseCollectionName'];
-  messages: UseChatHelpers<AIMessage>['messages'];
-  status: UseChatHelpers<AIMessage>['status'];
+  messages: AIMessage[];
+  status: AskAiStatus;
   askAiError?: Error;
   disableUserPersonalization: boolean;
   resultsFooterComponent: DocSearchProps['resultsFooterComponent'];
@@ -56,7 +55,6 @@ export interface ScreenStateProps<TItem extends BaseItem>
   suggestedQuestions: SuggestedQuestionHit[];
   selectSuggestedQuestion: (question: SuggestedQuestionHit) => void;
   onNewConversation: () => void;
-  agentStudio?: boolean;
 }
 
 export const ScreenState = React.memo(
@@ -83,7 +81,6 @@ export const ScreenState = React.memo(
           status={props.status}
           askAiError={props.askAiError}
           translations={translations?.askAiScreen}
-          agentStudio={props.agentStudio}
         />
       );
     }
