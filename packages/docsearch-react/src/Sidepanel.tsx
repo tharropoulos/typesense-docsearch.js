@@ -1,69 +1,29 @@
 import { DocSearch, useDocSearch } from '@docsearch/core';
 import type { DocSearchCallbacks, DocSearchRef, DocSearchTheme, SidepanelShortcuts } from '@docsearch/core';
+import type { ConfigurationOptions as TypesenseConfigurationOptions } from 'typesense/lib/Typesense/Configuration';
 import type { JSX } from 'react';
 import React from 'react';
 import { createPortal } from 'react-dom';
 
-import type { AgentStudioSearchParameters, AskAiSearchParameters } from './DocSearch';
+import type { DocSearchAskAi } from './DocSearch';
 import type { SidepanelButtonProps, SidepanelProps as SidepanelPanelProps } from './Sidepanel/index';
 import { SidepanelButton, Sidepanel } from './Sidepanel/index';
 
 export type { DocSearchRef, DocSearchCallbacks } from '@docsearch/core';
 
-export type SidepanelSearchParameters =
-  | {
-      /**
-       * **Experimental:** Whether to use Agent Studio as the chat backend.
-       *
-       * This is an experimental feature and its API may change without notice in future releases.
-       * Use with caution in production environments.
-       *
-       * @default false
-       */
-      agentStudio?: never;
-      /**
-       * The search parameters to use for the ask AI feature.
-       *
-       * **NOTE**: If using `agentStudio = true`, the `searchParameters` object is
-       * keyed by the index name.
-       */
-      searchParameters?: AskAiSearchParameters;
-    }
-  | {
-      agentStudio: false;
-      searchParameters?: AskAiSearchParameters;
-    }
-  | {
-      agentStudio: true;
-      /**
-       * The search parameters to use for the ask AI feature.
-       * Keyed by the index name.
-       *
-       * @example
-       * {
-       *   "INDEX_NAME": { distinct: false }
-       * }
-       */
-      searchParameters?: AgentStudioSearchParameters;
-    };
-
 export type DocSearchSidepanelProps = DocSearchCallbacks & {
   /**
-   * The assistant ID to use for the ask AI feature.
+   * Typesense server configuration used by sidepanel search.
    */
-  assistantId: string;
+  typesenseServerConfig: TypesenseConfigurationOptions;
   /**
-   * Public api key with search permissions for the index.
+   * Typesense collection name used for keyword search.
    */
-  apiKey: string;
+  typesenseCollectionName: string;
   /**
-   * Algolia application id used by the search client.
+   * Typesense conversational search configuration.
    */
-  appId: string;
-  /**
-   * The index name to use for the ask AI feature. Your assistant will search this index for relevant documents.
-   */
-  indexName: string;
+  askAi: DocSearchAskAi;
   /**
    * Configuration for keyboard shortcuts. Allows enabling/disabling specific shortcuts.
    *
@@ -86,10 +46,8 @@ export type DocSearchSidepanelProps = DocSearchCallbacks & {
   panel?: Omit<SidepanelPanelProps, 'keyboardShortcuts'>;
 };
 
-type SidepanelProps = DocSearchSidepanelProps & SidepanelSearchParameters;
-
 function DocSearchSidepanelComponent(
-  { keyboardShortcuts, theme, onReady, onOpen, onClose, onSidepanelOpen, onSidepanelClose, ...props }: SidepanelProps,
+  { keyboardShortcuts, theme, onReady, onOpen, onClose, onSidepanelOpen, onSidepanelClose, ...props }: DocSearchSidepanelProps,
   ref: React.ForwardedRef<DocSearchRef>,
 ): JSX.Element {
   return (
