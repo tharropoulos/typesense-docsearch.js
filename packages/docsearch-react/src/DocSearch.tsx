@@ -4,9 +4,19 @@ import type {
 } from '@algolia/autocomplete-core';
 import { DocSearch as DocSearchProvider, useDocSearch } from '@docsearch/core';
 import type { DocSearchModalShortcuts, DocSearchRef } from '@docsearch/core';
-import type { LiteClient, SearchParamsObject } from 'algoliasearch/lite';
+import type {
+  LiteClient,
+  SearchParamsObject,
+  SearchResponses,
+} from 'algoliasearch/lite';
 import React, { type JSX } from 'react';
 import { createPortal } from 'react-dom';
+import type { ConfigurationOptions as TypesenseConfigurationOptions } from 'typesense/lib/Typesense/Configuration';
+import type {
+  DocumentSchema,
+  SearchParams as TypesenseSearchParams,
+} from 'typesense/lib/Typesense/Documents';
+import type { MultiSearchRequestSchema } from 'typesense/lib/Typesense/Types';
 
 import { DocSearchButton } from './DocSearchButton';
 import type { ButtonTranslations } from './DocSearchButton';
@@ -27,6 +37,12 @@ export type DocSearchTranslations = Partial<{
 }>;
 
 // The interface that describes the minimal implementation required for the algoliasearch client, when using the [`transformSearchClient`](https://docsearch.algolia.com/docs/api/#transformsearchclient) option.
+export type TypesenseDocsearchTransformClient = {
+  search: <T extends DocumentSchema>(searchMethodParams: {
+    requests: Array<MultiSearchRequestSchema<T, string>>;
+  }) => Promise<SearchResponses<T>>;
+};
+
 export type DocSearchTransformClient = {
   search: LiteClient['search'];
   addAlgoliaAgent: LiteClient['addAlgoliaAgent'];
@@ -53,10 +69,15 @@ export interface ResultsFooterComponentProps {
 }
 
 export interface DocSearchProps {
-  /** Algolia application id used by the search client. */
-  appId: string;
-  /** Public api key with search permissions for the index. */
-  apiKey: string;
+  /** Typesense collection name to query. */
+  typesenseCollectionName: string;
+  /** Typesense server configuration for the client. */
+  typesenseServerConfig: TypesenseConfigurationOptions;
+  /** Additional Typesense search parameters to merge into each query. */
+  typesenseSearchParameters: TypesenseSearchParams<
+    Record<string, unknown>,
+    string
+  >;
   /**
    * List of indices and _optional_ searchParameters to be used for search.
    *
@@ -146,11 +167,11 @@ export interface DocSearchProps {
 }
 
 function DocSearchComponent(
-  { appId, apiKey, ...props }: DocSearchProps,
+  props: DocSearchProps,
   ref: React.ForwardedRef<DocSearchRef>
 ): JSX.Element {
   return (
-    <DocSearchProvider {...props} appId={appId} apiKey={apiKey} ref={ref}>
+    <DocSearchProvider {...props} ref={ref}>
       <DocSearchInner {...props} />
     </DocSearchProvider>
   );
@@ -158,9 +179,7 @@ function DocSearchComponent(
 
 export const DocSearch = React.forwardRef(DocSearchComponent);
 
-export function DocSearchInner(
-  props: Omit<DocSearchProps, 'appId' | 'apiKey'>
-): JSX.Element {
+export function DocSearchInner(props: DocSearchProps): JSX.Element {
   const {
     searchButtonRef,
     keyboardShortcuts,
@@ -168,13 +187,7 @@ export function DocSearchInner(
     initialQuery,
     openModal,
     closeModal,
-    appId,
-    apiKey,
   } = useDocSearch();
-
-  if (!appId || !apiKey) {
-    throw new Error('`DocSearch` requires `appId` and `apiKey` props.');
-  }
 
   return (
     <>
@@ -188,8 +201,6 @@ export function DocSearchInner(
         createPortal(
           <DocSearchModal
             {...props}
-            appId={appId}
-            apiKey={apiKey}
             initialScrollY={window.scrollY}
             initialQuery={initialQuery}
             translations={props?.translations?.modal}
