@@ -9,6 +9,7 @@ import { useTheme } from '@docsearch/core/useTheme';
 import type { ChatRequestOptions } from 'ai';
 import type { SearchResponse } from 'algoliasearch/lite';
 import React, { type JSX } from 'react';
+import type { MultiSearchRequestSchema } from 'typesense/lib/Typesense/Types';
 
 import { MAX_QUERY_SIZE } from './constants';
 import type { DocSearchIndex, DocSearchProps } from './DocSearch';
@@ -283,9 +284,125 @@ const buildQuerySources = async ({
   }
 };
 
+const buildTypesenseQuerySources = async ({
+  query,
+  state: sourcesState,
+  setContext,
+  setStatus,
+  searchClient,
+  typesenseCollectionName,
+  typesenseSearchParameters,
+  maxResultsPerGroup,
+  transformItems = identity,
+  saveRecentSearch,
+  onClose,
+}: {
+  query: string;
+  state: BuildQuerySourcesState;
+  setContext: (context: Partial<DocSearchState<InternalDocSearchHit>['context']>) => void;
+  setStatus: (status: DocSearchState<InternalDocSearchHit>['status']) => void;
+  searchClient: ReturnType<typeof useSearchClient>;
+  typesenseCollectionName: string;
+  typesenseSearchParameters?: DocSearchProps['typesenseSearchParameters'];
+  maxResultsPerGroup?: number;
+  transformItems?: DocSearchProps['transformItems'];
+  saveRecentSearch: (item: InternalDocSearchHit) => void;
+  onClose: () => void;
+}): Promise<Array<AutocompleteSource<InternalDocSearchHit>>> => {
+  try {
+    const typesenseRequest: MultiSearchRequestSchema<DocSearchHit, string> = {
+      collection: typesenseCollectionName,
+      q: query,
+      query_by:
+        'hierarchy.lvl0,hierarchy.lvl1,hierarchy.lvl2,hierarchy.lvl3,hierarchy.lvl4,hierarchy.lvl5,hierarchy.lvl6,content',
+      include_fields:
+        'hierarchy.lvl0,hierarchy.lvl1,hierarchy.lvl2,hierarchy.lvl3,hierarchy.lvl4,hierarchy.lvl5,hierarchy.lvl6,content,anchor,url,type,id',
+      highlight_full_fields:
+        'hierarchy.lvl0,hierarchy.lvl1,hierarchy.lvl2,hierarchy.lvl3,hierarchy.lvl4,hierarchy.lvl5,hierarchy.lvl6,content',
+      group_by: 'url',
+      group_limit: 3,
+      sort_by: 'item_priority:desc',
+      snippet_threshold: 8,
+      highlight_affix_num_tokens: 4,
+      ...(typesenseSearchParameters ?? {}),
+    };
+
+    const { results } = await searchClient.search<DocSearchHit>({
+      requests: [typesenseRequest],
+    });
+
+    const result = results[0] as SearchResponse<DocSearchHit>;
+    const { hits, nbHits } = result;
+    const transformedHits = transformItems(hits);
+    const sources = groupBy<DocSearchHit>(transformedHits, (hit) => removeHighlightTags(hit), maxResultsPerGroup);
+
+    // We store the `lvl0`s to display them as search suggestions
+    // in the "no results" screen.
+    if ((sourcesState.context.searchSuggestions as any[]).length < Object.keys(sources).length) {
+      setContext({
+        searchSuggestions: {
+          ...(sourcesState.context.searchSuggestions ?? []),
+          ...Object.keys(sources),
+        },
+      });
+    }
+
+    if (nbHits) {
+      const currentNbHits = sourcesState.context.nbHits as number | undefined;
+      setContext({
+        nbHits: (currentNbHits ?? 0) + nbHits,
+      });
+    }
+
+    return Object.values<DocSearchHit[]>(sources).map((items, index) => {
+      return {
+        sourceId: `hits_${typesenseCollectionName}_${index}`,
+        onSelect({ item, event }): void {
+          saveRecentSearch(item);
+          if (!isModifierEvent(event)) {
+            onClose();
+          }
+        },
+        getItemUrl({ item }): string {
+          return item.url;
+        },
+        getItems(): InternalDocSearchHit[] {
+          return Object.values(groupBy(items, (item) => item.hierarchy.lvl1, maxResultsPerGroup))
+            .map((groupedHits) =>
+              groupedHits.map((item) => {
+                let parent: InternalDocSearchHit | null = null;
+
+                const potentialParent = groupedHits.find(
+                  (siblingItem) => siblingItem.type === 'lvl1' && siblingItem.hierarchy.lvl1 === item.hierarchy.lvl1,
+                ) as InternalDocSearchHit | undefined;
+
+                if (item.type !== 'lvl1' && potentialParent) {
+                  parent = potentialParent;
+                }
+
+                return {
+                  ...item,
+                  __docsearch_parent: parent,
+                };
+              }),
+            )
+            .flat();
+        },
+      };
+    });
+  } catch (error) {
+    // The Algolia `RetryError` happens when all the servers have
+    // failed, meaning that there's no chance the response comes
+    // back. This is the right time to display an error.
+    // See https://github.com/algolia/algoliasearch-client-javascript/blob/2ffddf59bc765cd1b664ee0346b28f00229d6e12/packages/transporter/src/errors/createRetryError.ts#L5
+    if ((error as Error).name === 'RetryError') {
+      setStatus('error');
+    }
+    throw error;
+  }
+};
+
 export function DocSearchModal({
-  appId,
-  apiKey,
   askAi,
   maxResultsPerGroup,
   theme,
@@ -307,7 +424,9 @@ export function DocSearchModal({
   recentSearchesLimit = 7,
   recentSearchesWithFavoritesLimit = 4,
   indices = [],
-  indexName,
+  typesenseCollectionName,
+  typesenseServerConfig,
+  typesenseSearchParameters,
   searchParameters,
   isHybridModeSupported = false,
   ...props
@@ -347,7 +466,7 @@ export function DocSearchModal({
   ).current;
   const initialQuery = React.useRef(initialQueryFromProp || initialQueryFromSelection).current;
 
-  const searchClient = useSearchClient(appId, apiKey, transformSearchClient);
+  const searchClient = useSearchClient(transformSearchClient, typesenseServerConfig);
 
   const askAiConfig = typeof askAi === 'object' ? askAi : null;
   const askAiConfigurationId = typeof askAi === 'string' ? askAi : askAiConfig?.assistantId || null;
@@ -364,9 +483,9 @@ export function DocSearchModal({
   // Format the `indexes` to be used until `indexName` and `searchParameters` props are fully removed.
   const indexes: DocSearchIndex[] = [];
 
-  if (indexName && indexName !== '') {
+  if (typesenseCollectionName && typesenseCollectionName !== '') {
     indexes.push({
-      name: indexName,
+      name: typesenseCollectionName,
       searchParameters,
     });
   }
@@ -407,8 +526,8 @@ export function DocSearchModal({
 
   const { messages, status, setMessages, sendMessage, stopAskAiStreaming, askAiError, sendFeedback } = useAskAi({
     assistantId: askAiConfigurationId,
-    apiKey: askAiConfig?.apiKey || apiKey,
-    appId: askAiConfig?.appId || appId,
+    apiKey: askAiConfig?.apiKey ?? 'testkey',
+    appId: askAiConfig?.appId ?? 'testappid',
     indexName: askAiConfig?.indexName || defaultIndexName,
     searchParameters: askAiSearchParameters,
     useStagingEnv: askAiUseStagingEnv,
@@ -583,10 +702,10 @@ export function DocSearchModal({
   // feedback handler
   const handleFeedbackSubmit = React.useCallback(
     async (messageId: string, thumbs: 0 | 1): Promise<void> => {
-      if (!askAiConfigurationId || !appId) return;
+      if (!askAiConfigurationId) return;
       await sendFeedback(messageId, thumbs);
     },
-    [askAiConfigurationId, appId, sendFeedback],
+    [askAiConfigurationId, sendFeedback],
   );
 
   if (!autocompleteRef.current) {
@@ -643,22 +762,35 @@ export function DocSearchModal({
           context: sourcesState.context,
         };
 
-        const algoliaSourcesPromise = buildQuerySources({
-          query,
-          state: querySourcesState,
-          setContext,
-          setStatus,
-          searchClient,
-          indexes,
-          snippetLength,
-          insights: Boolean(insights),
-          appId,
-          apiKey,
-          maxResultsPerGroup,
-          transformItems,
-          saveRecentSearch,
-          onClose,
-        });
+        const querySourcesPromise =
+          typesenseCollectionName && typesenseCollectionName !== ''
+            ? buildTypesenseQuerySources({
+                query,
+                state: querySourcesState,
+                setContext,
+                setStatus,
+                searchClient,
+                typesenseCollectionName,
+                typesenseSearchParameters,
+                maxResultsPerGroup,
+                transformItems,
+                saveRecentSearch,
+                onClose,
+              })
+            : buildQuerySources({
+                query,
+                state: querySourcesState,
+                setContext,
+                setStatus,
+                searchClient,
+                indexes,
+                snippetLength,
+                insights: Boolean(insights),
+                maxResultsPerGroup,
+                transformItems,
+                saveRecentSearch,
+                onClose,
+              });
 
         // Ask AI source
         const askAiSource: Array<AutocompleteSource<InternalDocSearchHit>> = canHandleAskAi
@@ -700,8 +832,8 @@ export function DocSearchModal({
             ]
           : [];
         // Combine Algolia results (once resolved) with the Ask AI source
-        return algoliaSourcesPromise.then((algoliaSources) => {
-          return [...askAiSource, ...algoliaSources];
+        return querySourcesPromise.then((querySources) => {
+          return [...askAiSource, ...querySources];
         });
       },
     });
