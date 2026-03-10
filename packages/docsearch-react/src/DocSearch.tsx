@@ -86,7 +86,7 @@ export interface DocSearchProps {
   indices: Array<DocSearchIndex | string>;
   /**
    * Facets to display as keyword-search filter controls. Values are read
-   * dynamically from the configured Algolia indices.
+   * dynamically from the configured Typesense collection.
    *
    * @default [ ]
    */

@@ -65,7 +65,7 @@ export function Footer({
     backToSearchText = 'Back to search',
     closeKeyAriaLabel = 'Escape key',
     poweredByText = 'Powered by',
-    searchByText = 'Search by',
+    searchByText,
   } = translations;
 
   const hasFooterAction =
