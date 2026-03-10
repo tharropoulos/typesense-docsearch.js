@@ -9,14 +9,15 @@ import '@testing-library/jest-dom/vitest';
 
 import { DocSearchModal, type DocSearchModalProps } from '../DocSearchModal';
 
-const APP_ID = 'test_app';
-const API_KEY = 'test_api_key';
-const INDEX_NAME = 'test_index';
+const typesenseServerConfig = {
+  apiKey: 'test-key',
+  nodes: [{ host: 'localhost', port: 8108, protocol: 'http' as const }],
+};
 
 const DEFAULT_PROPS: DocSearchModalProps = {
-  appId: APP_ID,
-  apiKey: API_KEY,
-  indexName: INDEX_NAME,
+  typesenseCollectionName: 'docs',
+  typesenseServerConfig,
+  typesenseSearchParameters: {},
   transformSearchClient(searchClient) {
     return {
       ...searchClient,
