@@ -2552,7 +2552,12 @@ __metadata:
     algoliasearch: "npm:^5.28.0"
     marked: "npm:^16.3.0"
     nodemon: "npm:^3.1.0"
+    rollup: "npm:4.31.0"
     rollup-plugin-dts: "npm:^6.2.1"
+    typescript: "npm:5.7.3"
+    typesense: "npm:^3.0.1"
+    typesense-docsearch-css: "npm:^0.4.1"
+    typesense-instantsearch-adapter: "npm:3.0.0"
     vitest: "npm:3.0.2"
     zod: "npm:^4.1.8"
   peerDependencies:
@@ -9007,6 +9012,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"axios@npm:^1.13.5":
+  version: 1.13.6
+  resolution: "axios@npm:1.13.6"
+  dependencies:
+    follow-redirects: "npm:^1.15.11"
+    form-data: "npm:^4.0.5"
+    proxy-from-env: "npm:^1.1.0"
+  checksum: 10c0/51fb5af055c3b85662fa97df17d986ae2c37d13bf86d50b6bb36b6b3a2dec6966a1d3a14ab3774b71707b155ae3597ed9b7babdf1a1a863d1a31840cb8e7ec71
+  languageName: node
+  linkType: hard
+
 "axios@npm:^1.7.9, axios@npm:^1.8.3":
   version: 1.13.2
   resolution: "axios@npm:1.13.2"
@@ -9015,6 +9031,17 @@ __metadata:
     form-data: "npm:^4.0.4"
     proxy-from-env: "npm:^1.1.0"
   checksum: 10c0/e8a42e37e5568ae9c7a28c348db0e8cf3e43d06fcbef73f0048669edfe4f71219664da7b6cc991b0c0f01c28a48f037c515263cb79be1f1ae8ff034cd813867b
+  languageName: node
+  linkType: hard
+
+"axios@npm:^1.8.4":
+  version: 1.13.5
+  resolution: "axios@npm:1.13.5"
+  dependencies:
+    follow-redirects: "npm:^1.15.11"
+    form-data: "npm:^4.0.5"
+    proxy-from-env: "npm:^1.1.0"
+  checksum: 10c0/abf468c34f2d145f3dc7dbc0f1be67e520630624307bda69a41bbe8d386bd672d87b4405c4ee77f9ff54b235ab02f96a9968fb00e75b13ce64706e352a3068fd
   languageName: node
   linkType: hard
 
@@ -13706,7 +13733,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.0.0, follow-redirects@npm:^1.14.0, follow-redirects@npm:^1.15.6":
+"follow-redirects@npm:^1.0.0, follow-redirects@npm:^1.14.0, follow-redirects@npm:^1.15.11, follow-redirects@npm:^1.15.6":
   version: 1.15.11
   resolution: "follow-redirects@npm:1.15.11"
   peerDependenciesMeta:
@@ -13759,6 +13786,19 @@ __metadata:
     hasown: "npm:^2.0.2"
     mime-types: "npm:^2.1.12"
   checksum: 10c0/373525a9a034b9d57073e55eab79e501a714ffac02e7a9b01be1c820780652b16e4101819785e1e18f8d98f0aee866cc654d660a435c378e16a72f2e7cac9695
+  languageName: node
+  linkType: hard
+
+"form-data@npm:^4.0.5":
+  version: 4.0.5
+  resolution: "form-data@npm:4.0.5"
+  dependencies:
+    asynckit: "npm:^0.4.0"
+    combined-stream: "npm:^1.0.8"
+    es-set-tostringtag: "npm:^2.1.0"
+    hasown: "npm:^2.0.2"
+    mime-types: "npm:^2.1.12"
+  checksum: 10c0/dd6b767ee0bbd6d84039db12a0fa5a2028160ffbfaba1800695713b46ae974a5f6e08b3356c3195137f8530dcd9dfcb5d5ae1eeff53d0db1e5aad863b619ce3b
   languageName: node
   linkType: hard
 
@@ -17277,6 +17317,13 @@ __metadata:
     slice-ansi: "npm:^4.0.0"
     wrap-ansi: "npm:^6.2.0"
   checksum: 10c0/18b299e230432a156f2535660776406d15ba8bb7817dd3eaadd58004b363756d4ecaabcd658f9949f90b62ea7d3354423be3fdeb7a201ab951ec0e8d6139af86
+  languageName: node
+  linkType: hard
+
+"loglevel@npm:^1.8.1, loglevel@npm:^1.9.2":
+  version: 1.9.2
+  resolution: "loglevel@npm:1.9.2"
+  checksum: 10c0/1e317fa4648fe0b4a4cffef6de037340592cee8547b07d4ce97a487abe9153e704b98451100c799b032c72bb89c9366d71c9fb8192ada8703269263ae77acdc7
   languageName: node
   linkType: hard
 
@@ -25762,7 +25809,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2.0.0, tslib@npm:^2.0.3, tslib@npm:^2.1.0, tslib@npm:^2.3.0, tslib@npm:^2.4.0, tslib@npm:^2.6.0, tslib@npm:^2.6.2, tslib@npm:^2.8.0":
+"tslib@npm:^2.0.0, tslib@npm:^2.0.3, tslib@npm:^2.1.0, tslib@npm:^2.3.0, tslib@npm:^2.4.0, tslib@npm:^2.6.0, tslib@npm:^2.6.2, tslib@npm:^2.8.0, tslib@npm:^2.8.1":
   version: 2.8.1
   resolution: "tslib@npm:2.8.1"
   checksum: 10c0/9c4759110a19c53f992d9aae23aac5ced636e99887b51b9e61def52611732872ff7668757d4e4c61f19691e36f4da981cd9485e869b4a7408d689f6bf1f14e62
@@ -26016,6 +26063,50 @@ __metadata:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 10c0/ad09fdf7a756814dce65bc60c1657b40d44451346858eea230e10f2e95a289d9183b6e32e5c11e95acc0ccc214b4f36289dcad4bf1886b0adb84d711d336a430
+  languageName: node
+  linkType: hard
+
+"typesense-docsearch-css@npm:^0.4.1":
+  version: 0.4.1
+  resolution: "typesense-docsearch-css@npm:0.4.1"
+  checksum: 10c0/1e455d4e8ab4a9c335de1f234e6cd458ddccabd265c85f003bd01c77b5b3000a8c2c066db80dbf905b4fbcdca828efef35d223727c9e36b25f4e0d7f92d989f0
+  languageName: node
+  linkType: hard
+
+"typesense-instantsearch-adapter@npm:3.0.0":
+  version: 3.0.0
+  resolution: "typesense-instantsearch-adapter@npm:3.0.0"
+  dependencies:
+    typesense: "npm:^3.0.0-2"
+  peerDependencies:
+    "@babel/runtime": ^7.24.1
+  checksum: 10c0/9bd7f76a0de0b276a7e9e6c2bddb4f634f101d25e8cc940551faee7fe9ded0ab523c6c2761a7303b6310f2785e2b81768b5c7aa6e3975a6492ffaa80f7022269
+  languageName: node
+  linkType: hard
+
+"typesense@npm:^3.0.0-2":
+  version: 3.0.2
+  resolution: "typesense@npm:3.0.2"
+  dependencies:
+    axios: "npm:^1.13.5"
+    loglevel: "npm:^1.9.2"
+    tslib: "npm:^2.8.1"
+  peerDependencies:
+    "@babel/runtime": ^7.23.2
+  checksum: 10c0/6f35b94b88cadb40e460988ed40f3bf95ee23c5043114000c1e7eb21b1c9b6365441602ecbae150e687697d7ed4279548216b9821e443d0198f7323e989ecc12
+  languageName: node
+  linkType: hard
+
+"typesense@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "typesense@npm:3.0.1"
+  dependencies:
+    axios: "npm:^1.8.4"
+    loglevel: "npm:^1.8.1"
+    tslib: "npm:^2.6.2"
+  peerDependencies:
+    "@babel/runtime": ^7.23.2
+  checksum: 10c0/d1647e5408676586dd3679804bd44831a75bb1071aedf2e608f17090e885fc713d82b17b9c9577170622007db85314d1d4a568b47ea76cc76214b2f8266bd361
   languageName: node
   linkType: hard
 
