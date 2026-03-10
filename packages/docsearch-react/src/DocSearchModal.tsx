@@ -31,7 +31,7 @@ import {
 } from './utils';
 import {
   buildNoQuerySources,
-  buildQuerySources,
+  buildTypesenseQuerySources,
   type BuildQuerySourcesState,
 } from './utils/createDocSearchSources';
 import { normalizeDocSearchIndexes } from './utils/normalizeDocSearchIndexes';
@@ -50,8 +50,9 @@ export type DocSearchModalProps = DocSearchProps & {
 };
 
 export function DocSearchModal({
-  appId,
-  apiKey,
+  typesenseCollectionName,
+  typesenseServerConfig,
+  typesenseSearchParameters,
   maxResultsPerGroup,
   theme,
   onClose = noop,
@@ -101,16 +102,21 @@ export function DocSearchModal({
   const { initialQuery, initialQueryFromSelection } =
     useInitialModalQuery(initialQueryFromProp);
 
-  const searchClient = useSearchClient(appId, apiKey, transformSearchClient);
+  const searchClient = useSearchClient(
+    transformSearchClient,
+    typesenseServerConfig
+  );
 
+  // The Typesense collection is the single source of truth for this fork; the
+  // Algolia `indices` prop is kept only so downstream consumers keep compiling.
   const indexes = React.useMemo(
     () =>
       normalizeDocSearchIndexes({
-        indices,
+        indices: indices ?? [typesenseCollectionName],
       }),
-    [indices]
+    [indices, typesenseCollectionName]
   );
-  const defaultIndexName = indexes[0].name;
+  const defaultIndexName = typesenseCollectionName;
 
   const autocompleteRef =
     React.useRef<
@@ -127,7 +133,6 @@ export function DocSearchModal({
   const {
     visibleFacets,
     facetSelections,
-    facetSelectionsRef,
     handleFacetSelectionChange,
     clearFacetSelections,
   } = useDocSearchFacets({
@@ -181,24 +186,19 @@ export function DocSearchModal({
           context: sourcesState.context,
         };
 
-        const algoliaSourcesPromise = buildQuerySources({
+        return buildTypesenseQuerySources({
           query,
           state: querySourcesState,
           setContext,
           setStatus,
           searchClient,
-          indexes,
-          insights: Boolean(insights),
-          appId,
-          apiKey,
+          typesenseCollectionName,
+          typesenseSearchParameters,
           maxResultsPerGroup,
           transformItems,
           saveRecentSearch,
           onClose,
-          facetSelections: facetSelectionsRef,
         });
-
-        return algoliaSourcesPromise;
       },
     });
   }
