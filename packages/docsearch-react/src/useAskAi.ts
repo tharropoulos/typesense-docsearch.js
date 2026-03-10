@@ -1,259 +1,377 @@
-import type { UseChatHelpers } from '@ai-sdk/react';
-import { Chat, useChat } from '@ai-sdk/react';
-import type { ChatOnToolCallCallback } from 'ai';
-import {
-  DefaultChatTransport,
-  lastAssistantMessageIsCompleteWithToolCalls,
-  generateId,
-} from 'ai';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { ConfigurationOptions as TypesenseConfigurationOptions } from 'typesense/lib/Typesense/Configuration';
+import type { MultiSearchRequestSchema } from 'typesense/lib/Typesense/Types';
 
-import {
-  agentStudioBaseUrl,
-  getAgentStudioErrorMessage,
-  postAgentStudioFeedback,
-} from './askai';
 import type { Exchange } from './AskAiScreen';
 import type { StoredSearchPlugin } from './stored-searches';
 import { createStoredConversations } from './stored-searches';
-import { type AIMessage, type ToolCalls } from './types/AskiAi';
-import type { OnAskAiFeedback } from './types/Feedback';
-import { EMPTY_TOOLS, sanitizeMessagesForRequest } from './utils/ai';
-
-import type { AgentStudioSearchParameters, Memory, StoredAskAiState } from '.';
-
-type UseChat = UseChatHelpers<AIMessage>;
+import type { StoredAskAiState } from './types/StoredDocSearchHit';
+import type { AIMessage, AskAiStatus, TypesenseAskAiParams, UseAskAiSendMessageOptions } from './types/AskiAi';
 
 type UseAskAiParams = {
-  agentId: string;
-  apiKey: string;
-  appId: string;
-  searchParameters?: AgentStudioSearchParameters;
-  tools: ToolCalls;
-  memory?: Memory;
-  indices?: string[];
-};
+  typesenseServerConfig: TypesenseConfigurationOptions;
+  storageKey: string;
+} & TypesenseAskAiParams;
 
 type UseAskAiReturn = {
-  chatId: string;
   messages: AIMessage[];
-  status: UseChat['status'];
-  sendMessage: UseChat['sendMessage'];
-  setMessages: UseChat['setMessages'];
-  stopAskAiStreaming: UseChat['stop'];
+  status: AskAiStatus;
+  sendMessage: (query: string, options?: UseAskAiSendMessageOptions) => Promise<void>;
+  setMessages: (messages: AIMessage[]) => void;
+  stopAskAiStreaming: () => Promise<void>;
   askAiError?: Error;
   isStreaming: boolean;
   exchanges: Exchange[];
   conversations: StoredSearchPlugin<StoredAskAiState>;
-  sendFeedback: OnAskAiFeedback;
-  /**
-   * Create's a new chat instance, clearing existing messages and generating a
-   * new conversation ID.
-   */
-  startNewConversation: () => void;
-  /**
-   * Create's a new chat instance, seeded with an existing conversation's ID and
-   * its messages.
-   */
-  restoreConversation: (
-    restored: AIMessage[],
-    existingConversationId?: string
-  ) => void;
 };
 
-type UseAskAi = (params: UseAskAiParams) => UseAskAiReturn;
-
-type AgentStudioTransportParams = Pick<
-  UseAskAiParams,
-  'apiKey' | 'appId' | 'agentId'
-> & {
-  searchParameters?: AgentStudioSearchParameters;
-  userToken?: string;
-  indices?: string[];
+type TypesenseNodeConfig = {
+  host?: string;
+  path?: string;
+  port?: number | string;
+  protocol?: string;
+  url?: string;
 };
 
-const getAgentStudioTransport = ({
-  appId,
-  apiKey,
-  agentId,
-  searchParameters,
-  userToken,
-  indices,
-}: AgentStudioTransportParams): DefaultChatTransport<AIMessage> => {
-  const algoliaParams: {
-    searchParameters?: AgentStudioSearchParameters;
-    indices?: string[];
-  } = {};
+type StreamChunk = {
+  message?: string;
+  conversation_id?: string;
+  conversation?: {
+    answer?: string;
+    message?: string;
+    conversation_id?: string;
+  };
+};
 
-  if (searchParameters) {
-    algoliaParams.searchParameters = searchParameters;
+const createId = (): string => {
+  if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
+    return crypto.randomUUID();
   }
 
-  if (indices && indices.length > 0) {
-    algoliaParams.indices = indices;
-  }
-
-  return new DefaultChatTransport({
-    api: `${agentStudioBaseUrl(appId)}/agents/${agentId}/completions?stream=true&compatibilityMode=ai-sdk-5`,
-    headers: {
-      'x-algolia-application-id': appId,
-      'x-algolia-api-key': apiKey,
-      ...(userToken ? { 'x-algolia-secure-user-token': userToken } : {}),
-    },
-    body: {
-      algolia: algoliaParams,
-    },
-    prepareSendMessagesRequest({ id, messages, body, ...rest }) {
-      const sanitizedMessages = sanitizeMessagesForRequest(messages);
-
-      return {
-        ...rest,
-        body: {
-          id,
-          messages: sanitizedMessages,
-          ...body,
-        },
-      };
-    },
-  });
+  return `msg_${Math.random().toString(36).slice(2, 10)}`;
 };
 
-export const useAskAi: UseAskAi = ({
-  agentId,
-  apiKey,
-  appId,
-  tools = EMPTY_TOOLS,
-  searchParameters,
-  memory,
-  indices,
-}) => {
-  const abortControllerRef = useRef(new AbortController());
+const getFirstNode = (config: TypesenseConfigurationOptions): TypesenseNodeConfig => {
+  const node = config.nearestNode ?? config.nodes?.[0];
 
-  const askAiTransport = useMemo(
-    () =>
-      getAgentStudioTransport({
-        apiKey,
-        appId,
-        agentId,
-        searchParameters,
-        userToken: memory?.userToken,
-        indices,
-      }),
-    [apiKey, appId, agentId, searchParameters, memory?.userToken, indices]
-  );
+  if (!node) {
+    throw new Error('Typesense requires at least one configured node.');
+  }
 
-  // Store transport in a ref since it is dependent on unstable dependencies:
-  // - searchParameters, an object whose changed values trigger a new transport
-  // - indices, an array whose changed values trigger a new transport
-  const askAiTransportRef = useRef(askAiTransport);
-  askAiTransportRef.current = askAiTransport;
+  return node;
+};
 
-  // Sync ref during render so the stable `handleToolCall` (registered once
-  // by useChat) always sees the latest `tools` without re-creating itself.
-  // Safe because tool calls only fire after a commit, and writes are idempotent.
-  const toolsRef = useRef(tools);
-  toolsRef.current = tools;
+const getBaseUrl = (config: TypesenseConfigurationOptions): string => {
+  const node = getFirstNode(config);
 
-  const addToolOutputRef = useRef<UseChat['addToolOutput'] | null>(null);
+  if (node.url) {
+    return node.url;
+  }
 
-  const handleToolCall: ChatOnToolCallCallback<AIMessage> = useCallback(
-    ({ toolCall }) => {
-      const tool = toolsRef.current[toolCall.toolName];
-      if (!tool?.onToolCall) {
-        return;
-      }
+  if (!node.host) {
+    throw new Error('Typesense node configuration must include either `url` or `host`.');
+  }
 
-      tool.onToolCall({
-        ...toolCall,
-        addToolOutput: async ({ output }) => {
-          if (!addToolOutputRef.current) return;
+  const protocol = node.protocol ?? 'https';
+  const port = node.port ? `:${node.port}` : '';
+  const path = node.path ?? '';
 
-          await addToolOutputRef.current({
-            output,
-            tool: toolCall.toolName,
-            toolCallId: toolCall.toolCallId,
-          });
-        },
-      });
-    },
-    []
-  );
+  return `${protocol}://${node.host}${port}${path}`;
+};
 
-  const createChatInstance = useCallback(
-    (messages?: AIMessage[], id = generateId()): Chat<AIMessage> =>
-      new Chat<AIMessage>({
-        id,
-        messages,
-        sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
-        transport: askAiTransportRef.current,
-        onToolCall: handleToolCall,
-      }),
-    [handleToolCall]
-  );
+const getConversationId = (messages: AIMessage[]): string | undefined => {
+  for (let i = messages.length - 1; i >= 0; i--) {
+    const conversationId = messages[i]?.metadata?.conversationId;
 
-  const [chatInstance, setChatInstance] = useState(
-    (): Chat<AIMessage> => createChatInstance()
-  );
-  // Keep a stable reference to the chat instance so reading messages are render safe
-  const chatInstanceRef = useRef<Chat<AIMessage>>(chatInstance);
-  chatInstanceRef.current = chatInstance;
-
-  const { messages, status, setMessages, error, stop, addToolOutput } = useChat(
-    {
-      chat: chatInstance,
+    if (conversationId) {
+      return conversationId;
     }
-  );
+  }
 
-  useEffect(() => {
-    addToolOutputRef.current = addToolOutput;
-  }, [addToolOutput]);
+  return undefined;
+};
+
+const buildAssistantMessage = (conversationId?: string): AIMessage => ({
+  id: createId(),
+  role: 'assistant',
+  parts: [{ type: 'text', text: '', state: 'streaming' }],
+  metadata: conversationId ? { conversationId } : {},
+});
+
+const buildUserMessage = (query: string): AIMessage => ({
+  id: createId(),
+  role: 'user',
+  parts: [{ type: 'text', text: query, state: 'done' }],
+});
+
+const updateAssistantMessage = (
+  messages: AIMessage[],
+  assistantId: string,
+  updater: (message: AIMessage) => AIMessage
+): AIMessage[] =>
+  messages.map((message) => {
+    if (message.id !== assistantId) {
+      return message;
+    }
+
+    return updater(message);
+  });
+
+const parseSseEvent = (event: string): string[] =>
+  event
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => line.startsWith('data:'))
+    .map((line) => line.slice(5).trim())
+    .filter(Boolean);
+
+const splitSseEvents = (buffer: string): { events: string[]; remainder: string } => {
+  const normalizedBuffer = buffer.replace(/\r\n/g, '\n');
+  const events = normalizedBuffer.split('\n\n');
+
+  return {
+    events: events.slice(0, -1),
+    remainder: events.at(-1) ?? '',
+  };
+};
+
+const buildSearchRequest = ({
+  collection,
+  queryBy,
+  excludeFields,
+  searchParameters,
+}: Omit<TypesenseAskAiParams, 'conversationModelId'>): MultiSearchRequestSchema<Record<string, unknown>, string> => ({
+  collection,
+  query_by: queryBy,
+  exclude_fields: excludeFields,
+  ...(searchParameters ?? {}),
+});
+
+export const useAskAi = ({
+  typesenseServerConfig,
+  storageKey,
+  collection,
+  queryBy,
+  excludeFields = 'embedding',
+  conversationModelId,
+  searchParameters,
+}: UseAskAiParams): UseAskAiReturn => {
+  const [messages, setMessagesState] = useState<AIMessage[]>([]);
+  const [status, setStatus] = useState<AskAiStatus>('ready');
+  const [askAiError, setAskAiError] = useState<Error>();
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const messagesRef = useRef<AIMessage[]>([]);
+  const conversationIdRef = useRef<string | undefined>(undefined);
 
   const conversations = useRef(
     createStoredConversations<StoredAskAiState>({
-      key: `__DOCSEARCH_ASKAI_CONVERSATIONS__${appId}`,
+      key: storageKey,
       limit: 10,
     })
   ).current;
 
-  const sendFeedback = useCallback<OnAskAiFeedback>(
-    async (messageId, { thumbs, tags, notes }): Promise<void> => {
-      if (!agentId) return;
+  useEffect(() => {
+    messagesRef.current = messages;
+    conversationIdRef.current = getConversationId(messages);
+  }, [messages]);
 
-      const res = await postAgentStudioFeedback({
-        agentId,
-        vote: thumbs,
-        messageId,
-        appId,
-        apiKey,
-        abortSignal: abortControllerRef.current.signal,
-        notes,
-        tags,
-      });
+  const setMessages = useCallback((nextMessages: AIMessage[]): void => {
+    messagesRef.current = nextMessages;
+    conversationIdRef.current = getConversationId(nextMessages);
+    setMessagesState(nextMessages);
+  }, []);
 
-      if (res.status >= 300) throw new Error('Failed, try again later.');
-      conversations.addFeedback?.(
-        messageId,
-        thumbs === 1 ? 'like' : 'dislike',
-        { tags, notes }
-      );
+  const sendMessage = useCallback(
+    async (query: string, _options?: UseAskAiSendMessageOptions): Promise<void> => {
+      const userMessage = buildUserMessage(query);
+      const assistantMessage = buildAssistantMessage(conversationIdRef.current);
+      const nextMessages = [...messagesRef.current, userMessage, assistantMessage];
+
+      abortControllerRef.current?.abort();
+      const abortController = new AbortController();
+      abortControllerRef.current = abortController;
+
+      setAskAiError(undefined);
+      setStatus('submitted');
+      setMessages(nextMessages);
+
+      try {
+        const baseUrl = getBaseUrl(typesenseServerConfig);
+        const url = new URL('/multi_search', baseUrl);
+
+        url.searchParams.set('q', query);
+        url.searchParams.set('conversation', 'true');
+        url.searchParams.set('conversation_stream', 'true');
+        url.searchParams.set('conversation_model_id', conversationModelId);
+
+        if (conversationIdRef.current) {
+          url.searchParams.set('conversation_id', conversationIdRef.current);
+        }
+
+        const response = await fetch(url.toString(), {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-TYPESENSE-API-KEY': typesenseServerConfig.apiKey,
+          },
+          body: JSON.stringify({
+            searches: [
+              buildSearchRequest({
+                collection,
+                queryBy,
+                excludeFields,
+                searchParameters,
+              }),
+            ],
+          }),
+          signal: abortController.signal,
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(errorText || 'Typesense conversational search failed.');
+        }
+
+        if (!response.body) {
+          throw new Error('Typesense conversational search did not return a stream.');
+        }
+
+        setStatus('streaming');
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+        let streamedText = '';
+        let streamedConversationId = conversationIdRef.current;
+
+        while (true) {
+          const { done, value } = await reader.read();
+
+          if (done) {
+            break;
+          }
+
+          const decodedChunk = decoder.decode(value, { stream: true });
+          buffer += decodedChunk;
+
+          const { events, remainder } = splitSseEvents(buffer);
+          buffer = remainder;
+
+          for (const rawEvent of events) {
+            const payloads = parseSseEvent(rawEvent);
+
+            for (const payload of payloads) {
+              if (payload === '[DONE]') {
+                continue;
+              }
+
+              const chunk = JSON.parse(payload) as StreamChunk;
+              const finalAnswer = chunk.conversation?.answer;
+              const chunkText = chunk.message ?? chunk.conversation?.message ?? '';
+              const chunkConversationId = chunk.conversation_id ?? chunk.conversation?.conversation_id;
+
+              if (chunkConversationId) {
+                streamedConversationId = chunkConversationId;
+                conversationIdRef.current = chunkConversationId;
+              }
+
+              if (finalAnswer) {
+                if (streamedText.length === 0) {
+                  streamedText = finalAnswer;
+
+                  setMessagesState((currentMessages) =>
+                    updateAssistantMessage(currentMessages, assistantMessage.id, (message) => ({
+                      ...message,
+                      metadata: {
+                        ...message.metadata,
+                        ...(streamedConversationId ? { conversationId: streamedConversationId } : {}),
+                      },
+                      parts: [
+                        {
+                          type: 'text',
+                          text: streamedText,
+                          state: 'streaming',
+                        },
+                      ],
+                    }))
+                  );
+                }
+
+                continue;
+              }
+
+              if (chunkText.length === 0) {
+                continue;
+              }
+
+              streamedText += chunkText;
+
+              setMessagesState((currentMessages) =>
+                updateAssistantMessage(currentMessages, assistantMessage.id, (message) => ({
+                  ...message,
+                  metadata: {
+                    ...message.metadata,
+                    ...(streamedConversationId ? { conversationId: streamedConversationId } : {}),
+                  },
+                  parts: [
+                    {
+                      type: 'text',
+                      text: streamedText,
+                      state: 'streaming',
+                    },
+                  ],
+                }))
+              );
+            }
+          }
+        }
+
+        setMessagesState((currentMessages) =>
+          updateAssistantMessage(currentMessages, assistantMessage.id, (message) => ({
+            ...message,
+            metadata: {
+              ...message.metadata,
+              ...(streamedConversationId ? { conversationId: streamedConversationId } : {}),
+            },
+            parts: [
+              {
+                type: 'text',
+                text: streamedText,
+                state: 'done',
+              },
+            ],
+          }))
+        );
+        setStatus('ready');
+      } catch (error) {
+        if (abortController.signal.aborted) {
+          setStatus('ready');
+          return;
+        }
+
+        setAskAiError(error as Error);
+        setStatus('error');
+      }
     },
-    [agentId, appId, apiKey, conversations]
+    [collection, conversationModelId, excludeFields, queryBy, searchParameters, setMessages, typesenseServerConfig]
   );
 
-  const onStopStreaming = useCallback(async (): Promise<void> => {
-    abortControllerRef.current.abort();
-    await stop();
-  }, [stop]);
+  const stopAskAiStreaming = useCallback(async (): Promise<void> => {
+    abortControllerRef.current?.abort();
+    abortControllerRef.current = null;
+    setStatus('ready');
+  }, []);
 
-  const exchanges = useMemo((): Exchange[] => {
+  const exchanges = useMemo(() => {
     const grouped: Exchange[] = [];
 
     for (let i = 0; i < messages.length; i++) {
       if (messages[i].role === 'user') {
         const userMessage = messages[i];
-        const assistantMessage =
-          messages[i + 1]?.role === 'assistant' ? messages[i + 1] : null;
+        const assistantMessage = messages[i + 1]?.role === 'assistant' ? messages[i + 1] : null;
+
         grouped.push({ id: userMessage.id, userMessage, assistantMessage });
+
         if (assistantMessage) {
           i++;
         }
@@ -265,54 +383,15 @@ export const useAskAi: UseAskAi = ({
 
   const isStreaming = status === 'streaming' || status === 'submitted';
 
-  const askAiError = useMemo((): Error | undefined => {
-    if (!error) return undefined;
-
-    return getAgentStudioErrorMessage(error);
-  }, [error]);
-
-  const updateChatInstance = useCallback(
-    (restored?: AIMessage[], existingConversationId?: string): void => {
-      const newChatInstance = createChatInstance(
-        restored,
-        existingConversationId
-      );
-      chatInstanceRef.current = newChatInstance;
-      setChatInstance(newChatInstance);
-    },
-    [createChatInstance]
-  );
-
-  const startNewConversation = useCallback((): void => {
-    updateChatInstance();
-  }, [updateChatInstance]);
-
-  const restoreConversation = useCallback(
-    (restored: AIMessage[], existingConversationId?: string): void => {
-      updateChatInstance(restored, existingConversationId);
-    },
-    [updateChatInstance]
-  );
-
-  // This is so that the public `sendMessage` is always pointed to a stable reference of the chat instance
-  const sendMessageSafe = useCallback<UseChat['sendMessage']>(
-    (...args): Promise<void> => chatInstanceRef.current!.sendMessage(...args),
-    []
-  );
-
   return {
-    chatId: chatInstance.id,
     messages,
-    sendMessage: sendMessageSafe,
     status,
+    sendMessage,
     setMessages,
+    stopAskAiStreaming,
     askAiError,
-    stopAskAiStreaming: onStopStreaming,
     isStreaming,
     exchanges,
     conversations,
-    sendFeedback,
-    startNewConversation,
-    restoreConversation,
   };
 };
