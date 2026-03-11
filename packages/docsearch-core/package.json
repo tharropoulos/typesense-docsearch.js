@@ -10,10 +10,16 @@
     "url": "git+https://github.com/typesense/typesense-docsearch.js.git",
     "directory": "packages/docsearch-core"
   },
-  "author": {
-    "name": "Algolia, Inc.",
-    "url": "https://www.algolia.com"
-  },
+  "contributors": [
+    {
+      "name": "Algolia, Inc.",
+      "url": "https://www.algolia.com"
+    },
+    {
+      "name": "Typesense, Inc.",
+      "url": "https://typesense.org"
+    }
+  ],
   "sideEffects": false,
   "files": [
     "dist/",
