@@ -2,7 +2,7 @@
   "name": "@docsearch/website",
   "version": "4.6.0",
   "private": true,
-  "homepage": "https://docsearch.algolia.com/",
+  "homepage": "https://typesense.org/docs/latest/guide/docsearch.html",
   "scripts": {
     "build:clean": "rm -rf dist build .docusaurus node_modules",
     "docusaurus": "docusaurus",
@@ -16,11 +16,11 @@
     "write-heading-ids": "docusaurus write-heading-ids"
   },
   "dependencies": {
-    "@docsearch/core": "workspace:*",
-    "@docsearch/css": "workspace:*",
-    "@docsearch/docusaurus-adapter": "workspace:*",
-    "@docsearch/react": "workspace:*",
-    "@docsearch/sidepanel": "workspace:*",
+    "typesense-docsearch-core": "workspace:*",
+    "typesense-docsearch-css": "workspace:*",
+    "typesense-docsearch-docusaurus-adapter": "workspace:*",
+    "typesense-docsearch-react": "workspace:*",
+    "typesense-docsearch-sidepanel": "workspace:*",
     "@docusaurus/core": "3.9.2",
     "@docusaurus/preset-classic": "3.9.2",
     "@mdx-js/react": "^3.1.0",

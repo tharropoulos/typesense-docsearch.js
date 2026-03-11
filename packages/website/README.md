@@ -17,12 +17,12 @@ Check out our [website][2] for a complete explanation and documentation.
 Netlify handles the deployment of this website. If you are part of the DocSearch core team. [Access the Netlify Dashboard][11].
 
 [1]: ./static/img/docsearch-logo.svg
-[2]: https://docsearch.algolia.com/
+[2]: https://typesense.org/docs/latest/guide/docsearch.html
 [3]: https://api.netlify.com/api/v1/badges/30eacc09-d4b2-4a53-879b-04d40aaea454/deploy-status
 [4]: https://app.netlify.com/sites/docsearch/deploys
-[6]: https://github.com/algolia/docsearch
-[7]: https://github.com/algolia/docsearch-configs
-[8]: https://github.com/algolia/docsearch-scraper
-[9]: https://github.com/algolia/docsearch-website
+[6]: https://github.com/typesense/typesense-docsearch.js
+[7]: https://github.com/typesense/typesense-docsearch-scraper
+[8]: https://github.com/typesense/typesense-docsearch-scraper
+[9]: https://github.com/typesense/typesense-docsearch.js
 [10]: https://v2.docusaurus.io/
 [11]: https://app.netlify.com/sites/docsearch/overview
