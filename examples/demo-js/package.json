@@ -10,9 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@docsearch/css": "workspace:*",
-    "@docsearch/js": "workspace:*",
-    "@docsearch/sidepanel-js": "workspace:*"
+    "typesense-docsearch-css": "workspace:*",
+    "typesense-docsearch-sidepanel-js": "workspace:*",
+    "typesense-docsearch.js": "workspace:*"
   },
   "devDependencies": {
     "vite": "^6.0.7"

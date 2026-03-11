@@ -1,4 +1,4 @@
-# @docsearch/sidepanel
+# typesense-docsearch-sidepanel
 
 React package for [DocSearch Sidepanel](http://docsearch.algolia.com/), a standalone Ask AI chat panel.
 
@@ -6,13 +6,13 @@ React package for [DocSearch Sidepanel](http://docsearch.algolia.com/), a standa
 
 ```bash
 # or
-npm install @docsearch/core@5 @docsearch/sidepanel@5 @docsearch/css@5
+npm install typesense-docsearch-core@5 typesense-docsearch-sidepanel@5 typesense-docsearch-css@5
 ```
 
 If you don’t want to use a package manager, you can use a standalone endpoint:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@docsearch/sidepanel-js"></script>
+<script src="https://cdn.jsdelivr.net/npm/typesense-docsearch-sidepanel-js"></script>
 ```
 
 ## Get started
@@ -20,15 +20,15 @@ If you don’t want to use a package manager, you can use a standalone endpoint:
 DocSearch Sidepanel generates a fully accessible Ask AI chat panel for you.
 
 ```jsx App.js
-import { DocSearch } from '@docsearch/core';
-import { SidepanelButton, Sidepanel } from '@docsearch/sidepanel';
+import { DocSearch } from 'typesense-docsearch-core';
+import { SidepanelButton, Sidepanel } from 'typesense-docsearch-sidepanel';
 
 // Or using individual imports:
-// import { Sidepanel } from '@docsearch/sidepanel/sidepanel';
-// import { SidepanelButton } from '@docsearch/sidepanel/button';
+// import { Sidepanel } from 'typesense-docsearch-sidepanel/sidepanel';
+// import { SidepanelButton } from 'typesense-docsearch-sidepanel/button';
 
-import '@docsearch/css/dist/style.css';
-import '@docsearch/css/dist/sidepanel.css';
+import 'typesense-docsearch-css/dist/style.css';
+import 'typesense-docsearch-css/dist/sidepanel.css';
 
 function App() {
   return (

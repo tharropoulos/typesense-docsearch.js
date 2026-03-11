@@ -5,13 +5,13 @@ Install the hosted [DocSearch MCP](https://docsearch.algolia.com/mcp) in your AI
 ## Run without installing
 
 ```sh
-npx @docsearch/cli
+npx typesense-docsearch-cli
 ```
 
 Or install the `docsearch` command globally:
 
 ```sh
-npm install --global @docsearch/cli
+npm install --global typesense-docsearch-cli
 ```
 
 Requires Node.js 20 or later.
@@ -95,8 +95,8 @@ From the DocSearch monorepo root:
 
 ```sh
 bun install
-bun run --filter @docsearch/cli build
-bun run --filter @docsearch/cli test
+bun run --filter typesense-docsearch-cli build
+bun run --filter typesense-docsearch-cli test
 ```
 
 ## License

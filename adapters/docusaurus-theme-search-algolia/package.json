@@ -1,7 +1,7 @@
 {
-  "name": "@docsearch/docusaurus-adapter",
+  "name": "typesense-docsearch-docusaurus-adapter",
   "version": "5.0.2",
-  "description": "Algolia search component for Docusaurus.",
+  "description": "Docusaurus adapter for DocSearch, customized to work with Typesense",
   "main": "lib/index.js",
   "sideEffects": [
     "*.css"
@@ -20,11 +20,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/algolia/docsearch.git",
-    "directory": "adapters/docusaurus-theme-search-algolia"
-  },
+  "repository": "typesense/docsearch.js",
   "license": "MIT",
   "scripts": {
     "build": "bun x tsc --build --force && node ./scripts/copy-assets.mjs && oxfmt --config ../../.oxfmtrc.json ./lib/theme/**/*",
@@ -36,10 +32,6 @@
   },
   "dependencies": {
     "@algolia/autocomplete-core": "1.19.2",
-    "@docsearch/core": "workspace:*",
-    "@docsearch/modal": "workspace:*",
-    "@docsearch/react": "workspace:*",
-    "@docsearch/sidepanel": "workspace:*",
     "@docusaurus/core": "^3.10.2",
     "@docusaurus/plugin-content-docs": "^3.10.2",
     "@docusaurus/theme-common": "^3.10.2",
@@ -51,7 +43,11 @@
     "fs-extra": "^11.1.1",
     "joi": "^17.9.2",
     "search-insights": "^2.17.3",
-    "tslib": "^2.6.0"
+    "tslib": "^2.6.0",
+    "typesense-docsearch-core": "workspace:*",
+    "typesense-docsearch-modal": "workspace:*",
+    "typesense-docsearch-react": "workspace:*",
+    "typesense-docsearch-sidepanel": "workspace:*"
   },
   "devDependencies": {
     "@docusaurus/core": "^3.10.2",
@@ -68,5 +64,15 @@
   },
   "engines": {
     "node": ">=20.0"
-  }
+  },
+  "contributors": [
+    {
+      "name": "Algolia, Inc.",
+      "url": "https://www.algolia.com"
+    },
+    {
+      "name": "Typesense, Inc.",
+      "url": "https://typesense.org"
+    }
+  ]
 }

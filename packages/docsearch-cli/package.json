@@ -1,19 +1,21 @@
 {
-  "name": "@docsearch/cli",
-  "description": "Command-line tools for installing and querying DocSearch MCP.",
+  "name": "typesense-docsearch-cli",
+  "description": "CLI for DocSearch, customized to work with Typesense",
   "version": "0.0.2",
   "license": "MIT",
   "type": "module",
-  "homepage": "https://docsearch.algolia.com",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/algolia/docsearch.git",
-    "directory": "packages/docsearch-cli"
-  },
-  "author": {
-    "name": "Algolia, Inc.",
-    "url": "https://www.algolia.com"
-  },
+  "homepage": "https://typesense.org/docs/latest/guide/docsearch.html",
+  "repository": "typesense/docsearch.js",
+  "contributors": [
+    {
+      "name": "Algolia, Inc.",
+      "url": "https://www.algolia.com"
+    },
+    {
+      "name": "Typesense, Inc.",
+      "url": "https://typesense.org"
+    }
+  ],
   "bugs": {
     "url": "https://github.com/algolia/docsearch/issues"
   },

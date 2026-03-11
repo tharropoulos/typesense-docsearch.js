@@ -1,17 +1,17 @@
-# @docsearch/react
+# typesense-docsearch-react
 
 React package for [DocSearch](http://docsearch.algolia.com/), the best search experience for docs.
 
 ## Installation
 
 ```bash
-npm install @docsearch/react@5
+npm install typesense-docsearch-react@5
 ```
 
 If you don’t want to use a package manager, you can use a standalone endpoint:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@docsearch/react@5"></script>
+<script src="https://cdn.jsdelivr.net/npm/typesense-docsearch-react@5"></script>
 ```
 
 ## Get started
@@ -19,9 +19,9 @@ If you don’t want to use a package manager, you can use a standalone endpoint:
 DocSearch generates a fully accessible search box for you.
 
 ```jsx App.js
-import { DocSearch } from '@docsearch/react';
+import { DocSearch } from 'typesense-docsearch-react';
 
-import '@docsearch/css';
+import 'typesense-docsearch-css';
 
 function App() {
   return (

@@ -1,4 +1,4 @@
-# `@docsearch/docusaurus-adapter`
+# `typesense-docsearch-docusaurus-adapter`
 
 Algolia search component for Docusaurus.
 
