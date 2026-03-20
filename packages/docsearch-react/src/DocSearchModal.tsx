@@ -468,6 +468,14 @@ export function DocSearchModal({
 
   const askAiConfig = askAi ?? null;
   const [askAiState, setAskAiState] = React.useState<AskAiState>('initial');
+  const suggestedQuestions = React.useMemo<SuggestedQuestionHit[]>(() => {
+    const staticQuestions = askAiConfig?.suggestedQuestions ?? [];
+
+    return staticQuestions.map((question, index) => ({
+      objectID: `suggested-question-${index}`,
+      question,
+    })) as SuggestedQuestionHit[];
+  }, [askAiConfig?.suggestedQuestions]);
 
   // Format the `indexes` to be used until `indexName` and `searchParameters` props are fully removed.
   const indexes: DocSearchIndex[] = [];
@@ -1010,7 +1018,7 @@ export function DocSearchModal({
               hasCollections={hasCollections}
               askAiState={askAiState}
               selectAskAiQuestion={handleSelectAskAiQuestion}
-              suggestedQuestions={[]}
+              suggestedQuestions={suggestedQuestions}
               selectSuggestedQuestion={selectSuggestedQuestion}
               onAskAiToggle={onAskAiToggle}
               onNewConversation={handleNewConversation}

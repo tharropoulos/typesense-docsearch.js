@@ -61,6 +61,13 @@ export type DocSearchAskAi = {
    */
   conversationModelId: string;
   /**
+   * Static suggested questions shown in Ask AI entry points.
+   *
+   * TODO: Replace this with a Typesense-backed suggestions source instead of
+   * shipping questions directly in frontend config.
+   */
+  suggestedQuestions?: string[];
+  /**
    * Collection to query for conversational retrieval.
    * Defaults to `typesenseCollectionName`.
    */

@@ -101,9 +101,11 @@ export type SidepanelProps = {
   portalContainer?: DocumentFragment | Element | null;
   /**
    * Enables displaying suggested questions on new conversation screen.
-   * Reserved for a future Typesense-native suggestions source.
+   *
+   * TODO: Replace this with a Typesense-backed suggestions source instead of
+   * shipping questions directly in frontend config.
    */
-  suggestedQuestions?: boolean;
+  suggestedQuestions?: string[];
   /**
    * Translations specific to the Sidepanel panel.
    **/
@@ -181,7 +183,14 @@ function SidepanelInner(
     excludeFields: askAi.excludeFields || 'embedding',
     searchParameters: askAi.searchParameters,
   });
-  const suggestedQuestions: SuggestedQuestionHit[] = [];
+  const suggestedQuestions: SuggestedQuestionHit[] = React.useMemo(() => {
+    const staticQuestions = askAi.suggestedQuestions ?? [];
+
+    return staticQuestions.map((question, index) => ({
+      objectID: `suggested-question-${index}`,
+      question,
+    })) as SuggestedQuestionHit[];
+  }, [askAi.suggestedQuestions]);
 
   const prevStatus = React.useRef(status);
 
