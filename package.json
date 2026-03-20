@@ -2,13 +2,12 @@
   "name": "@docsearch/monorepo",
   "private": true,
   "workspaces": [
-    "adapters/*",
     "packages/*",
     "examples/*"
   ],
   "type": "module",
   "scripts": {
-    "build": "bun run --sequential build:stage:base build:stage:react build:stage:consumers build:stage:adapter build:pkg:cli",
+    "build": "bun run --sequential build:stage:base build:stage:react build:stage:consumers build:pkg:cli",
     "build:all": "bun run --sequential build",
     "build:pkg:core": "bun --filter typesense-docsearch-core build",
     "build:pkg:css": "bun --filter typesense-docsearch-css build",
@@ -17,12 +16,10 @@
     "build:pkg:sidepanel": "bun --filter typesense-docsearch-sidepanel build",
     "build:pkg:sidepanel-js": "bun --filter typesense-docsearch-sidepanel-js build",
     "build:pkg:modal": "bun --filter typesense-docsearch-modal build",
-    "build:pkg:adapter": "bun --filter typesense-docsearch-docusaurus-adapter build",
     "build:pkg:cli": "bun --filter typesense-docsearch-cli build",
     "build:stage:base": "bun run --parallel build:pkg:core build:pkg:css",
     "build:stage:react": "bun run build:pkg:react",
     "build:stage:consumers": "bun run --parallel build:pkg:js build:pkg:sidepanel build:pkg:sidepanel-js build:pkg:modal",
-    "build:stage:adapter": "bun run build:pkg:adapter",
     "build:examples": "bun --filter './examples/*' build",
     "fmt": "oxfmt --config ./.oxfmtrc.json .",
     "pw:clean": "rm -rf playwright-report test-results",
