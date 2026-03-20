@@ -73,11 +73,12 @@ export interface DocSearchAskAi {
    */
   searchParameters?: TypesenseAskAiSearchParameters;
   /**
-   * Enables displaying suggested questions on Ask AI's new conversation screen.
+   * Static suggested questions shown in Ask AI entry points.
    *
-   * @default false
+   * TODO: Replace this with a Typesense-backed suggestions source instead of
+   * shipping questions directly in frontend config.
    */
-  suggestedQuestions?: boolean;
+  suggestedQuestions?: string[];
   /**
    * Enables and configures prompt suggestions that are displayed during keyword
    * search.
