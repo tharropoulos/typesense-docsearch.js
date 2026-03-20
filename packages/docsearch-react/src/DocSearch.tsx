@@ -74,7 +74,7 @@ export interface DocSearchProps {
   /** Typesense server configuration for the client. */
   typesenseServerConfig: TypesenseConfigurationOptions;
   /** Additional Typesense search parameters to merge into each query. */
-  typesenseSearchParameters: TypesenseSearchParams<
+  typesenseSearchParameters?: TypesenseSearchParams<
     Record<string, unknown>,
     string
   >;
