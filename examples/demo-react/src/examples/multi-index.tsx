@@ -3,7 +3,11 @@ import { DocSearch } from 'typesense-docsearch-react';
 import type { JSX } from 'react';
 
 import type { DemoTheme } from '../App';
-import { API_KEY, APP_ID, SEARCH_INDEX_NAME } from '../constants';
+import {
+  defaultCollection,
+  defaultSearchParameters,
+  typesenseServerConfig,
+} from '../config';
 
 export default function MultiIndex({
   theme,
@@ -12,9 +16,12 @@ export default function MultiIndex({
 }): JSX.Element {
   return (
     <DocSearch
+      typesenseCollectionName={defaultCollection}
+      typesenseServerConfig={typesenseServerConfig}
+      typesenseSearchParameters={defaultSearchParameters}
       indices={[
         {
-          name: SEARCH_INDEX_NAME,
+          name: defaultCollection,
         },
         {
           name: 'tailwindcss',
@@ -23,8 +30,6 @@ export default function MultiIndex({
           name: 'kubernetes',
         },
       ]}
-      appId={APP_ID}
-      apiKey={API_KEY}
       translations={{ button: { buttonText: 'Multi index search' } }}
       insights={true}
       theme={theme}

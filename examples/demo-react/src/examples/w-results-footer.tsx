@@ -5,6 +5,11 @@ import type { InternalDocSearchHit } from 'typesense-docsearch-react';
 import type { JSX } from 'react';
 
 import type { DemoTheme } from '../App';
+import {
+  defaultCollection,
+  defaultSearchParameters,
+  typesenseServerConfig,
+} from '../config';
 
 function ResultsFooterComponent({
   state,
@@ -15,7 +20,7 @@ function ResultsFooterComponent({
   return (
     <div className="DocSearch-HitsFooter">
       <a
-        href="https://docsearch.algolia.com/apply"
+        href="https://typesense.org/docs/guide/docsearch.html"
         target="_blank"
         rel="noreferrer"
       >
@@ -32,9 +37,9 @@ export default function WResultsFooter({
 }): JSX.Element {
   return (
     <DocSearch
-      indices={['docsearch']}
-      appId="PMZUYBQDAK"
-      apiKey="24b09689d5b4223813d9b8e48563c8f6"
+      typesenseCollectionName={defaultCollection}
+      typesenseServerConfig={typesenseServerConfig}
+      typesenseSearchParameters={defaultSearchParameters}
       insights={true}
       resultsFooterComponent={ResultsFooterComponent}
       translations={{ button: { buttonText: 'Search with results footer' } }}

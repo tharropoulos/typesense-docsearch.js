@@ -4,7 +4,11 @@ import { SidepanelButton, Sidepanel } from 'typesense-docsearch-sidepanel';
 import type { JSX } from 'react';
 
 import type { DemoTheme } from '../App';
-import { AGENT_ID, API_KEY, APP_ID } from '../constants';
+import {
+  defaultAskAi,
+  defaultCollection,
+  typesenseServerConfig,
+} from '../config';
 
 export default function SidepanelExample({
   theme,
@@ -12,28 +16,13 @@ export default function SidepanelExample({
   theme: DemoTheme;
 }): JSX.Element {
   return (
-    <DocSearch appId={APP_ID} apiKey={API_KEY} theme={theme}>
+    <DocSearch theme={theme}>
       <SidepanelButton variant="inline" />
       <Sidepanel
-        agentId={AGENT_ID}
+        typesenseCollectionName={defaultCollection}
+        typesenseServerConfig={typesenseServerConfig}
+        askAi={defaultAskAi}
         variant="floating"
-        tools={{
-          printConsoleMessage: {
-            render({ message: { output } }) {
-              if (!output) return '';
-
-              return output as string;
-            },
-            async onToolCall({ input, addToolOutput }) {
-              // eslint-disable-next-line no-console
-              console.log((input as any).message);
-
-              await addToolOutput({
-                output: 'Check your console for a nice message :)',
-              });
-            },
-          },
-        }}
       />
     </DocSearch>
   );

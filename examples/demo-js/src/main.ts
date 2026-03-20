@@ -28,14 +28,21 @@ function logSidepanelState(instance: SidepanelInstance, label: string): void {
   });
 }
 
+const typesenseServerConfig = {
+  apiKey: 'xyz',
+  nodes: [{ host: 'localhost', port: 8108, protocol: 'http' as const }],
+};
+
 let docsearchInstance: DocSearchInstance | undefined = undefined;
 let sidepanelInstance: SidepanelInstance | undefined = undefined;
 
 sidepanelInstance = sidepanel({
   container: '#docsearch-sidepanel',
-  appId: 'PMZUYBQDAK',
-  apiKey: '24b09689d5b4223813d9b8e48563c8f6',
-  agentId: 'ccdec697-e3fe-465b-a1c3-657e7bf18aef',
+  typesenseCollectionName: 'docsearch',
+  typesenseServerConfig,
+  askAi: {
+    conversationModelId: 'askAIDemo',
+  },
   onReady: () => {
     // eslint-disable-next-line no-console
     console.log('[demo-js] sidepanel onReady()');
@@ -66,10 +73,12 @@ logSidepanelState(sidepanelInstance, 'sidepanel initial state');
 
 docsearchInstance = docsearch({
   container: '#docsearch',
-  indices: ['docsearch'],
-  appId: 'PMZUYBQDAK',
-  apiKey: '24b09689d5b4223813d9b8e48563c8f6',
-  askAi: 'ccdec697-e3fe-465b-a1c3-657e7bf18aef',
+  typesenseCollectionName: 'docsearch',
+  typesenseServerConfig,
+  typesenseSearchParameters: {},
+  askAi: {
+    conversationModelId: 'askAIDemo',
+  },
   interceptAskAiEvent: (initialMessage) => {
     docsearchInstance?.close();
     sidepanelInstance.open(initialMessage);
@@ -91,7 +100,7 @@ docsearchInstance = docsearch({
   resultsFooterComponent: ({ state }, { html }) => {
     return html`
       <div class="DocSearch-HitsFooter">
-        <a href="https://docsearch.algolia.com/apply" target="_blank">
+        <a href="https://typesense.org/docs/guide/docsearch.html" target="_blank">
           See all ${state.context?.nbHits || 0} results
         </a>
       </div>

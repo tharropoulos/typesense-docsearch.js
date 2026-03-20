@@ -5,7 +5,12 @@ import { Sidepanel, SidepanelButton } from 'typesense-docsearch-sidepanel';
 import type { JSX } from 'react';
 
 import type { DemoTheme } from '../App';
-import { AGENT_ID, API_KEY, APP_ID } from '../constants';
+import {
+  defaultAskAi,
+  defaultCollection,
+  defaultSearchParameters,
+  typesenseServerConfig,
+} from '../config';
 
 export default function BasicHybrid({
   theme,
@@ -13,12 +18,21 @@ export default function BasicHybrid({
   theme: DemoTheme;
 }): JSX.Element {
   return (
-    <DocSearch appId={APP_ID} apiKey={API_KEY} theme={theme}>
+    <DocSearch theme={theme}>
       <DocSearchButton />
-      <DocSearchAskAiModal askAi={AGENT_ID} indices={['docsearch']} />
+      <DocSearchAskAiModal
+        typesenseCollectionName={defaultCollection}
+        typesenseServerConfig={typesenseServerConfig}
+        typesenseSearchParameters={defaultSearchParameters}
+        askAi={defaultAskAi}
+      />
 
       <SidepanelButton />
-      <Sidepanel agentId={AGENT_ID} />
+      <Sidepanel
+        typesenseCollectionName={defaultCollection}
+        typesenseServerConfig={typesenseServerConfig}
+        askAi={defaultAskAi}
+      />
     </DocSearch>
   );
 }

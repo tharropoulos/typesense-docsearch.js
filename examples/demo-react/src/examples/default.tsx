@@ -3,7 +3,11 @@ import { DocSearch } from 'typesense-docsearch-react';
 import type { JSX } from 'react';
 
 import type { DemoTheme } from '../App';
-import { API_KEY, APP_ID, SEARCH_INDEX_NAME } from '../constants';
+import {
+  defaultCollection,
+  defaultSearchParameters,
+  typesenseServerConfig,
+} from '../config';
 
 export default function DefaultExperience({
   theme,
@@ -12,9 +16,9 @@ export default function DefaultExperience({
 }): JSX.Element {
   return (
     <DocSearch
-      indices={[SEARCH_INDEX_NAME]}
-      appId={APP_ID}
-      apiKey={API_KEY}
+      typesenseCollectionName={defaultCollection}
+      typesenseServerConfig={typesenseServerConfig}
+      typesenseSearchParameters={defaultSearchParameters}
       theme={theme}
     />
   );

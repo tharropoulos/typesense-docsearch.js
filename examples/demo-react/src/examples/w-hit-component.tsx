@@ -3,8 +3,17 @@ import { DocSearch } from 'typesense-docsearch-react';
 import type { JSX } from 'react';
 
 import type { DemoTheme } from '../App';
+import {
+  defaultCollection,
+  defaultSearchParameters,
+  typesenseServerConfig,
+} from '../config';
 
 function CustomHit({ hit }: { hit: any }): JSX.Element {
+  // Typesense returns flat `hierarchy.lvlN` keys, Algolia a nested object.
+  const lvl1 = hit['hierarchy.lvl1'] ?? hit.hierarchy?.lvl1;
+  const lvl2 = hit['hierarchy.lvl2'] ?? hit.hierarchy?.lvl2;
+
   return (
     <a
       href={hit.url}
@@ -67,10 +76,10 @@ function CustomHit({ hit }: { hit: any }): JSX.Element {
               whiteSpace: 'nowrap',
             }}
           >
-            {hit.hierarchy.lvl1 || 'Untitled'}
+            {lvl1 || 'Untitled'}
           </div>
 
-          {hit.hierarchy.lvl2 && (
+          {lvl2 && (
             <div
               style={{
                 fontSize: '13px',
@@ -80,7 +89,7 @@ function CustomHit({ hit }: { hit: any }): JSX.Element {
                 whiteSpace: 'nowrap',
               }}
             >
-              {hit.hierarchy.lvl2}
+              {lvl2}
             </div>
           )}
 
@@ -130,9 +139,9 @@ export default function WHitComponent({
 }): JSX.Element {
   return (
     <DocSearch
-      indices={['docsearch']}
-      appId="PMZUYBQDAK"
-      apiKey="24b09689d5b4223813d9b8e48563c8f6"
+      typesenseCollectionName={defaultCollection}
+      typesenseServerConfig={typesenseServerConfig}
+      typesenseSearchParameters={defaultSearchParameters}
       insights={true}
       translations={{ button: { buttonText: 'Search with custom hits' } }}
       hitComponent={CustomHit}

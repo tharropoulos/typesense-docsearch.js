@@ -6,7 +6,12 @@ import { useCallback, useRef, useState, type JSX } from 'react';
 import { createPortal } from 'react-dom';
 
 import type { DemoTheme } from '../App';
-import { AGENT_ID, API_KEY, APP_ID, SEARCH_INDEX_NAME } from '../constants';
+import {
+  defaultAskAi,
+  defaultCollection,
+  defaultSearchParameters,
+  typesenseServerConfig,
+} from '../config';
 
 let DocSearchModal: typeof DocSearchAskAiModalType | null = null;
 
@@ -95,10 +100,10 @@ function DocSearch({ theme }: { theme: DemoTheme }): JSX.Element {
         searchContainer.current &&
         createPortal(
           <DocSearchModal
-            indices={[SEARCH_INDEX_NAME]}
-            appId={APP_ID}
-            apiKey={API_KEY}
-            askAi={AGENT_ID}
+            typesenseCollectionName={defaultCollection}
+            typesenseServerConfig={typesenseServerConfig}
+            typesenseSearchParameters={defaultSearchParameters}
+            askAi={defaultAskAi}
             initialScrollY={window.scrollY}
             initialQuery={initialQuery}
             isAskAiActive={isAskAiActive}

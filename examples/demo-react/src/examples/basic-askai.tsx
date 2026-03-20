@@ -1,27 +1,14 @@
 /* eslint-disable react/react-in-jsx-scope */
-import { DocSearchAI, type ToolCalls } from 'typesense-docsearch-react';
+import { DocSearchAI } from 'typesense-docsearch-react';
 import type { JSX } from 'react';
 
 import type { DemoTheme } from '../App';
-import { AGENT_ID, API_KEY, APP_ID, SEARCH_INDEX_NAME } from '../constants';
-
-const customTools: ToolCalls = {
-  printConsoleMessage: {
-    render({ message: { output } }) {
-      if (!output) return '';
-
-      return output as string;
-    },
-    async onToolCall({ input, addToolOutput }) {
-      // eslint-disable-next-line no-console
-      console.log((input as any).message);
-
-      await addToolOutput({
-        output: 'Check your console for a nice message :)',
-      });
-    },
-  },
-};
+import {
+  defaultAskAi,
+  defaultCollection,
+  defaultSearchParameters,
+  typesenseServerConfig,
+} from '../config';
 
 export default function BasicAskAI({
   theme,
@@ -30,16 +17,18 @@ export default function BasicAskAI({
 }): JSX.Element {
   return (
     <DocSearchAI
-      indices={[SEARCH_INDEX_NAME]}
-      appId={APP_ID}
-      apiKey={API_KEY}
+      typesenseCollectionName={defaultCollection}
+      typesenseServerConfig={typesenseServerConfig}
+      typesenseSearchParameters={defaultSearchParameters}
       askAi={{
-        agentId: AGENT_ID,
-        suggestedQuestions: true,
-        tools: customTools,
-        promptSuggestions: {
-          indexName: 'docsearch-markdown_prompt_suggestions',
+        ...defaultAskAi,
+        searchParameters: {
+          filter_by: 'language:en',
         },
+        suggestedQuestions: [
+          'How do I install Typesense?',
+          'How does the DocSearch scraper work?',
+        ],
       }}
       facets={[
         { key: 'language', label: 'Language' },

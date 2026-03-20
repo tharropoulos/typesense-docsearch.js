@@ -3,6 +3,7 @@ import { DocSearchAI } from 'typesense-docsearch-react';
 import type { JSX } from 'react';
 
 import type { DemoTheme } from '../App';
+import { defaultAskAi, typesenseServerConfig } from '../config';
 
 // this type matches the structure of the provided example hit
 /* type _DocSearchCustomHit = {
@@ -28,19 +29,14 @@ export default function WTransformItems({
 }): JSX.Element {
   return (
     <DocSearchAI
-      indices={[
-        {
-          name: 'crawler_doc',
-          searchParameters: {
-            attributesToRetrieve: ['*'],
-            attributesToSnippet: ['*'],
-            hitsPerPage: 20,
-          },
-        },
-      ]}
-      appId="PMZUYBQDAK"
-      apiKey="24b09689d5b4223813d9b8e48563c8f6"
-      askAi="ccdec697-e3fe-465b-a1c3-657e7bf18aef"
+      typesenseCollectionName="crawler_doc"
+      typesenseServerConfig={typesenseServerConfig}
+      typesenseSearchParameters={{
+        query_by: 'h1,h2,content',
+        include_fields: '*',
+        per_page: 20,
+      }}
+      askAi={defaultAskAi}
       insights={true}
       transformItems={(items) => {
         return items.map((item: any) => ({
