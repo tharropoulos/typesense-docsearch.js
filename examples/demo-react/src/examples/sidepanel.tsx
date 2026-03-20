@@ -3,15 +3,16 @@ import { DocSearch } from 'typesense-docsearch-core';
 import { SidepanelButton, Sidepanel } from 'typesense-docsearch-sidepanel';
 import type { JSX } from 'react';
 
+import { defaultAskAi, defaultCollection, typesenseServerConfig } from '../config';
+
 export default function SidepanelExample(): JSX.Element {
   return (
     <DocSearch>
       <SidepanelButton variant="inline" />
       <Sidepanel
-        indexName="docsearch"
-        appId="PMZUYBQDAK"
-        apiKey="24b09689d5b4223813d9b8e48563c8f6"
-        assistantId="askAIDemo"
+        typesenseCollectionName={defaultCollection}
+        typesenseServerConfig={typesenseServerConfig}
+        askAi={defaultAskAi}
         variant="floating"
       />
     </DocSearch>

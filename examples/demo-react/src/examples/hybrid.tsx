@@ -4,26 +4,29 @@ import { DocSearchButton, DocSearchModal } from 'typesense-docsearch-modal';
 import { Sidepanel, SidepanelButton } from 'typesense-docsearch-sidepanel';
 import type { JSX } from 'react';
 
+import { defaultSearchParameters, typesenseServerConfig } from '../config';
+
 export default function BasicHybrid(): JSX.Element {
   return (
     <DocSearch>
       <DocSearchButton />
       <DocSearchModal
-        indexName="docsearch"
-        appId="beta3G7FSQDJR3"
-        apiKey="0faad3eae2ba413c16355a0f8670c201"
+        typesenseCollectionName="docsearch"
+        typesenseServerConfig={typesenseServerConfig}
+        typesenseSearchParameters={defaultSearchParameters}
         askAi={{
-          assistantId: 'e3Kl4lTCBlSA',
-          indexName: 'docsearch-markdown',
+          conversationModelId: 'e3Kl4lTCBlSA',
+          collection: 'docsearch-markdown',
         }}
       />
 
       <SidepanelButton />
       <Sidepanel
-        indexName="docsearch-markdown"
-        appId="beta3G7FSQDJR3"
-        apiKey="0faad3eae2ba413c16355a0f8670c201"
-        assistantId="e3Kl4lTCBlSA"
+        typesenseCollectionName="docsearch-markdown"
+        typesenseServerConfig={typesenseServerConfig}
+        askAi={{
+          conversationModelId: 'e3Kl4lTCBlSA',
+        }}
       />
     </DocSearch>
   );

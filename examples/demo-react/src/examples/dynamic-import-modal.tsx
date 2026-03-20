@@ -5,6 +5,8 @@ import type { DocSearchModal as DocSearchModalType } from 'typesense-docsearch-r
 import { useCallback, useRef, useState, type JSX } from 'react';
 import { createPortal } from 'react-dom';
 
+import { defaultCollection, defaultSearchParameters, typesenseServerConfig } from '../config';
+
 let DocSearchModal: typeof DocSearchModalType | null = null;
 
 function importDocSearchModalIfNeeded(): Promise<void> {
@@ -87,13 +89,13 @@ function DocSearch(): JSX.Element {
         searchContainer.current &&
         createPortal(
           <DocSearchModal
-            indexName="docsearch"
-            appId="PMZUYBQDAK"
-            apiKey="24b09689d5b4223813d9b8e48563c8f6"
+            typesenseCollectionName={defaultCollection}
+            typesenseServerConfig={typesenseServerConfig}
+            typesenseSearchParameters={defaultSearchParameters}
             askAi={{
-              assistantId: 'askAIDemo',
+              conversationModelId: 'askAIDemo',
               searchParameters: {
-                facetFilters: ['language:en'],
+                filter_by: 'language:en',
               },
             }}
             initialScrollY={window.scrollY}

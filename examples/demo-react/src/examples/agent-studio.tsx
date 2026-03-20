@@ -6,6 +6,8 @@ import { SidepanelButton } from 'typesense-docsearch-sidepanel/button';
 import { Sidepanel } from 'typesense-docsearch-sidepanel/sidepanel';
 import type { JSX } from 'react';
 
+import { defaultAskAi, defaultCollection, defaultSearchParameters, typesenseServerConfig } from '../config';
+
 export function AgentStudioExample(): JSX.Element {
   return (
     <>
@@ -16,13 +18,10 @@ export function AgentStudioExample(): JSX.Element {
           }}
         />
         <DocSearchModal
-          indexName="docsearch"
-          appId="PMZUYBQDAK"
-          apiKey="a00716d83c64f6c61905c078b7d5ab66"
-          askAi={{
-            assistantId: 'ccdec697-e3fe-465b-a1c3-657e7bf18aef',
-            agentStudio: true,
-          }}
+          typesenseCollectionName={defaultCollection}
+          typesenseServerConfig={typesenseServerConfig}
+          typesenseSearchParameters={defaultSearchParameters}
+          askAi={defaultAskAi}
         />
       </DocSearch>
 
@@ -34,11 +33,9 @@ export function AgentStudioExample(): JSX.Element {
           }}
         />
         <Sidepanel
-          indexName="docsearch-markdown"
-          appId="PMZUYBQDAK"
-          apiKey="a00716d83c64f6c61905c078b7d5ab66"
-          assistantId="ccdec697-e3fe-465b-a1c3-657e7bf18aef"
-          agentStudio={true}
+          typesenseCollectionName={defaultCollection}
+          typesenseServerConfig={typesenseServerConfig}
+          askAi={defaultAskAi}
         />
       </DocSearch>
     </>

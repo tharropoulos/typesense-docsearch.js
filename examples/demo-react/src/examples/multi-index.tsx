@@ -2,9 +2,14 @@
 import { DocSearch } from 'typesense-docsearch-react';
 import type { JSX } from 'react';
 
+import { defaultCollection, defaultSearchParameters, typesenseServerConfig } from '../config';
+
 export default function MultiIndex(): JSX.Element {
   return (
     <DocSearch
+      typesenseCollectionName={defaultCollection}
+      typesenseServerConfig={typesenseServerConfig}
+      typesenseSearchParameters={defaultSearchParameters}
       indices={[
         {
           name: 'docsearch',
@@ -16,8 +21,6 @@ export default function MultiIndex(): JSX.Element {
           name: 'kubernetes',
         },
       ]}
-      appId="PMZUYBQDAK"
-      apiKey="24b09689d5b4223813d9b8e48563c8f6"
       translations={{ button: { buttonText: 'Multi index search' } }}
       insights={true}
     />

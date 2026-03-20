@@ -30,12 +30,18 @@ function logSidepanelState(instance: SidepanelInstance, label: string): void {
   });
 }
 
+const typesenseServerConfig = {
+  apiKey: 'xyz',
+  nodes: [{ host: 'localhost', port: 8108, protocol: 'http' as const }],
+};
+
 const sidepanelInstance = sidepanel({
   container: '#docsearch-sidepanel',
-  indexName: 'docsearch',
-  appId: 'PMZUYBQDAK',
-  apiKey: '24b09689d5b4223813d9b8e48563c8f6',
-  assistantId: 'askAIDemo',
+  typesenseCollectionName: 'docsearch',
+  typesenseServerConfig,
+  askAi: {
+    conversationModelId: 'askAIDemo',
+  },
   onReady: () => {
     // eslint-disable-next-line no-console
     console.log('[demo-js] sidepanel onReady()');
@@ -65,10 +71,12 @@ logSidepanelState(sidepanelInstance, 'sidepanel initial state');
 
 const docsearchInstance = docsearch({
   container: '#docsearch',
-  indexName: 'docsearch',
-  appId: 'PMZUYBQDAK',
-  apiKey: '24b09689d5b4223813d9b8e48563c8f6',
-  askAi: 'askAIDemo',
+  typesenseCollectionName: 'docsearch',
+  typesenseServerConfig,
+  typesenseSearchParameters: {},
+  askAi: {
+    conversationModelId: 'askAIDemo',
+  },
   interceptAskAiEvent: (initialMessage: InitialAskAiMessage) => {
     docsearchInstance.close();
     sidepanelInstance.open(initialMessage);

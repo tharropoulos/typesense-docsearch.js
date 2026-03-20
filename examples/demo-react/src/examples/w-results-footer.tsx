@@ -4,6 +4,8 @@ import { DocSearch } from 'typesense-docsearch-react';
 import type { InternalDocSearchHit } from 'typesense-docsearch-react';
 import type { JSX } from 'react';
 
+import { defaultCollection, defaultSearchParameters, typesenseServerConfig } from '../config';
+
 function ResultsFooterComponent({ state }: { state: AutocompleteState<InternalDocSearchHit> }): JSX.Element {
   // Using JSX templates
   return (
@@ -18,9 +20,9 @@ function ResultsFooterComponent({ state }: { state: AutocompleteState<InternalDo
 export default function WResultsFooter(): JSX.Element {
   return (
     <DocSearch
-      indexName="docsearch"
-      appId="PMZUYBQDAK"
-      apiKey="24b09689d5b4223813d9b8e48563c8f6"
+      typesenseCollectionName={defaultCollection}
+      typesenseServerConfig={typesenseServerConfig}
+      typesenseSearchParameters={defaultSearchParameters}
       insights={true}
       resultsFooterComponent={ResultsFooterComponent}
       translations={{ button: { buttonText: 'Search with results footer' } }}

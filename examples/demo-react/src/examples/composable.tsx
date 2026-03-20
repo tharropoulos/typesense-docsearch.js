@@ -3,18 +3,20 @@ import { DocSearch } from 'typesense-docsearch-core';
 import { DocSearchButton, DocSearchModal } from 'typesense-docsearch-modal';
 import { type JSX } from 'react';
 
+import { defaultCollection, defaultSearchParameters, typesenseServerConfig } from '../config';
+
 export default function Composable(): JSX.Element {
   return (
     <DocSearch>
       <DocSearchButton translations={{ buttonText: 'Composable API' }} />
       <DocSearchModal
-        indexName="docsearch"
-        appId="PMZUYBQDAK"
-        apiKey="24b09689d5b4223813d9b8e48563c8f6"
+        typesenseCollectionName={defaultCollection}
+        typesenseServerConfig={typesenseServerConfig}
+        typesenseSearchParameters={defaultSearchParameters}
         askAi={{
-          assistantId: 'askAIDemo',
+          conversationModelId: 'askAIDemo',
           searchParameters: {
-            facetFilters: ['language:en'],
+            filter_by: 'language:en',
           },
         }}
       />

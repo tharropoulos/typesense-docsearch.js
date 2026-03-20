@@ -18,6 +18,7 @@ import MultiIndex from './examples/multi-index';
 import WHitComponent from './examples/w-hit-component';
 import WTransformItems from './examples/w-hit-transformItems';
 import WResultsFooter from './examples/w-results-footer';
+import { defaultAskAi, defaultCollection, typesenseServerConfig } from './config';
 
 function App(): JSX.Element {
   return (
@@ -100,7 +101,7 @@ function App(): JSX.Element {
           </section>
 
           <section className="demo-section">
-            <p className="section-description">Agent Studio</p>
+            <p className="section-description">Ask AI</p>
             <div className="search-wrapper column">
               <AgentStudioExample />
             </div>
@@ -109,12 +110,11 @@ function App(): JSX.Element {
       </div>
 
       <DocSearchSidepanel
-        assistantId="askAIDemo"
-        indexName="docsearch"
-        appId="PMZUYBQDAK"
-        apiKey="24b09689d5b4223813d9b8e48563c8f6"
+        typesenseServerConfig={typesenseServerConfig}
+        typesenseCollectionName={defaultCollection}
+        askAi={defaultAskAi}
         panel={{
-          suggestedQuestions: true,
+          suggestedQuestions: ["test suggestion"],
         }}
       />
     </div>

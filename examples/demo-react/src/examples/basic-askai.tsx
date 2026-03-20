@@ -2,18 +2,20 @@
 import { DocSearch } from 'typesense-docsearch-react';
 import type { JSX } from 'react';
 
+import { defaultCollection, defaultSearchParameters, typesenseServerConfig } from '../config';
+
 export default function BasicAskAI(): JSX.Element {
   return (
     <DocSearch
-      indexName="docsearch"
-      appId="PMZUYBQDAK"
-      apiKey="24b09689d5b4223813d9b8e48563c8f6"
+      typesenseCollectionName={defaultCollection}
+      typesenseServerConfig={typesenseServerConfig}
+      typesenseSearchParameters={defaultSearchParameters}
       askAi={{
-        assistantId: 'askAIDemo',
+        conversationModelId: 'askAIDemo',
         searchParameters: {
-          facetFilters: ['language:en'],
+          filter_by: 'language:en',
         },
-        suggestedQuestions: true,
+        suggestedQuestions: ["test"],
       }}
       insights={true}
       translations={{ button: { buttonText: 'Search with Ask AI' } }}

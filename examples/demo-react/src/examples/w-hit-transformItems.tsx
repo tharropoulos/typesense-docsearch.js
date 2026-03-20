@@ -2,6 +2,8 @@
 import { DocSearch } from 'typesense-docsearch-react';
 import type { JSX } from 'react';
 
+import { defaultSearchParameters, typesenseServerConfig } from '../config';
+
 // this type matches the structure of the provided example hit
 /* type _DocSearchCustomHit = {
   path: string;
@@ -22,11 +24,11 @@ import type { JSX } from 'react';
 export default function WTransformItems(): JSX.Element {
   return (
     <DocSearch
-      indexName="crawler_doc"
-      appId="PMZUYBQDAK"
-      apiKey="24b09689d5b4223813d9b8e48563c8f6"
+      typesenseCollectionName="crawler_doc"
+      typesenseServerConfig={typesenseServerConfig}
+      typesenseSearchParameters={defaultSearchParameters}
       askAi={{
-        assistantId: 'askAIDemo',
+        conversationModelId: 'askAIDemo',
       }}
       insights={true}
       searchParameters={{

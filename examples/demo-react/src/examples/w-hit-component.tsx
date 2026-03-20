@@ -2,6 +2,8 @@
 import { DocSearch } from 'typesense-docsearch-react';
 import type { JSX } from 'react';
 
+import { defaultCollection, defaultSearchParameters, typesenseServerConfig } from '../config';
+
 function CustomHit({ hit }: { hit: any }): JSX.Element {
   return (
     <a
@@ -114,9 +116,9 @@ function CustomHit({ hit }: { hit: any }): JSX.Element {
 export default function WHitComponent(): JSX.Element {
   return (
     <DocSearch
-      indexName="docsearch"
-      appId="PMZUYBQDAK"
-      apiKey="24b09689d5b4223813d9b8e48563c8f6"
+      typesenseCollectionName={defaultCollection}
+      typesenseServerConfig={typesenseServerConfig}
+      typesenseSearchParameters={defaultSearchParameters}
       insights={true}
       translations={{ button: { buttonText: 'Search with custom hits' } }}
       hitComponent={CustomHit}
