@@ -73,13 +73,6 @@ export default [
   },
   tseslint.configs.disableTypeChecked,
   {
-    files: ['adapters/**/*'],
-    rules: {
-      'import/no-unresolved': 0,
-      'import/no-extraneous-dependencies': 0,
-    },
-  },
-  {
     files: ['examples/demo/**/*'],
     rules: {
       'react/react-in-jsx-scope': 0,

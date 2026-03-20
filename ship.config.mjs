@@ -2,7 +2,6 @@ import fs from 'fs';
 import path from 'path';
 
 const packages = [
-  'adapters/docusaurus-theme-search-algolia',
   'packages/docsearch-css',
   'packages/docsearch-react',
   'packages/docsearch-js',
