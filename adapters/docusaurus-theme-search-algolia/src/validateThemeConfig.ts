@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import type { ThemeConfig, ThemeConfigAlgolia } from '@docsearch/docusaurus-adapter';
+import type { ThemeConfig, ThemeConfigAlgolia } from 'typesense-docsearch-docusaurus-adapter';
 import type { ThemeConfigValidationContext } from '@docusaurus/types';
 import Joi from 'joi';
 

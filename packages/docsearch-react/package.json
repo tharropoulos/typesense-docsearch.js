@@ -56,9 +56,9 @@
   },
   "dependencies": {
     "@algolia/autocomplete-core": "1.19.2",
-    "typesense-docsearch-core": "4.6.0",
-    "typesense-docsearch-css": "4.6.0",
     "typesense": "^3.0.1",
+    "typesense-docsearch-core": "workspace:*",
+    "typesense-docsearch-css": "workspace:*",
     "typesense-instantsearch-adapter": "3.0.0"
   },
   "devDependencies": {

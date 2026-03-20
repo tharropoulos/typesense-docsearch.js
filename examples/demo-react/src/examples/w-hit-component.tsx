@@ -1,5 +1,5 @@
 /* eslint-disable react/react-in-jsx-scope */
-import { DocSearch } from '@docsearch/react';
+import { DocSearch } from 'typesense-docsearch-react';
 import type { JSX } from 'react';
 
 function CustomHit({ hit }: { hit: any }): JSX.Element {

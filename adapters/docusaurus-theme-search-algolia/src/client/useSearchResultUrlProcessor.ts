@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import type { ThemeConfigAlgolia } from '@docsearch/docusaurus-adapter';
+import type { ThemeConfigAlgolia } from 'typesense-docsearch-docusaurus-adapter';
 import { isRegexpStringMatch } from '@docusaurus/theme-common';
 import { useBaseUrlUtils } from '@docusaurus/useBaseUrl';
 import { useCallback } from 'react';

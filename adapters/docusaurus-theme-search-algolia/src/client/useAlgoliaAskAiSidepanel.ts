@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import type { AskAiConfig } from '@docsearch/docusaurus-adapter';
+import type { AskAiConfig } from 'typesense-docsearch-docusaurus-adapter';
 import { useCallback, useMemo, useRef, useState } from 'react';
 
 type AskAiTogglePayload = {

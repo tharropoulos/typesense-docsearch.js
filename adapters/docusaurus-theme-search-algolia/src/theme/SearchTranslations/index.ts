@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import type { DocSearchTranslations } from '@docsearch/react';
+import type { DocSearchTranslations } from 'typesense-docsearch-react';
 import { translate } from '@docusaurus/Translate';
 
 const translations: DocSearchTranslations & {

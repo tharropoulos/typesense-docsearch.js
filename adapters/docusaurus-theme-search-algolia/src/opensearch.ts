@@ -7,7 +7,7 @@
 
 import path from 'path';
 
-import type { ThemeConfig } from '@docsearch/docusaurus-adapter';
+import type { ThemeConfig } from 'typesense-docsearch-docusaurus-adapter';
 import type { HtmlTags, LoadContext } from '@docusaurus/types';
 import { defaultConfig, compile } from 'eta';
 import fs from 'fs-extra';

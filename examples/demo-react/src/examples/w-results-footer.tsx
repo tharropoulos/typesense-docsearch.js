@@ -1,7 +1,7 @@
 /* eslint-disable react/react-in-jsx-scope */
 import type { AutocompleteState } from '@algolia/autocomplete-core';
-import { DocSearch } from '@docsearch/react';
-import type { InternalDocSearchHit } from '@docsearch/react';
+import { DocSearch } from 'typesense-docsearch-react';
+import type { InternalDocSearchHit } from 'typesense-docsearch-react';
 import type { JSX } from 'react';
 
 function ResultsFooterComponent({ state }: { state: AutocompleteState<InternalDocSearchHit> }): JSX.Element {

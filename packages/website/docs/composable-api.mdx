@@ -19,11 +19,11 @@ you have more control of where, when and how you want to bundle the components a
 
 With Composable API comes two new NPM packages:
 
-- `@docsearch/core` - Shared core logic for managing different states of DocSearch
-- `@docsearch/modal` - The actual components used for the DocSearch Modal
+- `typesense-docsearch-core` - Shared core logic for managing different states of DocSearch
+- `typesense-docsearch-modal` - The actual components used for the DocSearch Modal
 
 :::warning
-Because of the nature of composability, this API is only available within React, and not within the `@docsearch/js` package.
+Because of the nature of composability, this API is only available within React, and not within the `typesense-docsearch.js` package.
 :::
 
 ## Getting Started
@@ -43,7 +43,7 @@ In order to start using the Composable API, you will need to install the followi
 <TabItem value="npm">
 
 ```bash
-npm install @docsearch/core @docsearch/modal @docsearch/css
+npm install typesense-docsearch-core typesense-docsearch-modal typesense-docsearch-css
 ```
 
 </TabItem>
@@ -51,7 +51,7 @@ npm install @docsearch/core @docsearch/modal @docsearch/css
 <TabItem value="yarn">
 
 ```bash
-yarn add @docsearch/core @docsearch/modal @docsearch/css
+yarn add typesense-docsearch-core typesense-docsearch-modal typesense-docsearch-css
 ```
 
 </TabItem>
@@ -59,7 +59,7 @@ yarn add @docsearch/core @docsearch/modal @docsearch/css
 <TabItem value="pnpm">
 
 ```bash
-pnpm add @docsearch/core @docsearch/modal @docsearch/css
+pnpm add typesense-docsearch-core typesense-docsearch-modal typesense-docsearch-css
 ```
 
 </TabItem>
@@ -67,7 +67,7 @@ pnpm add @docsearch/core @docsearch/modal @docsearch/css
 <TabItem value="bun">
 
 ```bash
-bun add @docsearch/core @docsearch/modal @docsearch/css
+bun add typesense-docsearch-core typesense-docsearch-modal typesense-docsearch-css
 ```
 
 </TabItem>
@@ -80,9 +80,9 @@ bun add @docsearch/core @docsearch/modal @docsearch/css
 The most simple implementation would be as follows:
 
 ```tsx
-import { DocSearch } from '@docsearch/core';
-import { DocSearchButton, DocSearchModal } from '@docsearch/modal';
-import '@docsearch/css/style.css';
+import { DocSearch } from 'typesense-docsearch-core';
+import { DocSearchButton, DocSearchModal } from 'typesense-docsearch-modal';
+import 'typesense-docsearch-css/style.css';
 
 export function Search() {
   return (
@@ -114,9 +114,9 @@ This setup  is slightly more involved with now rendering three different compone
 Using Ask AI with the Composable API is quite similar to the normal way of using DocSearch. All that is needed is the `askAi` configuration:
 
 ```tsx
-import { DocSearch } from '@docsearch/core';
-import { DocSearchButton, DocSearchModal } from '@docsearch/modal';
-import '@docsearch/css/style.css';
+import { DocSearch } from 'typesense-docsearch-core';
+import { DocSearchButton, DocSearchModal } from 'typesense-docsearch-modal';
+import 'typesense-docsearch-css/style.css';
 
 export function Search() {
   return (
@@ -178,19 +178,19 @@ export default function AdvancedSearch(): JSX.Element {
 
 ### Bundle saving exports
 
-To help aid in trimming initial bundle size, the `@docsearch/modal` package exposes explicit file exports as well:
+To help aid in trimming initial bundle size, the `typesense-docsearch-modal` package exposes explicit file exports as well:
 
 ```ts
-import { DocSearchButton } from '@docsearch/modal/button';
-import { DocSearchModal } from '@docsearch/modal/modal';
+import { DocSearchButton } from 'typesense-docsearch-modal/button';
+import { DocSearchModal } from 'typesense-docsearch-modal/modal';
 ```
 
 Here is a basic example of delaying the loading of the `DocSearchModal` code until the search button is clicked:
 
 ```tsx
-import { DocSearch } from '@docsearch/core';
-import { DocSearchButton } from '@docsearch/modal/button';
-import type { DocSearchModal as DocSearchModalType } from '@docsearch/modal/modal';
+import { DocSearch } from 'typesense-docsearch-core';
+import { DocSearchButton } from 'typesense-docsearch-modal/button';
+import type { DocSearchModal as DocSearchModalType } from 'typesense-docsearch-modal/modal';
 import { useState } from 'react';
 
 let DocSearchModal: typeof DocSearchModalType | null = null;
@@ -200,7 +200,7 @@ async function importDocSearchModalIfNeeded() {
     return;
   }
 
-  const { DocSearchModal: Modal } = await import('@docsearch/modal/modal');
+  const { DocSearchModal: Modal } = await import('typesense-docsearch-modal/modal');
 
   DocSearchModal = Modal;
 }
@@ -233,7 +233,7 @@ export default function DynamicModal() {
 
 ### `<DocSearch />`
 
-The `<DocSearch />` component from the `@docsearch/core` package is the main state handler for all of DocSearch.
+The `<DocSearch />` component from the `typesense-docsearch-core` package is the main state handler for all of DocSearch.
 It utilizes [React Context][1] to enable sharing it's state across nested components.
 
 #### Props

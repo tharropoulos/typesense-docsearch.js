@@ -62,9 +62,9 @@ export default {
       }),
     ],
   ],
-  plugins: [myLoaders, tailwindLoader, '@docsearch/docusaurus-adapter'],
+  plugins: [myLoaders, tailwindLoader, 'typesense-docsearch-docusaurus-adapter'],
   themeConfig:
-    /** @type {import('@docsearch/docusaurus-adapter').ThemeConfig} */
+    /** @type {import('typesense-docsearch-docusaurus-adapter').ThemeConfig} */
     ({
       docsearch: {
         placeholder: 'Search or ask AI',

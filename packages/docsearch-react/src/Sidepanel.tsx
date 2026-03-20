@@ -1,5 +1,5 @@
-import { DocSearch, useDocSearch } from '@docsearch/core';
-import type { DocSearchCallbacks, DocSearchRef, DocSearchTheme, SidepanelShortcuts } from '@docsearch/core';
+import { DocSearch, useDocSearch } from 'typesense-docsearch-core';
+import type { DocSearchCallbacks, DocSearchRef, DocSearchTheme, SidepanelShortcuts } from 'typesense-docsearch-core';
 import type { ConfigurationOptions as TypesenseConfigurationOptions } from 'typesense/lib/Typesense/Configuration';
 import type { JSX } from 'react';
 import React from 'react';
@@ -9,7 +9,7 @@ import type { DocSearchAskAi } from './DocSearch';
 import type { SidepanelButtonProps, SidepanelProps as SidepanelPanelProps } from './Sidepanel/index';
 import { SidepanelButton, Sidepanel } from './Sidepanel/index';
 
-export type { DocSearchRef, DocSearchCallbacks } from '@docsearch/core';
+export type { DocSearchRef, DocSearchCallbacks } from 'typesense-docsearch-core';
 
 export type DocSearchSidepanelProps = DocSearchCallbacks & {
   /**

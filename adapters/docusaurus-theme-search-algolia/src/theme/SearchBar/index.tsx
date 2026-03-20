@@ -6,7 +6,7 @@
  */
 
 import type { AutocompleteState } from '@algolia/autocomplete-core';
-import type { ThemeConfigAlgolia } from '@docsearch/docusaurus-adapter';
+import type { ThemeConfigAlgolia } from 'typesense-docsearch-docusaurus-adapter';
 import type {
   InternalDocSearchHit,
   DocSearchModal as DocSearchModalType,
@@ -15,11 +15,11 @@ import type {
   DocSearchTransformClient,
   DocSearchHit,
   DocSearchTranslations,
-} from '@docsearch/react';
-import { DocSearchButton } from '@docsearch/react/button';
-import { SidepanelButton } from '@docsearch/react/sidepanel';
-import type { Sidepanel as SidepanelType } from '@docsearch/react/sidepanel';
-import { useDocSearchKeyboardEvents } from '@docsearch/react/useDocSearchKeyboardEvents';
+} from 'typesense-docsearch-react';
+import { DocSearchButton } from 'typesense-docsearch-react/button';
+import { SidepanelButton } from 'typesense-docsearch-react/sidepanel';
+import type { Sidepanel as SidepanelType } from 'typesense-docsearch-react/sidepanel';
+import { useDocSearchKeyboardEvents } from 'typesense-docsearch-react/useDocSearchKeyboardEvents';
 import Head from '@docusaurus/Head';
 import Link from '@docusaurus/Link';
 import { useHistory } from '@docusaurus/router';
@@ -72,7 +72,7 @@ function importDocSearchModalIfNeeded(): Promise<void> {
   }
 
   // eslint-disable-next-line import/dynamic-import-chunkname
-  return Promise.all([import('@docsearch/react/modal'), import('@docsearch/react/style'), import('./styles.css')]).then(
+  return Promise.all([import('typesense-docsearch-react/modal'), import('typesense-docsearch-react/style'), import('./styles.css')]).then(
     ([{ DocSearchModal: Modal }]) => {
       DocSearchModal = Modal;
     },
@@ -86,7 +86,7 @@ async function importDocSearchSidepanelIfNeeded(): Promise<void> {
   }
 
   // eslint-disable-next-line import/dynamic-import-chunkname
-  return Promise.all([import('@docsearch/react/sidepanel'), import('@docsearch/react/style/sidepanel')]).then(
+  return Promise.all([import('typesense-docsearch-react/sidepanel'), import('typesense-docsearch-react/style/sidepanel')]).then(
     ([{ Sidepanel }]) => {
       DocSearchSidepanel = Sidepanel;
     },

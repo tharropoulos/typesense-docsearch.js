@@ -1,5 +1,5 @@
 /* eslint-disable react/react-in-jsx-scope */
-import { DocSearch } from '@docsearch/react';
+import { DocSearch } from 'typesense-docsearch-react';
 import type { JSX } from 'react';
 
 export default function BasicAskAI(): JSX.Element {

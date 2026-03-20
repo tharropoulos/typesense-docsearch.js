@@ -1,1 +1,1 @@
-export * from '@docsearch/css/dist/sidepanel.css';
+export * from 'typesense-docsearch-css/dist/sidepanel.css';

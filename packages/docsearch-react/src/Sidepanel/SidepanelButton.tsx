@@ -1,4 +1,4 @@
-import type { SidepanelShortcuts } from '@docsearch/core';
+import type { SidepanelShortcuts } from 'typesense-docsearch-core';
 import React, { useEffect, useState } from 'react';
 import type { JSX } from 'react';
 

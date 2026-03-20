@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import type { AskAiConfig } from '@docsearch/docusaurus-adapter';
-import type { DocSearchModalProps, DocSearchTranslations } from '@docsearch/react';
+import type { AskAiConfig } from 'typesense-docsearch-docusaurus-adapter';
+import type { DocSearchModalProps, DocSearchTranslations } from 'typesense-docsearch-react';
 import translations from '@theme/SearchTranslations';
 import type { FacetFilters } from 'algoliasearch/lite';
 import { useCallback, useMemo, useState } from 'react';

@@ -4,8 +4,8 @@ import {
   createAutocomplete,
   type AutocompleteState,
 } from '@algolia/autocomplete-core';
-import type { InitialAskAiMessage, OnAskAiToggle } from '@docsearch/core';
-import { useTheme } from '@docsearch/core/useTheme';
+import type { InitialAskAiMessage, OnAskAiToggle } from 'typesense-docsearch-core';
+import { useTheme } from 'typesense-docsearch-core/useTheme';
 import type { SearchResponse } from 'algoliasearch/lite';
 import React, { type JSX } from 'react';
 import type { MultiSearchRequestSchema } from 'typesense/lib/Typesense/Types';

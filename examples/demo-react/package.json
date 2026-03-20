@@ -11,13 +11,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "typesense-docsearch-core": "workspace:*",
     "typesense-docsearch-css": "workspace:*",
     "typesense-docsearch-modal": "workspace:*",
     "typesense-docsearch-react": "workspace:*",
-    "typesense-docsearch-sidepanel": "workspace:*",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "typesense-docsearch-sidepanel": "workspace:*"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.4",

@@ -3,12 +3,12 @@ import type {
   AutocompleteOptions,
   AutocompleteState,
 } from '@algolia/autocomplete-core';
-import { DocSearch as DocSearchProvider, useDocSearch } from '@docsearch/core';
+import { DocSearch as DocSearchProvider, useDocSearch } from 'typesense-docsearch-core';
 import type {
   DocSearchModalShortcuts,
   DocSearchRef,
   InitialAskAiMessage,
-} from '@docsearch/core';
+} from 'typesense-docsearch-core';
 import type {
   LiteClient,
   SearchParamsObject,
@@ -35,7 +35,7 @@ import type {
 import type { ButtonTranslations, ModalTranslations } from '.';
 import type { TypesenseAskAiSearchParameters } from './types/AskiAi';
 
-export type { DocSearchRef } from '@docsearch/core';
+export type { DocSearchRef } from 'typesense-docsearch-core';
 
 export type DocSearchTranslations = Partial<{
   button: ButtonTranslations;
@@ -118,7 +118,7 @@ export interface DocSearchProps {
    * Intercept Ask AI requests (e.g. Submitting a prompt or selecting a suggested question).
    *
    * Return `true` to prevent the default modal Ask AI flow (no toggle, no sendMessage).
-   * Useful to route Ask AI into a different UI (e.g. `@docsearch/sidepanel-js`) without flicker.
+   * Useful to route Ask AI into a different UI (e.g. `typesense-docsearch-sidepanel-js`) without flicker.
    */
   interceptAskAiEvent?: (initialMessage: InitialAskAiMessage) => boolean | void;
   /**

@@ -1,9 +1,9 @@
 /* eslint-disable react/react-in-jsx-scope */
-import { DocSearch } from '@docsearch/core';
-import { DocSearchButton } from '@docsearch/modal/button';
-import { DocSearchModal } from '@docsearch/modal/modal';
-import { SidepanelButton } from '@docsearch/sidepanel/button';
-import { Sidepanel } from '@docsearch/sidepanel/sidepanel';
+import { DocSearch } from 'typesense-docsearch-core';
+import { DocSearchButton } from 'typesense-docsearch-modal/button';
+import { DocSearchModal } from 'typesense-docsearch-modal/modal';
+import { SidepanelButton } from 'typesense-docsearch-sidepanel/button';
+import { Sidepanel } from 'typesense-docsearch-sidepanel/sidepanel';
 import type { JSX } from 'react';
 
 export function AgentStudioExample(): JSX.Element {

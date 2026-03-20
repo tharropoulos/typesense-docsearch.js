@@ -22,8 +22,8 @@ function sourceOutput(fileName) {
       globals: {
         react: 'React',
         'react-dom': 'ReactDOM',
-        '@docsearch/core': 'DocSearchCore',
-        '@docsearch/react': 'DocSearchReact',
+        'typesense-docsearch-core': 'DocSearchCore',
+        'typesense-docsearch-react': 'DocSearchReact',
       },
       file: `dist/umd/${fileName}`,
       format: 'umd',
@@ -35,7 +35,7 @@ function sourceOutput(fileName) {
   ];
 }
 
-const externals = ['react', 'react-dom', '@docsearch/core', /^@docsearch\/react/];
+const externals = ['react', 'react-dom', 'typesense-docsearch-core', /^typesense-docsearch-react/];
 
 export default [
   {

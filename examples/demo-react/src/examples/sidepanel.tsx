@@ -1,6 +1,6 @@
 /* eslint-disable react/react-in-jsx-scope */
-import { DocSearch } from '@docsearch/core';
-import { SidepanelButton, Sidepanel } from '@docsearch/sidepanel';
+import { DocSearch } from 'typesense-docsearch-core';
+import { SidepanelButton, Sidepanel } from 'typesense-docsearch-sidepanel';
 import type { JSX } from 'react';
 
 export default function SidepanelExample(): JSX.Element {

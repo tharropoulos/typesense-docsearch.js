@@ -5,9 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-declare module '@docsearch/react/modal';
-declare module '@docsearch/react/style';
-declare module '@docsearch/react/style/sidepanel';
+declare module 'typesense-docsearch-react/modal';
+declare module 'typesense-docsearch-react/style';
+declare module 'typesense-docsearch-react/style/sidepanel';
 
 declare module 'eta' {
   export const defaultConfig: Record<string, unknown>;

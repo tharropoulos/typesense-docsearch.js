@@ -1,11 +1,11 @@
 /* eslint-disable react/react-in-jsx-scope */
-import { version } from '@docsearch/react';
-import { DocSearchSidepanel } from '@docsearch/react/sidepanel';
+import { version } from 'typesense-docsearch-react';
+import { DocSearchSidepanel } from 'typesense-docsearch-react/sidepanel';
 import type { JSX } from 'react';
 
 import './App.css';
-import '@docsearch/css/dist/style.css';
-import '@docsearch/css/dist/sidepanel.css';
+import 'typesense-docsearch-css/dist/style.css';
+import 'typesense-docsearch-css/dist/sidepanel.css';
 
 import { AgentStudioExample } from './examples/agent-studio';
 import Basic from './examples/basic';

@@ -1,5 +1,5 @@
-import type { DocSearchProps } from '@docsearch/core';
-import { DocSearch } from '@docsearch/core';
+import type { DocSearchProps } from 'typesense-docsearch-core';
+import { DocSearch } from 'typesense-docsearch-core';
 import type { RenderResult } from '@testing-library/react';
 import { render, screen, cleanup, act, fireEvent } from '@testing-library/react';
 import React from 'react';
@@ -19,7 +19,7 @@ const renderComponent = (
     },
   });
 
-describe('@docsearch/modal', () => {
+describe('typesense-docsearch-modal', () => {
   afterEach(() => {
     cleanup();
   });

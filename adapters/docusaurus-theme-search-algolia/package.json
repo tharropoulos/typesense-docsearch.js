@@ -35,7 +35,6 @@
     "copy:watch": "node ./scripts/copy-assets.mjs --watch"
   },
   "dependencies": {
-    "typesense-docsearch-react": "4.6.0",
     "@docusaurus/core": "^3.9.2",
     "@docusaurus/plugin-content-docs": "^3.9.2",
     "@docusaurus/theme-common": "^3.9.2",
@@ -48,6 +47,7 @@
     "joi": "^17.9.2",
     "lodash": "^4.17.21",
     "tslib": "^2.6.0",
+    "typesense-docsearch-react": "workspace:*",
     "utility-types": "^3.10.0"
   },
   "devDependencies": {

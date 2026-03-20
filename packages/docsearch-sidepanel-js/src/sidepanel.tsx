@@ -1,6 +1,6 @@
-import type { DocSearchRef, InitialAskAiMessage } from '@docsearch/core';
-import type { DocSearchSidepanelProps } from '@docsearch/react/sidepanel';
-import { DocSearchSidepanel } from '@docsearch/react/sidepanel';
+import type { DocSearchRef, InitialAskAiMessage } from 'typesense-docsearch-core';
+import type { DocSearchSidepanelProps } from 'typesense-docsearch-react/sidepanel';
+import { DocSearchSidepanel } from 'typesense-docsearch-react/sidepanel';
 import { render, createElement, unmountComponentAtNode, createRef } from 'preact/compat';
 
 /**

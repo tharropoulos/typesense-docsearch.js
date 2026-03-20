@@ -1,5 +1,5 @@
-import type { DocSearchProps } from '@docsearch/core';
-import { DocSearch } from '@docsearch/core';
+import type { DocSearchProps } from 'typesense-docsearch-core';
+import { DocSearch } from 'typesense-docsearch-core';
 import type { RenderResult } from '@testing-library/react';
 import { render, screen, cleanup, act, fireEvent } from '@testing-library/react';
 import React from 'react';
@@ -9,14 +9,15 @@ import '@testing-library/jest-dom/vitest';
 
 import { DocSearchModal, type DocSearchModalProps } from '../DocSearchModal';
 
-const APP_ID = 'test_app';
-const API_KEY = 'test_api_key';
-const INDEX_NAME = 'test_index';
+const typesenseServerConfig = {
+  apiKey: 'test_api_key',
+  nodes: [{ host: 'localhost', port: 8108, protocol: 'http' as const }],
+};
 
 const DEFAULT_PROPS: DocSearchModalProps = {
-  appId: APP_ID,
-  apiKey: API_KEY,
-  indexName: INDEX_NAME,
+  typesenseCollectionName: 'test_index',
+  typesenseServerConfig,
+  typesenseSearchParameters: {},
   transformSearchClient(searchClient) {
     return {
       ...searchClient,
@@ -52,7 +53,7 @@ const renderComponent = (
     },
   });
 
-describe('@docsearch/modal', () => {
+describe('typesense-docsearch-modal', () => {
   afterEach(() => {
     cleanup();
   });

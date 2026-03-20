@@ -5,9 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-declare module '@docsearch/docusaurus-adapter' {
-  import type { DocSearchProps } from '@docsearch/react';
-  import type { SidepanelProps } from '@docsearch/react/sidepanel';
+declare module 'typesense-docsearch-docusaurus-adapter' {
+  import type { DocSearchProps } from 'typesense-docsearch-react';
+  import type { SidepanelProps } from 'typesense-docsearch-react/sidepanel';
   import type { FacetFilters } from 'algoliasearch/lite';
   import type { DeepPartial, Overwrite, Optional } from 'utility-types';
 
@@ -108,7 +108,7 @@ declare module '@theme/SearchBar' {
 }
 
 declare module '@theme/SearchTranslations' {
-  import type { DocSearchTranslations } from '@docsearch/react';
+  import type { DocSearchTranslations } from 'typesense-docsearch-react';
 
   const translations: DocSearchTranslations & {
     placeholder: string;

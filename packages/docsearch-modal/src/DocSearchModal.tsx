@@ -1,6 +1,6 @@
-import { useDocSearch } from '@docsearch/core';
-import type { DocSearchModalProps as ReactDocSearchModalProps } from '@docsearch/react';
-import { DocSearchModal as Modal } from '@docsearch/react/modal';
+import { useDocSearch } from 'typesense-docsearch-core';
+import type { DocSearchModalProps as ReactDocSearchModalProps } from 'typesense-docsearch-react';
+import { DocSearchModal as Modal } from 'typesense-docsearch-react/modal';
 import type { JSX } from 'react';
 import React from 'react';
 import { createPortal } from 'react-dom';

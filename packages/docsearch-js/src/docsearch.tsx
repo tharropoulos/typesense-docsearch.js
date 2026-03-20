@@ -1,6 +1,6 @@
-import type { DocSearchRef, InitialAskAiMessage } from '@docsearch/core';
-import type { DocSearchProps as DocSearchComponentProps } from '@docsearch/react';
-import { DocSearch, version as docSearchVersion } from '@docsearch/react';
+import type { DocSearchRef, InitialAskAiMessage } from 'typesense-docsearch-core';
+import type { DocSearchProps as DocSearchComponentProps } from 'typesense-docsearch-react';
+import { DocSearch, version as docSearchVersion } from 'typesense-docsearch-react';
 import htm from 'htm';
 import type { JSX } from 'preact';
 import { createElement, render, isValidElement, unmountComponentAtNode, createRef } from 'preact/compat';

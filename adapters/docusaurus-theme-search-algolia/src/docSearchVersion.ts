@@ -5,6 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { version as docSearchVersion } from '@docsearch/react';
+import { version as docSearchVersion } from 'typesense-docsearch-react';
 
 export const docSearchVersionString = docSearchVersion;

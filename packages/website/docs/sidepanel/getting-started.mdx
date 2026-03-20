@@ -21,11 +21,11 @@ To get started with Sidepanel, first you will need to install the needed package
 <TabItem value="npm">
 
 ```bash
-npm install @docsearch/react @docsearch/css
+npm install typesense-docsearch-react typesense-docsearch-css
 
 # Or if using JS based package
 
-npm install @docsearch/sidepanel-js @docsearch/css
+npm install typesense-docsearch-sidepanel-js typesense-docsearch-css
 ```
 
 </TabItem>
@@ -33,11 +33,11 @@ npm install @docsearch/sidepanel-js @docsearch/css
 <TabItem value="yarn">
 
 ```bash
-yarn add @docsearch/react @docsearch/css
+yarn add typesense-docsearch-react typesense-docsearch-css
 
 # Or if using JS based package
 
-yarn add @docsearch/sidepanel-js @docsearch/css
+yarn add typesense-docsearch-sidepanel-js typesense-docsearch-css
 ```
 
 </TabItem>
@@ -45,11 +45,11 @@ yarn add @docsearch/sidepanel-js @docsearch/css
 <TabItem value="pnpm">
 
 ```bash
-pnpm add @docsearch/react @docsearch/css
+pnpm add typesense-docsearch-react typesense-docsearch-css
 
 # Or if using JS based package
 
-pnpm add @docsearch/sidepanel-js @docsearch/css
+pnpm add typesense-docsearch-sidepanel-js typesense-docsearch-css
 ```
 
 </TabItem>
@@ -57,11 +57,11 @@ pnpm add @docsearch/sidepanel-js @docsearch/css
 <TabItem value="bun">
 
 ```bash
-bun add @docsearch/react @docsearch/css
+bun add typesense-docsearch-react typesense-docsearch-css
 
 # Or if using JS based package
 
-bun add @docsearch/sidepanel-js @docsearch/css
+bun add typesense-docsearch-sidepanel-js typesense-docsearch-css
 ```
 
 </TabItem>
@@ -72,10 +72,10 @@ bun add @docsearch/sidepanel-js @docsearch/css
 ### Without package manager
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css/dist/style.css" />
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css/dist/sidepanel.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typesense-docsearch-css/dist/style.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typesense-docsearch-css/dist/sidepanel.css" />
 
-<script src="https://cdn.jsdelivr.net/npm/@docsearch/sidepanel-js"></script>
+<script src="https://cdn.jsdelivr.net/npm/typesense-docsearch-sidepanel-js"></script>
 ```
 
 ## Implementation
@@ -85,10 +85,10 @@ The simplest implementation of Sidepanel would be as follows:
 <Tabs>
 <TabItem value="React">
 ```tsx
-import { DocSearchSidepanel } from '@docsearch/react/sidepanel';
+import { DocSearchSidepanel } from 'typesense-docsearch-react/sidepanel';
 
-import '@docsearch/css/dist/style.css';
-import '@docsearch/css/dist/sidepanel.css';
+import 'typesense-docsearch-css/dist/style.css';
+import 'typesense-docsearch-css/dist/sidepanel.css';
 
 function App() {
   return (
@@ -111,10 +111,10 @@ You will need a `container` DOM node to render the Sidepanel into:
 ```
 
 ```js
-import sidepanel from '@docsearch/sidepanel-js';
+import sidepanel from 'typesense-docsearch-sidepanel-js';
 
-import '@docsearch/css/dist/style.css';
-import '@docsearch/css/dist/sidepanel.css';
+import 'typesense-docsearch-css/dist/style.css';
+import 'typesense-docsearch-css/dist/sidepanel.css';
 
 sidepanel({
   container: '#docsearch-sidepanel',

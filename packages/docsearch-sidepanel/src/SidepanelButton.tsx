@@ -1,6 +1,6 @@
-import { useDocSearch } from '@docsearch/core';
-import type { SidepanelButtonProps as ButtonProps } from '@docsearch/react/sidepanel';
-import { SidepanelButton as Button } from '@docsearch/react/sidepanel';
+import { useDocSearch } from 'typesense-docsearch-core';
+import type { SidepanelButtonProps as ButtonProps } from 'typesense-docsearch-react/sidepanel';
+import { SidepanelButton as Button } from 'typesense-docsearch-react/sidepanel';
 import React from 'react';
 import type { JSX } from 'react';
 import { createPortal } from 'react-dom';

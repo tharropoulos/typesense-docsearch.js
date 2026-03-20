@@ -22,7 +22,7 @@ function sourceOutput(fileName) {
       globals: {
         react: 'React',
         'react-dom': 'ReactDOM',
-        '@docsearch/core': 'DocSearchCore',
+        'typesense-docsearch-core': 'DocSearchCore',
       },
       file: `dist/umd/${fileName}`,
       format: 'umd',
@@ -34,7 +34,7 @@ function sourceOutput(fileName) {
   ];
 }
 
-const externalPackages = ['react', 'react-dom', '@docsearch/core'];
+const externalPackages = ['react', 'react-dom', 'typesense-docsearch-core'];
 
 export default [
   {

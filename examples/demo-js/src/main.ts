@@ -1,11 +1,11 @@
 import type { AutocompleteState } from '@algolia/autocomplete-core';
-import type { InitialAskAiMessage } from '@docsearch/core';
-import docsearch, { type DocSearchInstance, type TemplateHelpers } from '@docsearch/js';
-import sidepanel, { type SidepanelInstance } from '@docsearch/sidepanel-js';
+import type { InitialAskAiMessage } from 'typesense-docsearch-core';
+import docsearch, { type DocSearchInstance, type TemplateHelpers } from 'typesense-docsearch.js';
+import sidepanel, { type SidepanelInstance } from 'typesense-docsearch-sidepanel-js';
 
 import './app.css';
-import '@docsearch/css/dist/style.css';
-import '@docsearch/css/dist/sidepanel.css';
+import 'typesense-docsearch-css/dist/style.css';
+import 'typesense-docsearch-css/dist/sidepanel.css';
 
 declare global {
   interface Window {

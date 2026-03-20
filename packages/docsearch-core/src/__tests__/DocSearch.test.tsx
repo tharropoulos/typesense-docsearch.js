@@ -33,7 +33,7 @@ const StateRender = (): JSX.Element => {
   return <p>State: {docsearchState}</p>;
 };
 
-describe('@docsearch/core', () => {
+describe('typesense-docsearch-core', () => {
   afterEach(() => {
     cleanup();
   });

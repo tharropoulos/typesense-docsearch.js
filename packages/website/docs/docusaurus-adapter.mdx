@@ -2,7 +2,7 @@
 title: Docusaurus Adapter (Recommended)
 ---
 
-If you use Docusaurus, install and configure `@docsearch/docusaurus-adapter` to get the latest DocSearch features on your current Docusaurus version.
+If you use Docusaurus, install and configure `typesense-docsearch-docusaurus-adapter` to get the latest DocSearch features on your current Docusaurus version.
 
 ## Why this adapter exists
 
@@ -19,9 +19,9 @@ In practice, this means:
 ## Install
 
 ```bash
-yarn add @docsearch/docusaurus-adapter
+yarn add typesense-docsearch-docusaurus-adapter
 # or
-npm install @docsearch/docusaurus-adapter
+npm install typesense-docsearch-docusaurus-adapter
 ```
 
 ## Configuration
@@ -30,7 +30,7 @@ Keep `@docusaurus/preset-classic`, add the adapter plugin, and configure search 
 
 ```js title="docusaurus.config.mjs"
 export default {
-  plugins: ['@docsearch/docusaurus-adapter'],
+  plugins: ['typesense-docsearch-docusaurus-adapter'],
   themeConfig: {
     docsearch: {
       appId: 'YOUR_APP_ID',

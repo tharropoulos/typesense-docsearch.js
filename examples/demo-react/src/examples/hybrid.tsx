@@ -1,7 +1,7 @@
 /* eslint-disable react/react-in-jsx-scope */
-import { DocSearch } from '@docsearch/core';
-import { DocSearchButton, DocSearchModal } from '@docsearch/modal';
-import { Sidepanel, SidepanelButton } from '@docsearch/sidepanel';
+import { DocSearch } from 'typesense-docsearch-core';
+import { DocSearchButton, DocSearchModal } from 'typesense-docsearch-modal';
+import { Sidepanel, SidepanelButton } from 'typesense-docsearch-sidepanel';
 import type { JSX } from 'react';
 
 export default function BasicHybrid(): JSX.Element {

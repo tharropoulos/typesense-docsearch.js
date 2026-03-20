@@ -1,6 +1,6 @@
 /* eslint-disable react/react-in-jsx-scope */
-import { DocSearch } from '@docsearch/core';
-import { DocSearchButton, DocSearchModal } from '@docsearch/modal';
+import { DocSearch } from 'typesense-docsearch-core';
+import { DocSearchButton, DocSearchModal } from 'typesense-docsearch-modal';
 import { type JSX } from 'react';
 
 export default function Composable(): JSX.Element {
