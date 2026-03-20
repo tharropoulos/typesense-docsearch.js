@@ -320,9 +320,11 @@
 
 .DocSearch-Logo a {
   display: flex;
+  align-items: center;
 }
 
 .DocSearch-Logo svg {
+  align-self: center;
   color: var(--docsearch-logo-color);
   margin-inline-start: 8px;
 }
