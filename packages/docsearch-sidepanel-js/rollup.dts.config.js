@@ -7,6 +7,12 @@ const externalsForTypes = [
   /^react-dom(\/|$)/,
   /^@types\/react(\/|$)/,
   /^@ai-sdk\/react(\/|$)/,
+  /^typesense(\/|$)/,
+  /^algoliasearch(\/|$)/,
+  /^@algolia\//,
+  /^search-insights$/,
+  /^loglevel$/,
+  /^(fs|http|https)$/,
 ];
 
 export default [
