@@ -7,14 +7,14 @@
  */
 
 import type { AutocompleteState } from '@algolia/autocomplete-core';
-import { DocSearch as DocSearchProvider, useDocSearch } from '@docsearch/core';
+import { DocSearch as DocSearchProvider, useDocSearch } from 'typesense-docsearch-core';
 import type {
   DocusaurusSearchBarAskAiProps,
   ThemeConfigDocSearch,
-} from '@docsearch/docusaurus-adapter';
-import type { DocSearchAskAiModal as DocSearchAskAiModalType } from '@docsearch/modal/askai';
-import { DocSearchButton } from '@docsearch/modal/button';
-import type { DocSearchModal as DocSearchModalType } from '@docsearch/modal/modal';
+} from 'typesense-docsearch-docusaurus-adapter';
+import type { DocSearchAskAiModal as DocSearchAskAiModalType } from 'typesense-docsearch-modal/askai';
+import { DocSearchButton } from 'typesense-docsearch-modal/button';
+import type { DocSearchModal as DocSearchModalType } from 'typesense-docsearch-modal/modal';
 import type {
   DocSearchAskAiModalProps,
   DocSearchHit,
@@ -25,9 +25,9 @@ import type {
   InternalDocSearchHit,
   StoredDocSearchHit,
   ToolCalls,
-} from '@docsearch/react';
-import { SidepanelButton } from '@docsearch/sidepanel/button';
-import type { Sidepanel as SidepanelType } from '@docsearch/sidepanel/sidepanel';
+} from 'typesense-docsearch-react';
+import { SidepanelButton } from 'typesense-docsearch-sidepanel/button';
+import type { Sidepanel as SidepanelType } from 'typesense-docsearch-sidepanel/sidepanel';
 import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
 import Head from '@docusaurus/Head';
 import Link from '@docusaurus/Link';
@@ -100,9 +100,9 @@ function importDocSearchModalIfNeeded(): Promise<void> {
   }
 
   return Promise.all([
-    import('@docsearch/modal/modal'),
-    import('@docsearch/modal/askai'),
-    import('@docsearch/react/style'),
+    import('typesense-docsearch-modal/modal'),
+    import('typesense-docsearch-modal/askai'),
+    import('typesense-docsearch-react/style'),
     import('./styles.css'),
   ]).then(
     ([{ DocSearchModal: Modal }, { DocSearchAskAiModal: AskAiModal }]) => {
@@ -118,8 +118,8 @@ function importDocSearchSidepanelIfNeeded(): Promise<void> {
   }
 
   return Promise.all([
-    import('@docsearch/sidepanel/sidepanel'),
-    import('@docsearch/react/style/sidepanel'),
+    import('typesense-docsearch-sidepanel/sidepanel'),
+    import('typesense-docsearch-react/style/sidepanel'),
   ]).then(([{ Sidepanel }]) => {
     DocSearchSidepanel = Sidepanel;
   });

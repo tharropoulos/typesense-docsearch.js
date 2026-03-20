@@ -1,10 +1,10 @@
 /* eslint-disable react/react-in-jsx-scope */
-import { version } from '@docsearch/react';
+import { version } from 'typesense-docsearch-react';
 import { useState, type JSX } from 'react';
 
 import './App.css';
-import '@docsearch/css/dist/style.css';
-import '@docsearch/css/dist/sidepanel.css';
+import 'typesense-docsearch-css/dist/style.css';
+import 'typesense-docsearch-css/dist/sidepanel.css';
 
 import Basic from './examples/basic';
 import BasicAskAI from './examples/basic-askai';

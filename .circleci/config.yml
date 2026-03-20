@@ -79,7 +79,7 @@ jobs:
           name: Build and Size
           command: |
             bun run build
-            bun run --filter @docsearch/cli test:pack
+            bun run --filter typesense-docsearch-cli test:pack
       - run:
           name: Move dist folders to workspace
           command: |

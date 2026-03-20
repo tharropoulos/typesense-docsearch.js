@@ -30,28 +30,28 @@ Install the React package and styles:
   <TabItem value="npm" label="npm">
 
 ```bash
-npm install @docsearch/react@^5 @docsearch/css@^5
+npm install typesense-docsearch-react@^5 typesense-docsearch-css@^5
 ```
 
   </TabItem>
   <TabItem value="yarn" label="Yarn">
 
 ```bash
-yarn add @docsearch/react@^5 @docsearch/css@^5
+yarn add typesense-docsearch-react@^5 typesense-docsearch-css@^5
 ```
 
   </TabItem>
   <TabItem value="pnpm" label="pnpm">
 
 ```bash
-pnpm add @docsearch/react@^5 @docsearch/css@^5
+pnpm add typesense-docsearch-react@^5 typesense-docsearch-css@^5
 ```
 
   </TabItem>
   <TabItem value="bun" label="Bun">
 
 ```bash
-bun add @docsearch/react@^5 @docsearch/css@^5
+bun add typesense-docsearch-react@^5 typesense-docsearch-css@^5
 ```
 
   </TabItem>
@@ -60,8 +60,8 @@ bun add @docsearch/react@^5 @docsearch/css@^5
 Render `DocSearchAI`, not the search-only `DocSearch` component:
 
 ```tsx title="Search.tsx"
-import { DocSearchAI } from '@docsearch/react';
-import '@docsearch/css';
+import { DocSearchAI } from 'typesense-docsearch-react';
+import 'typesense-docsearch-css';
 
 export function Search() {
   return (
@@ -88,28 +88,28 @@ Install the JavaScript package and styles:
   <TabItem value="npm" label="npm">
 
 ```bash
-npm install @docsearch/js@^5 @docsearch/css@^5
+npm install typesense-docsearch.js@^5 typesense-docsearch-css@^5
 ```
 
   </TabItem>
   <TabItem value="yarn" label="Yarn">
 
 ```bash
-yarn add @docsearch/js@^5 @docsearch/css@^5
+yarn add typesense-docsearch.js@^5 typesense-docsearch-css@^5
 ```
 
   </TabItem>
   <TabItem value="pnpm" label="pnpm">
 
 ```bash
-pnpm add @docsearch/js@^5 @docsearch/css@^5
+pnpm add typesense-docsearch.js@^5 typesense-docsearch-css@^5
 ```
 
   </TabItem>
   <TabItem value="bun" label="Bun">
 
 ```bash
-bun add @docsearch/js@^5 @docsearch/css@^5
+bun add typesense-docsearch.js@^5 typesense-docsearch-css@^5
 ```
 
   </TabItem>
@@ -124,8 +124,8 @@ Add a container to your page:
 Initialize DocSearch with your Agent Studio agent:
 
 ```js title="load-docsearch.js"
-import docsearch from '@docsearch/js';
-import '@docsearch/css';
+import docsearch from 'typesense-docsearch.js';
+import 'typesense-docsearch-css';
 
 docsearch({
   container: '#docsearch',

@@ -81,10 +81,10 @@ export default {
         apiKey: 'nPDHxKLCr5n23QOyG11zRsICHC5TqzHe',
       },
     ],
-    '@docsearch/docusaurus-adapter',
+    'typesense-docsearch-docusaurus-adapter',
   ],
   themeConfig:
-    /** @type {import('@docsearch/docusaurus-adapter').ThemeConfig} */
+    /** @type {import('typesense-docsearch-docusaurus-adapter').ThemeConfig} */
     ({
       docsearch: {
         placeholder: 'Search or ask AI',

@@ -6,7 +6,7 @@ import { defines, pkgExports } from '../../tsdown.base.ts';
 
 import pkg from './package.json' with { type: 'json' };
 
-const externals = ['react', 'react-dom', /^react\//, '@docsearch/core'];
+const externals = ['react', 'react-dom', /^react\//, 'typesense-docsearch-core'];
 
 const sharedConfig: UserConfig = {
   platform: 'browser',
@@ -79,8 +79,8 @@ export default defineConfig([
         react: 'React',
         'react/jsx-runtime': 'React',
         'react-dom': 'ReactDOM',
-        '@docsearch/core': 'DocSearchCore',
-        '@docsearch/core/useTheme': 'DocSearchCore',
+        'typesense-docsearch-core': 'DocSearchCore',
+        'typesense-docsearch-core/useTheme': 'DocSearchCore',
       },
     },
     format: 'umd',

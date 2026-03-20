@@ -1,4 +1,4 @@
-# @docsearch/css
+# typesense-docsearch-css
 
 ## 5.0.2
 
@@ -32,7 +32,7 @@
 
   ## Packaging & architecture
 
-  - New `@docsearch/cli` package for MCP setup and search
+  - New `typesense-docsearch-cli` package for MCP setup and search
   - MCP plugin support
   - Split JS bundles for search-only usage and JS-based hybrid mode
   - Migrated the build system to tsdown
@@ -95,9 +95,9 @@
 
   - New `footerAction` prop renders a custom action in the modal footer,
     before the Algolia logo, inside `.DocSearch-Footer-Action`
-  - `@docsearch/js` supports `footerAction` via template patterns (html helper,
+  - `typesense-docsearch.js` supports `footerAction` via template patterns (html helper,
     JSX, or function-based)
-  - Fixes typing differences between `@docsearch/react` and `@docsearch/js`
+  - Fixes typing differences between `typesense-docsearch-react` and `typesense-docsearch.js`
   - Restyle the footer with a `.DocSearch-Footer-Actions` wrapper
 
 - ecd905d: Align CSS class and animation names with the `DocSearch-` naming convention.
@@ -130,9 +130,9 @@
 
   - New `footerAction` prop renders a custom action in the modal footer,
     before the Algolia logo, inside `.DocSearch-Footer-Action`
-  - `@docsearch/js` supports `footerAction` via template patterns (html helper,
+  - `typesense-docsearch.js` supports `footerAction` via template patterns (html helper,
     JSX, or function-based)
-  - Fixes typing differences between `@docsearch/react` and `@docsearch/js`
+  - Fixes typing differences between `typesense-docsearch-react` and `typesense-docsearch.js`
   - Restyle the footer with a `.DocSearch-Footer-Actions` wrapper
 
 ## 5.0.0-beta.2
@@ -230,7 +230,7 @@
 
   ## Packaging & architecture
 
-  - New `@docsearch/cli` package for MCP setup and search
+  - New `typesense-docsearch-cli` package for MCP setup and search
   - MCP plugin support
   - Split JS bundles for search-only usage and JS-based hybrid mode
   - Migrated the build system to tsdown

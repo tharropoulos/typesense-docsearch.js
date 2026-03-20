@@ -5,14 +5,14 @@
  * in the root directory of this source tree.
  */
 
-declare module '@docsearch/docusaurus-adapter' {
+declare module 'typesense-docsearch-docusaurus-adapter' {
   import type {
     AgentStudioSearchParameters,
     DocSearchAskAi,
     DocSearchProps,
     ToolCalls,
-  } from '@docsearch/react';
-  import type { SidepanelProps } from '@docsearch/react/sidepanel';
+  } from 'typesense-docsearch-react';
+  import type { SidepanelProps } from 'typesense-docsearch-react/sidepanel';
 
   type DocusaurusSidePanelConfig =
     | boolean
@@ -125,7 +125,7 @@ declare module '@theme/SearchPage' {
 }
 
 declare module '@theme/SearchBar' {
-  import type { DocusaurusSearchBarProps } from '@docsearch/docusaurus-adapter';
+  import type { DocusaurusSearchBarProps } from 'typesense-docsearch-docusaurus-adapter';
   import type { ReactNode } from 'react';
 
   export default function SearchBar(
@@ -134,7 +134,7 @@ declare module '@theme/SearchBar' {
 }
 
 declare module '@theme/SearchTranslations' {
-  import type { DocSearchTranslations } from '@docsearch/react';
+  import type { DocSearchTranslations } from 'typesense-docsearch-react';
 
   const translations: DocSearchTranslations & {
     placeholder: string;

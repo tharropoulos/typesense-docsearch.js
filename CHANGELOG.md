@@ -27,7 +27,7 @@
 
 ### Bug Fixes
 
-* make @docsearch/core a real dependency. ([#2848](https://github.com/algolia/docsearch/issues/2848)) ([73eddb7](https://github.com/algolia/docsearch/commit/73eddb76fca7a6091f12c977caff76934bd508f1))
+* make typesense-docsearch-core a real dependency. ([#2848](https://github.com/algolia/docsearch/issues/2848)) ([73eddb7](https://github.com/algolia/docsearch/commit/73eddb76fca7a6091f12c977caff76934bd508f1))
 
 
 
@@ -212,7 +212,7 @@
 
 ### Bug Fixes
 
-* **js:** make `@docsearch/react` devDep ([9967436](https://github.com/algolia/docsearch/commit/9967436993da24cf5340c03c1681350d7bb787c2))
+* **js:** make `typesense-docsearch-react` devDep ([9967436](https://github.com/algolia/docsearch/commit/9967436993da24cf5340c03c1681350d7bb787c2))
 * update doc ([a9b3d89](https://github.com/algolia/docsearch/commit/a9b3d893f6571da936c986d3e9b701650ab30ac9))
 * update website package version ([1c5070b](https://github.com/algolia/docsearch/commit/1c5070b2063810428afe30cb4b9504f3e4b75138))
 * upload tarballs ([9a6f1a0](https://github.com/algolia/docsearch/commit/9a6f1a0cfa33a35970691e25e82914f551d649ca))
@@ -432,7 +432,7 @@ Users are encouraged to use the [lite client](https://www.algolia.com/doc/librar
 
 ### Bug Fixes
 
-* **deps:** make react an optional peer dependency in @docsearch/react ([#1273](https://github.com/algolia/docsearch/issues/1273)) ([eb44d0c](https://github.com/algolia/docsearch/commit/eb44d0c2b72f700b81cf1390539592156b2580b6))
+* **deps:** make react an optional peer dependency in typesense-docsearch-react ([#1273](https://github.com/algolia/docsearch/issues/1273)) ([eb44d0c](https://github.com/algolia/docsearch/commit/eb44d0c2b72f700b81cf1390539592156b2580b6))
 * dependencies 2022-08-08 ([#1480](https://github.com/algolia/docsearch/issues/1480)) ([587ccd1](https://github.com/algolia/docsearch/commit/587ccd1cf9ba5529c8c7ded3547e21849321a8d0))
 
 # [3.2.0](https://github.com/algolia/docsearch/compare/v3.1.1...v3.2.0) (2022-08-02)

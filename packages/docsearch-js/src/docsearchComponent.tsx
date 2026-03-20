@@ -1,5 +1,5 @@
-import type { DocSearchProps as DocSearchComponentProps } from '@docsearch/react';
-import { DocSearch, version } from '@docsearch/react';
+import type { DocSearchProps as DocSearchComponentProps } from 'typesense-docsearch-react';
+import { DocSearch, version } from 'typesense-docsearch-react';
 
 import {
   createDocSearch,

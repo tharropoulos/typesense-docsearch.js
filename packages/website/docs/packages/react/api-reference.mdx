@@ -1,6 +1,6 @@
 ---
 title: React API reference
-description: Reference for the components, props, ref, and exports in @docsearch/react 5.
+description: Reference for the components, props, ref, and exports in typesense-docsearch-react 5.
 ---
 
 ## Components
@@ -12,7 +12,7 @@ description: Reference for the components, props, ref, and exports in @docsearch
 Renders keyword search. It accepts the [common props](#common-props) and forwards a [`DocSearchRef`](#docsearchref).
 
 ```tsx title="Search.tsx"
-import { DocSearch } from '@docsearch/react';
+import { DocSearch } from 'typesense-docsearch-react';
 ```
 
 ### `DocSearchAI`
@@ -22,7 +22,7 @@ import { DocSearch } from '@docsearch/react';
 Renders keyword search and Ask AI. It accepts the [common props](#common-props), requires [`askAi`](#askai), and forwards a [`DocSearchRef`](#docsearchref).
 
 ```tsx title="Search.tsx"
-import { DocSearchAI } from '@docsearch/react';
+import { DocSearchAI } from 'typesense-docsearch-react';
 ```
 
 ## Common props
@@ -406,18 +406,18 @@ The root package exports `DocSearch`, `DocSearchAI`, `DocSearchAskAiModal`, `Doc
 
 | Import | Export |
 | --- | --- |
-| `@docsearch/react/askaiModal` | `DocSearchAskAiModal` |
-| `@docsearch/react/button` | `DocSearchButton` |
-| `@docsearch/react/docsearch` | `DocSearch` - Search only |
-| `@docsearch/react/docsearchAi` | `DocSearchAI` and AI types |
-| `@docsearch/react/modal` | `DocSearchModal` |
-| `@docsearch/react/sidepanel` | `DocSearchSidepanel` and Sidepanel components |
-| `@docsearch/react/useDocSearchKeyboardEvents` | `useDocSearchKeyboardEvents` |
-| `@docsearch/react/useTheme` | `useTheme` |
-| `@docsearch/react/version` | `version` |
+| `typesense-docsearch-react/askaiModal` | `DocSearchAskAiModal` |
+| `typesense-docsearch-react/button` | `DocSearchButton` |
+| `typesense-docsearch-react/docsearch` | `DocSearch` - Search only |
+| `typesense-docsearch-react/docsearchAi` | `DocSearchAI` and AI types |
+| `typesense-docsearch-react/modal` | `DocSearchModal` |
+| `typesense-docsearch-react/sidepanel` | `DocSearchSidepanel` and Sidepanel components |
+| `typesense-docsearch-react/useDocSearchKeyboardEvents` | `useDocSearchKeyboardEvents` |
+| `typesense-docsearch-react/useTheme` | `useTheme` |
+| `typesense-docsearch-react/version` | `version` |
 
 For provider and modal composition, see [Composable API](/docs/composable-api). For modal and Sidepanel composition, see [hybrid mode](/docs/hybrid-mode).
 
 ## Style exports
 
-Import `@docsearch/css` for the complete modal stylesheet. The React package also exports `@docsearch/react/style` and split `style/variables`, `style/button`, `style/modal`, `style/askai`, and `style/sidepanel` entries for component-level builds. See [Styling](/docs/packages/css/styling).
+Import `typesense-docsearch-css` for the complete modal stylesheet. The React package also exports `typesense-docsearch-react/style` and split `style/variables`, `style/button`, `style/modal`, `style/askai`, and `style/sidepanel` entries for component-level builds. See [Styling](/docs/packages/css/styling).

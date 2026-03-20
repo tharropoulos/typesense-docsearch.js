@@ -6,7 +6,7 @@ import React, { useCallback, useState } from 'react';
 
 const ENDPOINT = 'https://mcp.algolia.com/1/docsearch/mcp';
 
-const CLI_SETUP_PREFIX = 'npx @docsearch/cli setup';
+const CLI_SETUP_PREFIX = 'npx typesense-docsearch-cli setup';
 
 // Clients with a matching `docsearch setup` agent flag (see packages/docsearch-cli).
 const CLI_SUPPORTED_CLIENTS = new Set([

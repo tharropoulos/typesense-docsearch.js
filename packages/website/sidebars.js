@@ -27,12 +27,12 @@ export default {
         'packages/overview',
         {
           type: 'category',
-          label: '@docsearch/js',
+          label: 'typesense-docsearch.js',
           items: ['packages/js/getting-started', 'packages/js/api-reference'],
         },
         {
           type: 'category',
-          label: '@docsearch/react',
+          label: 'typesense-docsearch-react',
           items: [
             'packages/react/getting-started',
             'packages/react/api-reference',
@@ -41,12 +41,12 @@ export default {
         },
         {
           type: 'category',
-          label: '@docsearch/modal',
+          label: 'typesense-docsearch-modal',
           items: ['packages/modal/overview', 'packages/modal/api'],
         },
         {
           type: 'category',
-          label: '@docsearch/sidepanel',
+          label: 'typesense-docsearch-sidepanel',
           items: [
             'packages/sidepanel/getting-started',
             'packages/sidepanel/advanced-use-cases',
@@ -55,7 +55,7 @@ export default {
         },
         {
           type: 'category',
-          label: '@docsearch/sidepanel-js',
+          label: 'typesense-docsearch-sidepanel-js',
           items: [
             'packages/sidepanel-js/getting-started',
             'packages/sidepanel-js/api',
@@ -63,17 +63,17 @@ export default {
         },
         {
           type: 'category',
-          label: '@docsearch/css',
+          label: 'typesense-docsearch-css',
           items: ['packages/css/styling', 'packages/css/bundle-exports'],
         },
         {
           type: 'category',
-          label: '@docsearch/core',
+          label: 'typesense-docsearch-core',
           items: ['packages/core/overview', 'packages/core/api'],
         },
         {
           type: 'category',
-          label: '@docsearch/docusaurus-adapter',
+          label: 'typesense-docsearch-docusaurus-adapter',
           items: [
             'packages/docusaurus-adapter/getting-started',
             'packages/docusaurus-adapter/configuration-reference',

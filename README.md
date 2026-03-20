@@ -4,7 +4,7 @@
 
 The easiest way to add search to your documentation – for free.
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/30eacc09-d4b2-4a53-879b-04d40aaea454/deploy-status)](https://app.netlify.com/sites/docsearch/deploys) [![npm version](https://img.shields.io/npm/v/@docsearch/js.svg?style=flat-square)](https://www.npmjs.com/package/@docsearch/js/v/alpha) [![Used by](https://img.shields.io/endpoint?style=flat-square&url=https://api.usedby.dev/npm/@docsearch/js/shield.json)](https://github.com/algolia/docsearch/network/dependents) [![License](https://img.shields.io/badge/license-MIT-green.svg?style=flat-square)](./LICENSE)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/30eacc09-d4b2-4a53-879b-04d40aaea454/deploy-status)](https://app.netlify.com/sites/docsearch/deploys) [![npm version](https://img.shields.io/npm/v/typesense-docsearch.js.svg?style=flat-square)](https://www.npmjs.com/package/typesense-docsearch.js/v/alpha) [![Used by](https://img.shields.io/endpoint?style=flat-square&url=https://api.usedby.dev/npm/typesense-docsearch.js/shield.json)](https://github.com/algolia/docsearch/network/dependents) [![License](https://img.shields.io/badge/license-MIT-green.svg?style=flat-square)](./LICENSE)
 
 <p align="center">
   <strong>
@@ -33,15 +33,15 @@ DocSearch crawls your documentation, pushes the content to an Algolia index and 
 #### Installation
 
 ```sh
-bun add @docsearch/js@5
+bun add typesense-docsearch.js@5
 # or
-npm install @docsearch/js@5
+npm install typesense-docsearch.js@5
 ```
 
 If you don’t want to use a package manager, you can use a standalone endpoint:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@docsearch/js@5"></script>
+<script src="https://cdn.jsdelivr.net/npm/typesense-docsearch.js@5"></script>
 ```
 
 #### Get started
@@ -57,9 +57,9 @@ Then, insert DocSearch into it by calling the [`docsearch`](https://docsearch.al
 Make sure to provide a [`container`](https://docsearch.algolia.com/docs/api#container) (for example, a `div`), not an `input`. DocSearch generates a fully accessible search box for you.
 
 ```js app.js
-import docsearch from '@docsearch/js';
+import docsearch from 'typesense-docsearch.js';
 
-import '@docsearch/css';
+import 'typesense-docsearch-css';
 
 docsearch({
   container: '#docsearch',
@@ -74,15 +74,15 @@ docsearch({
 #### Installation
 
 ```bash
-bun add @docsearch/react@5
+bun add typesense-docsearch-react@5
 # or
-npm install @docsearch/react@5
+npm install typesense-docsearch-react@5
 ```
 
 If you don’t want to use a package manager, you can use a standalone endpoint:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@docsearch/react@5"></script>
+<script src="https://cdn.jsdelivr.net/npm/typesense-docsearch-react@5"></script>
 ```
 
 #### Get started
@@ -90,9 +90,9 @@ If you don’t want to use a package manager, you can use a standalone endpoint:
 DocSearch generates a fully accessible search box for you.
 
 ```jsx App.js
-import { DocSearch } from '@docsearch/react';
+import { DocSearch } from 'typesense-docsearch-react';
 
-import '@docsearch/css';
+import 'typesense-docsearch-css';
 
 function App() {
   return (
@@ -128,7 +128,7 @@ DocSearch is made of the following repositories:
 
 DocSearch is used by [Bootstrap](https://github.com/twbs/bootstrap), [Cheerio](https://github.com/cheeriojs/cheerio), [Element Plus](https://github.com/element-plus/element-plus), [Authelia](https://github.com/authelia/authelia), [MDX](https://github.com/mdx-js/mdx), [VitePress](https://github.com/vuejs/vitepress) and [many more](https://github.com/algolia/docsearch/network/dependents).
 
-[![Used by](https://api.usedby.dev/npm/@docsearch/js?max=50&sort=stars)](https://github.com/algolia/docsearch/network/dependents)
+[![Used by](https://api.usedby.dev/npm/typesense-docsearch.js?max=50&sort=stars)](https://github.com/algolia/docsearch/network/dependents)
 Generated with [usedby.dev](https://usedby.dev/)
 
 ## License

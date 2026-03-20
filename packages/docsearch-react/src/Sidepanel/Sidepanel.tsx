@@ -1,4 +1,4 @@
-import type { SidepanelShortcuts, InitialAskAiMessage } from '@docsearch/core';
+import type { SidepanelShortcuts, InitialAskAiMessage } from 'typesense-docsearch-core';
 import React, { useCallback } from 'react';
 import type { JSX } from 'react';
 

@@ -4,8 +4,8 @@ import React from 'react';
 
 import DemoApp from '../components/demo/DemoApp';
 
-import '@docsearch/css/dist/style.css';
-import '@docsearch/css/dist/sidepanel.css';
+import 'typesense-docsearch-css/dist/style.css';
+import 'typesense-docsearch-css/dist/sidepanel.css';
 
 import '../components/demo/demo.css';
 

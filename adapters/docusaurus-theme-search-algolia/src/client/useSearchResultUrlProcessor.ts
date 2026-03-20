@@ -5,7 +5,7 @@
  * in the root directory of this source tree.
  */
 
-import type { ThemeConfigDocSearch } from '@docsearch/docusaurus-adapter';
+import type { ThemeConfigDocSearch } from 'typesense-docsearch-docusaurus-adapter';
 import { isRegexpStringMatch } from '@docusaurus/theme-common';
 import { useBaseUrlUtils } from '@docusaurus/useBaseUrl';
 import { useCallback } from 'react';

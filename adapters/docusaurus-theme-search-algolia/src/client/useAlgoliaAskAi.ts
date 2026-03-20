@@ -5,8 +5,8 @@
  * in the root directory of this source tree.
  */
 
-import type { AskAiConfig } from '@docsearch/docusaurus-adapter';
-import type { DocSearchAskAi, DocSearchProps } from '@docsearch/react';
+import type { AskAiConfig } from 'typesense-docsearch-docusaurus-adapter';
+import type { DocSearchAskAi, DocSearchProps } from 'typesense-docsearch-react';
 import type { FacetFilters } from 'algoliasearch/lite';
 import { useMemo } from 'react';
 

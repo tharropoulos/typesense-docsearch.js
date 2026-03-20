@@ -8,7 +8,7 @@
 import type {
   ThemeConfig,
   UserThemeConfig,
-} from '@docsearch/docusaurus-adapter';
+} from 'typesense-docsearch-docusaurus-adapter';
 import type Joi from 'joi';
 import { describe, expect, it } from 'vitest';
 

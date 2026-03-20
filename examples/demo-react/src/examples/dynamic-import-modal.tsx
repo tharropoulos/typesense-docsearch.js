@@ -1,7 +1,7 @@
 /* eslint-disable react/react-in-jsx-scope */
-import { useDocSearchKeyboardEvents } from '@docsearch/core/useDocSearchKeyboardEvents';
-import type { DocSearchAskAiModal as DocSearchAskAiModalType } from '@docsearch/react/askaiModal';
-import { DocSearchButton } from '@docsearch/react/button';
+import { useDocSearchKeyboardEvents } from 'typesense-docsearch-core/useDocSearchKeyboardEvents';
+import type { DocSearchAskAiModal as DocSearchAskAiModalType } from 'typesense-docsearch-react/askaiModal';
+import { DocSearchButton } from 'typesense-docsearch-react/button';
 import { useCallback, useRef, useState, type JSX } from 'react';
 import { createPortal } from 'react-dom';
 
@@ -15,7 +15,7 @@ function importDocSearchModalIfNeeded(): Promise<void> {
     return Promise.resolve();
   }
   // eslint-disable-next-line import/dynamic-import-chunkname
-  return Promise.all([import('@docsearch/react/askaiModal')]).then(
+  return Promise.all([import('typesense-docsearch-react/askaiModal')]).then(
     ([{ DocSearchAskAiModal: Modal }]) => {
       DocSearchModal = Modal;
     }

@@ -16,34 +16,34 @@ Upgrade the site to Node.js 20 or later and Docusaurus 3.10.2 or later in the Do
 
 ## 2. Install the v5 adapter
 
-Install `@docsearch/docusaurus-adapter@^5`:
+Install `typesense-docsearch-docusaurus-adapter@^5`:
 
 <Tabs groupId="package-manager" aria-label="Package manager">
   <TabItem value="npm" label="npm">
 
 ```bash
-npm install @docsearch/docusaurus-adapter@^5
+npm install typesense-docsearch-docusaurus-adapter@^5
 ```
 
   </TabItem>
   <TabItem value="yarn" label="Yarn">
 
 ```bash
-yarn add @docsearch/docusaurus-adapter@^5
+yarn add typesense-docsearch-docusaurus-adapter@^5
 ```
 
   </TabItem>
   <TabItem value="pnpm" label="pnpm">
 
 ```bash
-pnpm add @docsearch/docusaurus-adapter@^5
+pnpm add typesense-docsearch-docusaurus-adapter@^5
 ```
 
   </TabItem>
   <TabItem value="bun" label="Bun">
 
 ```bash
-bun add @docsearch/docusaurus-adapter@^5
+bun add typesense-docsearch-docusaurus-adapter@^5
 ```
 
   </TabItem>
@@ -60,7 +60,7 @@ V4 accepted `themeConfig.algolia` as an alias. V5 rejects it.
 
 ```js title="docusaurus.config.mjs"
 export default {
-  plugins: ['@docsearch/docusaurus-adapter'],
+  plugins: ['typesense-docsearch-docusaurus-adapter'],
   themeConfig: {
     algolia: {
       appId: 'YOUR_APPLICATION_ID',
@@ -76,7 +76,7 @@ export default {
 
 ```js title="docusaurus.config.mjs"
 export default {
-  plugins: ['@docsearch/docusaurus-adapter'],
+  plugins: ['typesense-docsearch-docusaurus-adapter'],
   themeConfig: {
     docsearch: {
       appId: 'YOUR_APPLICATION_ID',
@@ -277,15 +277,15 @@ The root `sidePanel` requires `askAi`. It can override Agent Studio `indices`, `
 V5 rejects `askAi.tools` and `sidePanel.tools` in `docusaurus.config` because Docusaurus removes functions while serializing theme config. Swizzle `@theme/SearchBar` and pass tools as component props.
 
 ```bash
-npm run swizzle -- @docsearch/docusaurus-adapter SearchBar --eject
+npm run swizzle -- typesense-docsearch-docusaurus-adapter SearchBar --eject
 ```
 
 <Tabs groupId="language" aria-label="Programming language">
   <TabItem value="react" label="React">
 
 ```tsx title="src/theme/SearchBar/index.tsx"
-import type { DocusaurusSearchBarProps } from '@docsearch/docusaurus-adapter';
-import type { ToolCalls } from '@docsearch/react';
+import type { DocusaurusSearchBarProps } from 'typesense-docsearch-docusaurus-adapter';
+import type { ToolCalls } from 'typesense-docsearch-react';
 import OriginalSearchBar from '@theme-original/SearchBar';
 
 const tools: ToolCalls = {

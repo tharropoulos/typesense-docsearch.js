@@ -6,7 +6,7 @@ description: Load and customize the DocSearch v5 CSS.
 import TabItem from '@theme/TabItem';
 import Tabs from '@theme/Tabs';
 
-`@docsearch/css` contains the styles for the search button, modal, and Sidepanel.
+`typesense-docsearch-css` contains the styles for the search button, modal, and Sidepanel.
 
 ## Install and import
 
@@ -14,28 +14,28 @@ import Tabs from '@theme/Tabs';
   <TabItem value="npm" label="npm">
 
 ```bash
-npm install @docsearch/css@^5
+npm install typesense-docsearch-css@^5
 ```
 
   </TabItem>
   <TabItem value="yarn" label="Yarn">
 
 ```bash
-yarn add @docsearch/css@^5
+yarn add typesense-docsearch-css@^5
 ```
 
   </TabItem>
   <TabItem value="pnpm" label="pnpm">
 
 ```bash
-pnpm add @docsearch/css@^5
+pnpm add typesense-docsearch-css@^5
 ```
 
   </TabItem>
   <TabItem value="bun" label="Bun">
 
 ```bash
-bun add @docsearch/css@^5
+bun add typesense-docsearch-css@^5
 ```
 
   </TabItem>
@@ -44,7 +44,7 @@ bun add @docsearch/css@^5
 For the search button and modal, import the package root:
 
 ```js title="app.js"
-import '@docsearch/css';
+import 'typesense-docsearch-css';
 ```
 
 The root stylesheet includes variables, button styles, modal styles, and Agent Studio response styles. It doesn't include Sidepanel layout styles.
@@ -52,8 +52,8 @@ The root stylesheet includes variables, button styles, modal styles, and Agent S
 For a Sidepanel, add its stylesheet after the root stylesheet:
 
 ```js title="app.js"
-import '@docsearch/css';
-import '@docsearch/css/dist/sidepanel.css';
+import 'typesense-docsearch-css';
+import 'typesense-docsearch-css/dist/sidepanel.css';
 ```
 
 ## Override variables

@@ -1,4 +1,4 @@
-# @docsearch/react
+# typesense-docsearch-react
 
 ## 5.0.2
 
@@ -6,16 +6,16 @@
 
 - 1508196: Fix Ask AI conversations breaking after stopping a stream mid-tool-call. Incomplete tool parts (`input-streaming`/`input-available`) are now pruned before resending, so the dangling `tool_use` no longer causes the provider to reject every subsequent question.
 - 59c575f: fix(askai): preserve the conversation when opening Ask AI from the results row [#3010](https://github.com/algolia/docsearch/issues/3010)
-  - @docsearch/css@5.0.2
-  - @docsearch/core@5.0.2
+  - typesense-docsearch-css@5.0.2
+  - typesense-docsearch-core@5.0.2
 
 ## 5.0.1
 
 ### Patch Changes
 
 - 4ac53c4: Fixes missing published export for keyword only `<DocSearch />` that was missed in [#2884](https://github.com/algolia/docsearch/pull/2884).
-  - @docsearch/css@5.0.1
-  - @docsearch/core@5.0.1
+  - typesense-docsearch-css@5.0.1
+  - typesense-docsearch-core@5.0.1
 
 ## 5.0.0
 
@@ -45,7 +45,7 @@
 
   ## Packaging & architecture
 
-  - New `@docsearch/cli` package for MCP setup and search
+  - New `typesense-docsearch-cli` package for MCP setup and search
   - MCP plugin support
   - Split JS bundles for search-only usage and JS-based hybrid mode
   - Migrated the build system to tsdown
@@ -86,7 +86,7 @@
 - ecd905d: feat(v5): UI and DX updates
 
   - Rename the Ask AI assistantId option to agentId (adapter theme.SearchModal.askAi.assistantId → agentId)
-  - appId and apiKey moved up into @docsearch/core, so they're configured once and shared
+  - appId and apiKey moved up into typesense-docsearch-core, so they're configured once and shared
   - Removed the indexName prop from the Sidepanel
   - Facet defaults can now be read from the index searchParameters
   - Restored nested grouping of search results
@@ -137,9 +137,9 @@
 
   - New `footerAction` prop renders a custom action in the modal footer,
     before the Algolia logo, inside `.DocSearch-Footer-Action`
-  - `@docsearch/js` supports `footerAction` via template patterns (html helper,
+  - `typesense-docsearch.js` supports `footerAction` via template patterns (html helper,
     JSX, or function-based)
-  - Fixes typing differences between `@docsearch/react` and `@docsearch/js`
+  - Fixes typing differences between `typesense-docsearch-react` and `typesense-docsearch.js`
   - Restyle the footer with a `.DocSearch-Footer-Actions` wrapper
 
 - ecd905d: Align CSS class and animation names with the `DocSearch-` naming convention.
@@ -166,8 +166,8 @@
 - Updated dependencies [ecd905d]
 - Updated dependencies [ecd905d]
 - Updated dependencies [ecd905d]
-  - @docsearch/css@5.0.0
-  - @docsearch/core@5.0.0
+  - typesense-docsearch-css@5.0.0
+  - typesense-docsearch-core@5.0.0
 
 ## 5.0.0-beta.4
 
@@ -175,8 +175,8 @@
 
 - ee9fddb: Surface Agent Studio cost-control errors and block prompts until the user can recover. [#2878](https://github.com/algolia/docsearch/pull/2878)
 - Updated dependencies [ee9fddb]
-  - @docsearch/css@5.0.0-beta.4
-  - @docsearch/core@5.0.0-beta.4
+  - typesense-docsearch-css@5.0.0-beta.4
+  - typesense-docsearch-core@5.0.0-beta.4
 
 ## 5.0.0-beta.3
 
@@ -191,16 +191,16 @@
 
   - New `footerAction` prop renders a custom action in the modal footer,
     before the Algolia logo, inside `.DocSearch-Footer-Action`
-  - `@docsearch/js` supports `footerAction` via template patterns (html helper,
+  - `typesense-docsearch.js` supports `footerAction` via template patterns (html helper,
     JSX, or function-based)
-  - Fixes typing differences between `@docsearch/react` and `@docsearch/js`
+  - Fixes typing differences between `typesense-docsearch-react` and `typesense-docsearch.js`
   - Restyle the footer with a `.DocSearch-Footer-Actions` wrapper
 
 - Updated dependencies [3f74c33]
 - Updated dependencies [4e44b55]
 - Updated dependencies [b28bc84]
-  - @docsearch/core@5.0.0-beta.3
-  - @docsearch/css@5.0.0-beta.3
+  - typesense-docsearch-core@5.0.0-beta.3
+  - typesense-docsearch-css@5.0.0-beta.3
 
 ## 5.0.0-beta.2
 
@@ -234,7 +234,7 @@
 - 4f6b5b1: feat(v5): UI and DX updates
 
   - Rename the Ask AI assistantId option to agentId (adapter theme.SearchModal.askAi.assistantId → agentId)
-  - appId and apiKey moved up into @docsearch/core, so they're configured once and shared
+  - appId and apiKey moved up into typesense-docsearch-core, so they're configured once and shared
   - Removed the indexName prop from the Sidepanel
   - Facet defaults can now be read from the index searchParameters
   - Restored nested grouping of search results
@@ -261,8 +261,8 @@
 - Updated dependencies [5eac1fd]
 - Updated dependencies [4f6b5b1]
 - Updated dependencies [9fe6738]
-  - @docsearch/css@5.0.0-beta.2
-  - @docsearch/core@5.0.0-beta.2
+  - typesense-docsearch-css@5.0.0-beta.2
+  - typesense-docsearch-core@5.0.0-beta.2
 
 ## 5.0.0-beta.1
 
@@ -301,8 +301,8 @@
   selectors accordingly.
 
 - Updated dependencies [09861c8]
-  - @docsearch/css@5.0.0-beta.1
-  - @docsearch/core@5.0.0-beta.1
+  - typesense-docsearch-css@5.0.0-beta.1
+  - typesense-docsearch-core@5.0.0-beta.1
 
 ## 5.0.0-beta.0
 
@@ -332,7 +332,7 @@
 
   ## Packaging & architecture
 
-  - New `@docsearch/cli` package for MCP setup and search
+  - New `typesense-docsearch-cli` package for MCP setup and search
   - MCP plugin support
   - Split JS bundles for search-only usage and JS-based hybrid mode
   - Migrated the build system to tsdown
@@ -346,5 +346,5 @@
 ### Patch Changes
 
 - Updated dependencies [a8ed1ea]
-  - @docsearch/core@5.0.0-beta.0
-  - @docsearch/css@5.0.0-beta.0
+  - typesense-docsearch-core@5.0.0-beta.0
+  - typesense-docsearch-css@5.0.0-beta.0

@@ -10,7 +10,7 @@ const externals = [
   'react',
   'react-dom',
   /^react\//,
-  '@docsearch/core',
+  'typesense-docsearch-core',
   /^@docsearch\/react/,
 ];
 
@@ -54,8 +54,8 @@ export default defineConfig([
       globals: {
         react: 'React',
         'react-dom': 'ReactDOM',
-        '@docsearch/core': 'DocSearchCore',
-        '@docsearch/react/sidepanel': 'DocSearchReact',
+        'typesense-docsearch-core': 'DocSearchCore',
+        'typesense-docsearch-react/sidepanel': 'DocSearchReact',
       },
     },
     format: 'umd',

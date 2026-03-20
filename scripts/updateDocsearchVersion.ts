@@ -20,7 +20,7 @@ const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8'));
 const packageVersion = packageJson.version;
 
 if (typeof packageVersion !== 'string') {
-  throw new Error('Unable to determine @docsearch/react version.');
+  throw new Error('Unable to determine typesense-docsearch-react version.');
 }
 
 const nextContent = `export const version = '${packageVersion}';\n`;

@@ -6,7 +6,7 @@ description: Add the composable DocSearch modal to a React application.
 import TabItem from '@theme/TabItem';
 import Tabs from '@theme/Tabs';
 
-`@docsearch/modal` provides the DocSearch search button, keyword-search modal, and Agent Studio-enabled modal for React. Render these components inside the `DocSearch` provider from `@docsearch/core`.
+`typesense-docsearch-modal` provides the DocSearch search button, keyword-search modal, and Agent Studio-enabled modal for React. Render these components inside the `DocSearch` provider from `typesense-docsearch-core`.
 
 For the complete component workflow, see the [Composable API guide](../../composable-api).
 
@@ -16,28 +16,28 @@ For the complete component workflow, see the [Composable API guide](../../compos
   <TabItem value="npm" label="npm">
 
 ```bash
-npm install @docsearch/core@^5 @docsearch/modal@^5 @docsearch/css@^5
+npm install typesense-docsearch-core@^5 typesense-docsearch-modal@^5 typesense-docsearch-css@^5
 ```
 
   </TabItem>
   <TabItem value="yarn" label="Yarn">
 
 ```bash
-yarn add @docsearch/core@^5 @docsearch/modal@^5 @docsearch/css@^5
+yarn add typesense-docsearch-core@^5 typesense-docsearch-modal@^5 typesense-docsearch-css@^5
 ```
 
   </TabItem>
   <TabItem value="pnpm" label="pnpm">
 
 ```bash
-pnpm add @docsearch/core@^5 @docsearch/modal@^5 @docsearch/css@^5
+pnpm add typesense-docsearch-core@^5 typesense-docsearch-modal@^5 typesense-docsearch-css@^5
 ```
 
   </TabItem>
   <TabItem value="bun" label="Bun">
 
 ```bash
-bun add @docsearch/core@^5 @docsearch/modal@^5 @docsearch/css@^5
+bun add typesense-docsearch-core@^5 typesense-docsearch-modal@^5 typesense-docsearch-css@^5
 ```
 
   </TabItem>
@@ -48,10 +48,10 @@ bun add @docsearch/core@^5 @docsearch/modal@^5 @docsearch/css@^5
 Import the main stylesheet once, near your application entry point.
 
 ```tsx title="Search.tsx"
-import { DocSearch } from '@docsearch/core';
-import { DocSearchButton, DocSearchModal } from '@docsearch/modal';
+import { DocSearch } from 'typesense-docsearch-core';
+import { DocSearchButton, DocSearchModal } from 'typesense-docsearch-modal';
 
-import '@docsearch/css';
+import 'typesense-docsearch-css';
 
 export function Search() {
   return (
@@ -74,10 +74,10 @@ Use a search-only API key. Don't expose an Algolia Admin API key in browser code
 In v5, Ask AI uses Agent Studio. Pass an Agent Studio agent ID through `askAi`. There's no `agentStudio` boolean in the v5 API.
 
 ```tsx title="Search.tsx"
-import { DocSearch } from '@docsearch/core';
-import { DocSearchAskAiModal, DocSearchButton } from '@docsearch/modal';
+import { DocSearch } from 'typesense-docsearch-core';
+import { DocSearchAskAiModal, DocSearchButton } from 'typesense-docsearch-modal';
 
-import '@docsearch/css';
+import 'typesense-docsearch-css';
 
 export function Search() {
   return (
@@ -116,16 +116,16 @@ The modal package reads theme, keyboard shortcut, and lifecycle state from `DocS
 </DocSearch>
 ```
 
-See the [`@docsearch/core` API](../core/api) for provider props and refs.
+See the [`typesense-docsearch-core` API](../core/api) for provider props and refs.
 
 ## Load smaller entry points
 
 The package exposes component-specific entry points for code splitting:
 
 ```tsx title="Search.tsx"
-import { DocSearchAskAiModal } from '@docsearch/modal/askai';
-import { DocSearchButton } from '@docsearch/modal/button';
-import { DocSearchModal } from '@docsearch/modal/modal';
+import { DocSearchAskAiModal } from 'typesense-docsearch-modal/askai';
+import { DocSearchButton } from 'typesense-docsearch-modal/button';
+import { DocSearchModal } from 'typesense-docsearch-modal/modal';
 ```
 
 See the [modal API reference](./api) for all exports and props.

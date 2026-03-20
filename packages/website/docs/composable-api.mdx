@@ -23,9 +23,9 @@ DocSearch v5 provides two modal components. Render one modal for each `DocSearch
 
 The composable components come from three packages:
 
-- [`@docsearch/core`](/docs/packages/core/overview) provides `DocSearch`, shared state, keyboard handling, and the imperative ref.
-- [`@docsearch/modal`](/docs/packages/modal/overview) provides the provider-connected button and modal components.
-- [`@docsearch/css`](/docs/packages/css/styling) provides the styles.
+- [`typesense-docsearch-core`](/docs/packages/core/overview) provides `DocSearch`, shared state, keyboard handling, and the imperative ref.
+- [`typesense-docsearch-modal`](/docs/packages/modal/overview) provides the provider-connected button and modal components.
+- [`typesense-docsearch-css`](/docs/packages/css/styling) provides the styles.
 
 ## Install the packages
 
@@ -35,28 +35,28 @@ Install matching v5 versions of the DocSearch packages:
   <TabItem value="npm" label="npm">
 
 ```bash
-npm install @docsearch/core@^5 @docsearch/modal@^5 @docsearch/css@^5
+npm install typesense-docsearch-core@^5 typesense-docsearch-modal@^5 typesense-docsearch-css@^5
 ```
 
   </TabItem>
   <TabItem value="yarn" label="Yarn">
 
 ```bash
-yarn add @docsearch/core@^5 @docsearch/modal@^5 @docsearch/css@^5
+yarn add typesense-docsearch-core@^5 typesense-docsearch-modal@^5 typesense-docsearch-css@^5
 ```
 
   </TabItem>
   <TabItem value="pnpm" label="pnpm">
 
 ```bash
-pnpm add @docsearch/core@^5 @docsearch/modal@^5 @docsearch/css@^5
+pnpm add typesense-docsearch-core@^5 typesense-docsearch-modal@^5 typesense-docsearch-css@^5
 ```
 
   </TabItem>
   <TabItem value="bun" label="Bun">
 
 ```bash
-bun add @docsearch/core@^5 @docsearch/modal@^5 @docsearch/css@^5
+bun add typesense-docsearch-core@^5 typesense-docsearch-modal@^5 typesense-docsearch-css@^5
 ```
 
   </TabItem>
@@ -67,11 +67,11 @@ bun add @docsearch/core@^5 @docsearch/modal@^5 @docsearch/css@^5
 Wrap the button and keyword modal in one `DocSearch` provider. Pass a public search-only API key to the provider; its descendants use these credentials by default.
 
 ```tsx title="KeywordSearch.tsx"
-import { DocSearch } from '@docsearch/core';
-import { DocSearchButton, DocSearchModal } from '@docsearch/modal';
+import { DocSearch } from 'typesense-docsearch-core';
+import { DocSearchButton, DocSearchModal } from 'typesense-docsearch-modal';
 import type { JSX } from 'react';
 
-import '@docsearch/css/dist/style.css';
+import 'typesense-docsearch-css/dist/style.css';
 
 interface KeywordSearchProps {
   appId: string;
@@ -105,11 +105,11 @@ The provider opens the modal when a user selects the button, presses <kbd>Ctrl</
 Replace `DocSearchModal` with `DocSearchAskAiModal`. Create the assistant in [Agent Studio](/docs/agent-studio/getting-started), then configure its ID on the provider.
 
 ```tsx title="SearchWithAskAi.tsx"
-import { DocSearch } from '@docsearch/core';
-import { DocSearchAskAiModal, DocSearchButton } from '@docsearch/modal';
+import { DocSearch } from 'typesense-docsearch-core';
+import { DocSearchAskAiModal, DocSearchButton } from 'typesense-docsearch-modal';
 import type { JSX } from 'react';
 
-import '@docsearch/css/dist/style.css';
+import 'typesense-docsearch-css/dist/style.css';
 
 interface SearchWithAskAiProps {
   appId: string;
@@ -159,7 +159,7 @@ The connected components manage these transitions for you:
 Use `useDocSearch` in a component under the provider when your application needs declarative access to this state.
 
 ```tsx
-import { useDocSearch } from '@docsearch/core';
+import { useDocSearch } from 'typesense-docsearch-core';
 import type { JSX } from 'react';
 
 export function SearchControls(): JSX.Element {
@@ -190,8 +190,8 @@ Only call `onAskAiToggle(true)` when the provider contains `DocSearchAskAiModal`
 Attach a `DocSearchRef` to the provider when non-React code or a parent component must control DocSearch.
 
 ```tsx
-import { DocSearch, type DocSearchRef } from '@docsearch/core';
-import { DocSearchAskAiModal, DocSearchButton } from '@docsearch/modal';
+import { DocSearch, type DocSearchRef } from 'typesense-docsearch-core';
+import { DocSearchAskAiModal, DocSearchButton } from 'typesense-docsearch-modal';
 import { useRef, type JSX } from 'react';
 
 interface ControlledSearchProps {
@@ -293,17 +293,17 @@ Reports whether desktop hybrid mode is available.
 Import the button eagerly and split the larger modal into another JavaScript chunk. The following Ask AI example preloads that chunk on hover, focus, or touch, then renders it only after the provider opens a modal state.
 
 ```tsx title="LazySearch.tsx"
-import { DocSearch, useDocSearch } from '@docsearch/core';
-import { DocSearchButton } from '@docsearch/modal/button';
-import type { DocSearchAskAiModalProps } from '@docsearch/modal/askai';
+import { DocSearch, useDocSearch } from 'typesense-docsearch-core';
+import { DocSearchButton } from 'typesense-docsearch-modal/button';
+import type { DocSearchAskAiModalProps } from 'typesense-docsearch-modal/askai';
 import { lazy, Suspense, type JSX } from 'react';
 
-import '@docsearch/css/dist/style.css';
+import 'typesense-docsearch-css/dist/style.css';
 
-let modalImport: Promise<typeof import('@docsearch/modal/askai')> | undefined;
+let modalImport: Promise<typeof import('typesense-docsearch-modal/askai')> | undefined;
 
-function loadModal(): Promise<typeof import('@docsearch/modal/askai')> {
-  modalImport ??= import('@docsearch/modal/askai');
+function loadModal(): Promise<typeof import('typesense-docsearch-modal/askai')> {
+  modalImport ??= import('typesense-docsearch-modal/askai');
   return modalImport;
 }
 
@@ -367,20 +367,20 @@ Use the package root for convenience or a subpath to keep eager bundles focused.
 
 | Import | Exports |
 | --- | --- |
-| `@docsearch/core` | `DocSearch`, `useDocSearch`, their types, keyboard utilities, and theme utilities |
-| `@docsearch/modal` | `DocSearchButton`, `DocSearchModal`, `DocSearchAskAiModal`, and their prop types |
-| `@docsearch/modal/button` | `DocSearchButton`, `DocSearchButtonProps` |
-| `@docsearch/modal/modal` | `DocSearchModal`, `DocSearchModalProps` |
-| `@docsearch/modal/askai` | `DocSearchAskAiModal`, `DocSearchAskAiModalProps` |
+| `typesense-docsearch-core` | `DocSearch`, `useDocSearch`, their types, keyboard utilities, and theme utilities |
+| `typesense-docsearch-modal` | `DocSearchButton`, `DocSearchModal`, `DocSearchAskAiModal`, and their prop types |
+| `typesense-docsearch-modal/button` | `DocSearchButton`, `DocSearchButtonProps` |
+| `typesense-docsearch-modal/modal` | `DocSearchModal`, `DocSearchModalProps` |
+| `typesense-docsearch-modal/askai` | `DocSearchAskAiModal`, `DocSearchAskAiModalProps` |
 
-The lower-level React entry points are `@docsearch/react/button`, `@docsearch/react/modal`, and `@docsearch/react/askaiModal`. They don't connect themselves to the composable provider. Use them only when you intend to manage portal rendering, refs, `initialScrollY`, close behavior, and Ask AI state yourself.
+The lower-level React entry points are `typesense-docsearch-react/button`, `typesense-docsearch-react/modal`, and `typesense-docsearch-react/askaiModal`. They don't connect themselves to the composable provider. Use them only when you intend to manage portal rendering, refs, `initialScrollY`, close behavior, and Ask AI state yourself.
 
 ## Load the styles
 
 For either complete modal, import the combined stylesheet once:
 
 ```ts
-import '@docsearch/css/dist/style.css';
+import 'typesense-docsearch-css/dist/style.css';
 ```
 
 The combined stylesheet contains variables, button styles, keyword modal styles, and Ask AI modal styles. It doesn't contain Sidepanel styles.
@@ -388,12 +388,12 @@ The combined stylesheet contains variables, button styles, keyword modal styles,
 For a keyword-only CSS bundle, import the layers in this order:
 
 ```ts
-import '@docsearch/css/dist/_variables.css';
-import '@docsearch/css/dist/button.css';
-import '@docsearch/css/dist/modal.css';
+import 'typesense-docsearch-css/dist/_variables.css';
+import 'typesense-docsearch-css/dist/button.css';
+import 'typesense-docsearch-css/dist/modal.css';
 ```
 
-Add `@docsearch/css/dist/_askai.css` when you use `DocSearchAskAiModal`. Bundlers can also load the same files through `@docsearch/react/style`, `@docsearch/react/style/button`, `@docsearch/react/style/modal`, `@docsearch/react/style/askai`, and `@docsearch/react/style/variables`.
+Add `typesense-docsearch-css/dist/_askai.css` when you use `DocSearchAskAiModal`. Bundlers can also load the same files through `typesense-docsearch-react/style`, `typesense-docsearch-react/style/button`, `typesense-docsearch-react/style/modal`, `typesense-docsearch-react/style/askai`, and `typesense-docsearch-react/style/variables`.
 
 ## API summary
 

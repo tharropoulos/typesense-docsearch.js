@@ -5,7 +5,7 @@
  * in the root directory of this source tree.
  */
 
-import type { ThemeConfigDocSearch } from '@docsearch/docusaurus-adapter';
+import type { ThemeConfigDocSearch } from 'typesense-docsearch-docusaurus-adapter';
 import { useMemo } from 'react';
 
 type SidepanelOptions = Exclude<

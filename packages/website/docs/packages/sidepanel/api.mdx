@@ -1,12 +1,12 @@
 ---
 title: React Sidepanel API reference
-description: API reference for @docsearch/sidepanel.
+description: API reference for typesense-docsearch-sidepanel.
 toc_max_heading_level: 2
 ---
 
 ## `Sidepanel`
 
-Render `Sidepanel` inside `DocSearch` from `@docsearch/core`.
+Render `Sidepanel` inside `DocSearch` from `typesense-docsearch-core`.
 
 Set `theme` on `DocSearch`; `SidepanelProps` omits it. Set lifecycle callbacks such as `onSidepanelOpen` and `onSidepanelClose` on the provider. Don't pass inherited `onOpen` or `onClose` callbacks to `Sidepanel`, because they replace the wrapper's state handlers.
 
@@ -198,12 +198,12 @@ Whether the Sidepanel is open.
 
 Whether the provider is mounted.
 
-`InitialAskAiMessage` is `{ query: string; messageId?: string; suggestedQuestionId?: string }`. See the [`@docsearch/core` API](../core/api) for the full ref.
+`InitialAskAiMessage` is `{ query: string; messageId?: string; suggestedQuestionId?: string }`. See the [`typesense-docsearch-core` API](../core/api) for the full ref.
 
 ## Exports
 
 | Import path | Value exports | Type exports |
 | --- | --- | --- |
-| `@docsearch/sidepanel` | `Sidepanel`, `SidepanelButton` | `SidepanelProps`, `SidepanelButtonProps` |
-| `@docsearch/sidepanel/sidepanel` | `Sidepanel` | `SidepanelProps` |
-| `@docsearch/sidepanel/button` | `SidepanelButton` | `SidepanelButtonProps` |
+| `typesense-docsearch-sidepanel` | `Sidepanel`, `SidepanelButton` | `SidepanelProps`, `SidepanelButtonProps` |
+| `typesense-docsearch-sidepanel/sidepanel` | `Sidepanel` | `SidepanelProps` |
+| `typesense-docsearch-sidepanel/button` | `SidepanelButton` | `SidepanelButtonProps` |

@@ -10,7 +10,7 @@ const externals = [
   'react',
   'react-dom',
   /^react\//,
-  '@docsearch/core',
+  'typesense-docsearch-core',
   /^@docsearch\/react/,
 ];
 
@@ -55,11 +55,11 @@ export default defineConfig([
       globals: {
         react: 'React',
         'react-dom': 'ReactDOM',
-        '@docsearch/core': 'DocSearchCore',
-        '@docsearch/react': 'DocSearchReact',
-        '@docsearch/react/askaiModal': 'DocSearchReact',
-        '@docsearch/react/button': 'DocSearchReact',
-        '@docsearch/react/modal': 'DocSearchReact',
+        'typesense-docsearch-core': 'DocSearchCore',
+        'typesense-docsearch-react': 'DocSearchReact',
+        'typesense-docsearch-react/askaiModal': 'DocSearchReact',
+        'typesense-docsearch-react/button': 'DocSearchReact',
+        'typesense-docsearch-react/modal': 'DocSearchReact',
       },
     },
     format: 'umd',

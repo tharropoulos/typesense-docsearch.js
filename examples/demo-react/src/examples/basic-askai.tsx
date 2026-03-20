@@ -1,5 +1,5 @@
 /* eslint-disable react/react-in-jsx-scope */
-import { DocSearchAI, type ToolCalls } from '@docsearch/react';
+import { DocSearchAI, type ToolCalls } from 'typesense-docsearch-react';
 import type { JSX } from 'react';
 
 import type { DemoTheme } from '../App';

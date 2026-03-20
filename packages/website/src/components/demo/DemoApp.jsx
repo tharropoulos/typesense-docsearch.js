@@ -1,6 +1,6 @@
-import { DocSearch } from '@docsearch/core';
-import { DocSearchAskAiModal, DocSearchButton } from '@docsearch/modal';
-import { DocSearchSidepanel } from '@docsearch/react/sidepanel';
+import { DocSearch } from 'typesense-docsearch-core';
+import { DocSearchAskAiModal, DocSearchButton } from 'typesense-docsearch-modal';
+import { DocSearchSidepanel } from 'typesense-docsearch-react/sidepanel';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import { installAskAiMock } from './askai-fixture';

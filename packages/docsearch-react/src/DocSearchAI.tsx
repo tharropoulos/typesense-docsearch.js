@@ -1,5 +1,5 @@
-import { DocSearch as DocSearchProvider, useDocSearch } from '@docsearch/core';
-import type { DocSearchRef, InitialAskAiMessage } from '@docsearch/core';
+import { DocSearch as DocSearchProvider, useDocSearch } from 'typesense-docsearch-core';
+import type { DocSearchRef, InitialAskAiMessage } from 'typesense-docsearch-core';
 import React, { type JSX } from 'react';
 import { createPortal } from 'react-dom';
 
@@ -97,7 +97,7 @@ export interface DocSearchAIProps extends DocSearchProps {
    *
    * Return `true` to prevent the default modal Ask AI flow (no toggle, no
    * sendMessage). Useful to route Ask AI into a different UI (e.g.
-   * `@docsearch/sidepanel-js`) without flicker.
+   * `typesense-docsearch-sidepanel-js`) without flicker.
    */
   interceptAskAiEvent?: (initialMessage: InitialAskAiMessage) => boolean | void;
 }

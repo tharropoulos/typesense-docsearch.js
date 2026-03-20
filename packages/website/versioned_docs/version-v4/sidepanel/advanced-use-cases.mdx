@@ -8,13 +8,13 @@ import TabItem from '@theme/TabItem';
 ## Introduction
 
 This guide will cover some advanced implementations/use cases for the Sidepanel. The examples below assume you're using the Sidepanel React package,
-available from `@docsearch/sidepanel`. The `@docsearch/sidepanel` package can be installed as follows:
+available from `typesense-docsearch-sidepanel`. The `typesense-docsearch-sidepanel` package can be installed as follows:
 
 <Tabs>
 <TabItem value="npm">
 
 ```bash
-npm install @docsearch/sidepanel
+npm install typesense-docsearch-sidepanel
 ```
 
 </TabItem>
@@ -22,7 +22,7 @@ npm install @docsearch/sidepanel
 <TabItem value="yarn">
 
 ```bash
-yarn add @docsearch/sidepanel
+yarn add typesense-docsearch-sidepanel
 ```
 
 </TabItem>
@@ -30,7 +30,7 @@ yarn add @docsearch/sidepanel
 <TabItem value="pnpm">
 
 ```bash
-pnpm add @docsearch/sidepanel
+pnpm add typesense-docsearch-sidepanel
 ```
 
 </TabItem>
@@ -38,7 +38,7 @@ pnpm add @docsearch/sidepanel
 <TabItem value="bun">
 
 ```bash
-bun add @docsearch/sidepanel
+bun add typesense-docsearch-sidepanel
 ```
 
 </TabItem>
@@ -51,8 +51,8 @@ bun add @docsearch/sidepanel
 Below is an example of a more complex implementation with `searchParameters`, a different `variant`, and some translations.
 
 ```tsx
-import { DocSearch } from '@docsearch/core';
-import { SidepanelButton, Sidepanel } from '@docsearch/sidepanel';
+import { DocSearch } from 'typesense-docsearch-core';
+import { SidepanelButton, Sidepanel } from 'typesense-docsearch-sidepanel';
 
 function App() {
   return (
@@ -91,9 +91,9 @@ function App() {
 Sidepanel is built in a way that allows for dynamic importing of its components to help reduce bundle size. Below is a brief example of how to do so:
 
 ```tsx
-import { DocSearch } from '@docsearch/core';
-import { SidepanelButton } from '@docsearch/sidepanel/button';
-import type { Sidepanel as SidepanelType } from '@docsearch/sidepanel/sidepanel';
+import { DocSearch } from 'typesense-docsearch-core';
+import { SidepanelButton } from 'typesense-docsearch-sidepanel/button';
+import type { Sidepanel as SidepanelType } from 'typesense-docsearch-sidepanel/sidepanel';
 import { useState } from 'react';
 
 let Sidepanel: typeof SidepanelType | null = null;
@@ -103,7 +103,7 @@ async function importSidepanelIfNeeded() {
     return;
   }
 
-  const { Sidepanel: Panel } = await import('@docsearch/sidepanel/sidepanel');
+  const { Sidepanel: Panel } = await import('typesense-docsearch-sidepanel/sidepanel');
 
   Sidepanel = Panel;
 }

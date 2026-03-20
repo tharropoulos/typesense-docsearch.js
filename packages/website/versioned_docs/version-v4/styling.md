@@ -10,32 +10,32 @@ The following content is for **[DocSearch v4][2]**. If you are using **[DocSearc
 
 ## Introduction
 
-DocSearch v4 comes with a theme package called `@docsearch/css`, which offers a sleek out of the box theme!
+DocSearch v4 comes with a theme package called `typesense-docsearch-css`, which offers a sleek out of the box theme!
 
 :::note
 
-This package is a dependency of [`@docsearch/js`][1] and [`@docsearch/react`][1], you don't need to install it if you are using a package manager!
+This package is a dependency of [`typesense-docsearch.js`][1] and [`typesense-docsearch-react`][1], you don't need to install it if you are using a package manager!
 
 :::
 
 ## Installation
 
 ```bash
-yarn add @docsearch/css@4
+yarn add typesense-docsearch-css@4
 # or
-npm install @docsearch/css@4
+npm install typesense-docsearch-css@4
 ```
 
 If you don’t want to use a package manager, you can use a standalone endpoint:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@4" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typesense-docsearch-css@4" />
 ```
 
 ## Files
 
 ```
-@docsearch/css
+typesense-docsearch-css
 ├── dist/style.css # all styles
 ├── dist/_variables.css # CSS variables
 ├── dist/button.css # CSS for the button

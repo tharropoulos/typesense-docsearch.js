@@ -6,7 +6,7 @@ This guide provides detailed information on migrating from [DocSearch v3](/docs/
 
 ## If You're Using Docusaurus
 
-Use [`@docsearch/docusaurus-adapter`](./docusaurus-adapter) to get the latest DocSearch integration on your current Docusaurus version.
+Use [`typesense-docsearch-docusaurus-adapter`](./docusaurus-adapter) to get the latest DocSearch integration on your current Docusaurus version.
 
 This is the recommended path when you need newer DocSearch features (for example, Ask AI sidepanel support) without waiting for changes in Docusaurus' built-in search integration.
 

@@ -1,7 +1,7 @@
 import { Check, Copy } from 'iconoir-react';
 import React, { useState } from 'react';
 
-const COMMAND = 'npx @docsearch/cli setup';
+const COMMAND = 'npx typesense-docsearch-cli setup';
 
 export function InstallCommand() {
   const [copied, setCopied] = useState(false);

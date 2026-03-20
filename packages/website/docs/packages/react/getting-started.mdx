@@ -6,7 +6,7 @@ description: Add DocSearch v5 keyword search or Agent Studio answers to a React 
 import TabItem from '@theme/TabItem';
 import Tabs from '@theme/Tabs';
 
-`@docsearch/react` exports separate components for keyword search and Ask AI. Choose the component that matches your application.
+`typesense-docsearch-react` exports separate components for keyword search and Ask AI. Choose the component that matches your application.
 
 ## Before you start
 
@@ -18,28 +18,28 @@ Collect your Algolia application ID, Search API key, and index name. To add Ask 
   <TabItem value="npm" label="npm">
 
 ```bash
-npm install @docsearch/react@^5 @docsearch/css@^5
+npm install typesense-docsearch-react@^5 typesense-docsearch-css@^5
 ```
 
   </TabItem>
   <TabItem value="yarn" label="Yarn">
 
 ```bash
-yarn add @docsearch/react@^5 @docsearch/css@^5
+yarn add typesense-docsearch-react@^5 typesense-docsearch-css@^5
 ```
 
   </TabItem>
   <TabItem value="pnpm" label="pnpm">
 
 ```bash
-pnpm add @docsearch/react@^5 @docsearch/css@^5
+pnpm add typesense-docsearch-react@^5 typesense-docsearch-css@^5
 ```
 
   </TabItem>
   <TabItem value="bun" label="Bun">
 
 ```bash
-bun add @docsearch/react@^5 @docsearch/css@^5
+bun add typesense-docsearch-react@^5 typesense-docsearch-css@^5
 ```
 
   </TabItem>
@@ -52,9 +52,9 @@ The package supports React and React DOM versions from 16.8 through 19.
 Render `DocSearch` when your site only needs keyword results:
 
 ```jsx title="Search.jsx"
-import { DocSearch } from '@docsearch/react';
+import { DocSearch } from 'typesense-docsearch-react';
 
-import '@docsearch/css';
+import 'typesense-docsearch-css';
 
 export function Search() {
   return (
@@ -74,9 +74,9 @@ export function Search() {
 Render `DocSearchAI` and pass the Agent Studio assistant:
 
 ```jsx title="Search.jsx"
-import { DocSearchAI } from '@docsearch/react';
+import { DocSearchAI } from 'typesense-docsearch-react';
 
-import '@docsearch/css';
+import 'typesense-docsearch-css';
 
 export function Search() {
   return (
@@ -100,7 +100,7 @@ Both components forward a `DocSearchRef`:
 
 ```tsx title="Search.tsx"
 import { useRef } from 'react';
-import { DocSearchAI, type DocSearchRef } from '@docsearch/react';
+import { DocSearchAI, type DocSearchRef } from 'typesense-docsearch-react';
 
 export function Search() {
   const searchRef = useRef<DocSearchRef>(null);

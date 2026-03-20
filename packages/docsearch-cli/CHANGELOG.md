@@ -1,4 +1,4 @@
-# @docsearch/cli
+# typesense-docsearch-cli
 
 ## 0.0.1
 

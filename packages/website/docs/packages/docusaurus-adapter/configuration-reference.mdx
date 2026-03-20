@@ -11,7 +11,7 @@ Add supported options under `themeConfig.docsearch`. The adapter doesn't read `t
 
 ```js title="docusaurus.config.mjs"
 export default {
-  plugins: ['@docsearch/docusaurus-adapter'],
+  plugins: ['typesense-docsearch-docusaurus-adapter'],
   themeConfig: {
     docsearch: {
       appId: 'YOUR_APPLICATION_ID',
@@ -447,10 +447,10 @@ Override memory for the panel. Defaults to `askAi.memory`. See [user-scoped memo
 
 Docusaurus can't serialize tool functions in `themeConfig`. The adapter rejects both `askAi.tools` and `sidePanel.tools` there.
 
-Swizzle `SearchBar` from `@docsearch/docusaurus-adapter`, then pass tools as component props:
+Swizzle `SearchBar` from `typesense-docsearch-docusaurus-adapter`, then pass tools as component props:
 
 ```bash
-npm run swizzle -- @docsearch/docusaurus-adapter SearchBar --eject
+npm run swizzle -- typesense-docsearch-docusaurus-adapter SearchBar --eject
 ```
 
 Replace the generated component with one of these examples:
@@ -459,8 +459,8 @@ Replace the generated component with one of these examples:
   <TabItem value="react" label="React">
 
 ```tsx title="src/theme/SearchBar/index.tsx"
-import type { DocusaurusSearchBarProps } from '@docsearch/docusaurus-adapter';
-import type { ToolCalls } from '@docsearch/react';
+import type { DocusaurusSearchBarProps } from 'typesense-docsearch-docusaurus-adapter';
+import type { ToolCalls } from 'typesense-docsearch-react';
 import OriginalSearchBar from '@theme-original/SearchBar';
 
 const tools: ToolCalls = {
@@ -562,7 +562,7 @@ A string `from` value is treated literally. A `RegExp` is converted to its sourc
 The adapter reports dedicated errors for removed or unsupported v4 options. Use the replacement named in each message:
 
 ```text
-`themeConfig.algolia` is no longer supported by @docsearch/docusaurus-adapter v5. Move the configuration to `themeConfig.docsearch`.
+`themeConfig.algolia` is no longer supported by typesense-docsearch-docusaurus-adapter v5. Move the configuration to `themeConfig.docsearch`.
 
 `themeConfig.docsearch.indexName` was removed. Use `themeConfig.docsearch.indices` instead.
 

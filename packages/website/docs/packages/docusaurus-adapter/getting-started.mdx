@@ -6,7 +6,7 @@ description: Add DocSearch v5 keyword search and Agent Studio answers to a Docus
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-Use `@docsearch/docusaurus-adapter` to add keyword search, a search results page, Ask AI, and an Ask AI Sidepanel to Docusaurus.
+Use `typesense-docsearch-docusaurus-adapter` to add keyword search, a search results page, Ask AI, and an Ask AI Sidepanel to Docusaurus.
 
 ## Before you start
 
@@ -21,34 +21,34 @@ Use Node.js 20 or later, Docusaurus 3.10.2 or later in the Docusaurus 3 release 
 
 ## Install the adapter
 
-Install `@docsearch/docusaurus-adapter@^5`:
+Install `typesense-docsearch-docusaurus-adapter@^5`:
 
 <Tabs groupId="package-manager" aria-label="Package manager">
   <TabItem value="npm" label="npm">
 
 ```bash
-npm install @docsearch/docusaurus-adapter@^5
+npm install typesense-docsearch-docusaurus-adapter@^5
 ```
 
   </TabItem>
   <TabItem value="yarn" label="Yarn">
 
 ```bash
-yarn add @docsearch/docusaurus-adapter@^5
+yarn add typesense-docsearch-docusaurus-adapter@^5
 ```
 
   </TabItem>
   <TabItem value="pnpm" label="pnpm">
 
 ```bash
-pnpm add @docsearch/docusaurus-adapter@^5
+pnpm add typesense-docsearch-docusaurus-adapter@^5
 ```
 
   </TabItem>
   <TabItem value="bun" label="Bun">
 
 ```bash
-bun add @docsearch/docusaurus-adapter@^5
+bun add typesense-docsearch-docusaurus-adapter@^5
 ```
 
   </TabItem>
@@ -62,7 +62,7 @@ Add the adapter to `plugins`. Configure it under `themeConfig.docsearch`:
 
 ```js title="docusaurus.config.mjs"
 export default {
-  plugins: ['@docsearch/docusaurus-adapter'],
+  plugins: ['typesense-docsearch-docusaurus-adapter'],
   themeConfig: {
     docsearch: {
       appId: 'YOUR_APPLICATION_ID',
@@ -101,7 +101,7 @@ Set `askAi` to an object with your Agent Studio assistant ID:
 
 ```js title="docusaurus.config.mjs"
 export default {
-  plugins: ['@docsearch/docusaurus-adapter'],
+  plugins: ['typesense-docsearch-docusaurus-adapter'],
   themeConfig: {
     docsearch: {
       appId: 'YOUR_APPLICATION_ID',

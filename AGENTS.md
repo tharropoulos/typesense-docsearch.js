@@ -8,13 +8,13 @@ DocSearch is an Algolia-powered search widget for documentation sites. It's a Ty
 
 ### Packages
 
-- `@docsearch/core` - Core logic and hooks
-- `@docsearch/react` - React components
-- `@docsearch/js` - Vanilla JavaScript wrapper
-- `@docsearch/css` - Styles
-- `@docsearch/modal` - Modal component
-- `@docsearch/sidepanel` - Side panel React component
-- `@docsearch/sidepanel-js` - Side panel vanilla JS wrapper
+- `typesense-docsearch-core` - Core logic and hooks
+- `typesense-docsearch-react` - React components
+- `typesense-docsearch.js` - Vanilla JavaScript wrapper
+- `typesense-docsearch-css` - Styles
+- `typesense-docsearch-modal` - Modal component
+- `typesense-docsearch-sidepanel` - Side panel React component
+- `typesense-docsearch-sidepanel-js` - Side panel vanilla JS wrapper
 - `website` - Documentation site (Docusaurus)
 
 ## Build Commands
@@ -27,7 +27,7 @@ bun install
 bun run build
 
 # Build specific package
-bun run --filter @docsearch/react build
+bun run --filter typesense-docsearch-react build
 
 # Watch mode (all packages)
 bun run watch

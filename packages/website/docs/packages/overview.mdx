@@ -8,19 +8,19 @@ import Tabs from '@theme/Tabs';
 
 DocSearch v5 provides keyword search, AI answers powered by Agent Studio, and lower-level packages for custom integrations.
 
-Start with `@docsearch/js` for a browser integration or `@docsearch/react` for a React application. Both packages support the same keyword search options.
+Start with `typesense-docsearch.js` for a browser integration or `typesense-docsearch-react` for a React application. Both packages support the same keyword search options.
 
 ## Choose a package
 
 | Package | Use it for |
 | --- | --- |
-| [`@docsearch/js`](./js/getting-started) | JavaScript sites, including sites that don't use React. The default entry includes keyword search and Ask AI. |
-| [`@docsearch/react`](./react/getting-started) | React applications. Choose `DocSearch` for keyword search or `DocSearchAI` for keyword search and Ask AI. |
-| [`@docsearch/css`](./css/styling) | The complete button and modal stylesheet. See [Styling](/docs/packages/css/styling). |
-| [`@docsearch/core`](./core/overview) | Shared state, keyboard handling, and the provider for the [Composable API](/docs/composable-api). |
-| [`@docsearch/modal`](./modal/overview) | Search button, keyword modal, and Ask AI modal components for the Composable API. |
-| [`@docsearch/sidepanel`](./sidepanel/getting-started) | React Sidepanel components for persistent AI conversations. |
-| [`@docsearch/sidepanel-js`](./sidepanel-js/getting-started) | JavaScript wrapper for the AI Sidepanel. |
+| [`typesense-docsearch.js`](./js/getting-started) | JavaScript sites, including sites that don't use React. The default entry includes keyword search and Ask AI. |
+| [`typesense-docsearch-react`](./react/getting-started) | React applications. Choose `DocSearch` for keyword search or `DocSearchAI` for keyword search and Ask AI. |
+| [`typesense-docsearch-css`](./css/styling) | The complete button and modal stylesheet. See [Styling](/docs/packages/css/styling). |
+| [`typesense-docsearch-core`](./core/overview) | Shared state, keyboard handling, and the provider for the [Composable API](/docs/composable-api). |
+| [`typesense-docsearch-modal`](./modal/overview) | Search button, keyword modal, and Ask AI modal components for the Composable API. |
+| [`typesense-docsearch-sidepanel`](./sidepanel/getting-started) | React Sidepanel components for persistent AI conversations. |
+| [`typesense-docsearch-sidepanel-js`](./sidepanel-js/getting-started) | JavaScript wrapper for the AI Sidepanel. |
 
 If your Docusaurus site uses the DocSearch adapter, follow the [Docusaurus adapter guide](/docs/packages/docusaurus-adapter/getting-started).
 
@@ -30,15 +30,15 @@ If your Docusaurus site uses the DocSearch adapter, follow the [Docusaurus adapt
 
 Use keyword search when you only need results from Algolia indices. It has no Ask AI runtime.
 
-- JavaScript: import `@docsearch/js/docsearch`.
-- React: render `DocSearch` from `@docsearch/react`.
+- JavaScript: import `typesense-docsearch.js/docsearch`.
+- React: render `DocSearch` from `typesense-docsearch-react`.
 
 ### Keyword search and Ask AI
 
 Use the AI-capable integration when you have an Agent Studio assistant.
 
-- JavaScript: use the default `@docsearch/js` export.
-- React: render `DocSearchAI` from `@docsearch/react`.
+- JavaScript: use the default `typesense-docsearch.js` export.
+- React: render `DocSearchAI` from `typesense-docsearch-react`.
 
 Create and configure the assistant before adding it to DocSearch. See [Get started with Agent Studio](../agent-studio/getting-started).
 

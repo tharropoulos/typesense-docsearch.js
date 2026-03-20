@@ -1,6 +1,6 @@
-import type { DocSearchAIProps as DocSearchComponentProps } from '@docsearch/react/docsearchAi';
-import { DocSearchAI } from '@docsearch/react/docsearchAi';
-import { version } from '@docsearch/react/version';
+import type { DocSearchAIProps as DocSearchComponentProps } from 'typesense-docsearch-react/docsearchAi';
+import { DocSearchAI } from 'typesense-docsearch-react/docsearchAi';
+import { version } from 'typesense-docsearch-react/version';
 
 import {
   createDocSearch,

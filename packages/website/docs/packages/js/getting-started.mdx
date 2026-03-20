@@ -6,7 +6,7 @@ description: Add DocSearch v5 keyword search or Agent Studio answers to a JavaSc
 import TabItem from '@theme/TabItem';
 import Tabs from '@theme/Tabs';
 
-Use `@docsearch/js` to render DocSearch into an HTML element. The default entry includes keyword search and Ask AI. A separate entry includes keyword search only.
+Use `typesense-docsearch.js` to render DocSearch into an HTML element. The default entry includes keyword search and Ask AI. A separate entry includes keyword search only.
 
 ## Before you start
 
@@ -18,28 +18,28 @@ Collect your Algolia application ID, Search API key, and index name. To add Ask 
   <TabItem value="npm" label="npm">
 
 ```bash
-npm install @docsearch/js@^5 @docsearch/css@^5
+npm install typesense-docsearch.js@^5 typesense-docsearch-css@^5
 ```
 
   </TabItem>
   <TabItem value="yarn" label="Yarn">
 
 ```bash
-yarn add @docsearch/js@^5 @docsearch/css@^5
+yarn add typesense-docsearch.js@^5 typesense-docsearch-css@^5
 ```
 
   </TabItem>
   <TabItem value="pnpm" label="pnpm">
 
 ```bash
-pnpm add @docsearch/js@^5 @docsearch/css@^5
+pnpm add typesense-docsearch.js@^5 typesense-docsearch-css@^5
 ```
 
   </TabItem>
   <TabItem value="bun" label="Bun">
 
 ```bash
-bun add @docsearch/js@^5 @docsearch/css@^5
+bun add typesense-docsearch.js@^5 typesense-docsearch-css@^5
 ```
 
   </TabItem>
@@ -58,9 +58,9 @@ Pass a container element or a selector that matches one. Don't pass an `input`; 
 Import the default entry and provide an `askAi` configuration:
 
 ```js title="app.js"
-import docsearch from '@docsearch/js';
+import docsearch from 'typesense-docsearch.js';
 
-import '@docsearch/css';
+import 'typesense-docsearch-css';
 
 const search = docsearch({
   container: '#docsearch',
@@ -80,9 +80,9 @@ The default entry bundles both experiences. `askAi` accepts an assistant ID stri
 Import the `/docsearch` entry to exclude Ask AI code:
 
 ```js title="app.js"
-import docsearch from '@docsearch/js/docsearch';
+import docsearch from 'typesense-docsearch.js/docsearch';
 
-import '@docsearch/css';
+import 'typesense-docsearch-css';
 
 const search = docsearch({
   container: '#docsearch',
@@ -101,9 +101,9 @@ Load the complete stylesheet and one JavaScript bundle. Both UMD bundles expose 
 ```html title="index.html"
 <link
   rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/@docsearch/css@^5/dist/style.css"
+  href="https://cdn.jsdelivr.net/npm/typesense-docsearch-css@^5/dist/style.css"
 />
-<script src="https://cdn.jsdelivr.net/npm/@docsearch/js@^5/dist/umd/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/typesense-docsearch.js@^5/dist/umd/index.js"></script>
 <script>
   window.docsearch({
     container: '#docsearch',
@@ -122,9 +122,9 @@ Load the complete stylesheet and one JavaScript bundle. Both UMD bundles expose 
 ```html title="index.html"
 <link
   rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/@docsearch/css@^5/dist/style.css"
+  href="https://cdn.jsdelivr.net/npm/typesense-docsearch-css@^5/dist/style.css"
 />
-<script src="https://cdn.jsdelivr.net/npm/@docsearch/js@^5/dist/umd/docsearch.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/typesense-docsearch.js@^5/dist/umd/docsearch.js"></script>
 <script>
   window.docsearch({
     container: '#docsearch',

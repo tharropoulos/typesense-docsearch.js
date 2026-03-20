@@ -1,4 +1,4 @@
-import type { SidepanelShortcuts } from '@docsearch/core';
+import type { SidepanelShortcuts } from 'typesense-docsearch-core';
 import { useEffect } from 'react';
 
 type UseSidepanelKeyboardEventsProps = {

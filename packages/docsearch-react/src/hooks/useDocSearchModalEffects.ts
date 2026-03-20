@@ -1,4 +1,4 @@
-import { useTheme } from '@docsearch/core/useTheme';
+import { useTheme } from 'typesense-docsearch-core/useTheme';
 import React from 'react';
 
 import type { DocSearchTheme } from '../types';

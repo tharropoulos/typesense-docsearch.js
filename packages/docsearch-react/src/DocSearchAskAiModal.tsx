@@ -1,5 +1,5 @@
 import { createAutocomplete } from '@algolia/autocomplete-core';
-import type { InitialAskAiMessage, OnAskAiToggle } from '@docsearch/core';
+import type { InitialAskAiMessage, OnAskAiToggle } from 'typesense-docsearch-core';
 import type { ChatRequestOptions } from 'ai';
 import React, { type JSX } from 'react';
 

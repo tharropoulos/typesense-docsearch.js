@@ -1,7 +1,7 @@
 import type {
   ThemeConfig,
   ThemeConfigDocSearch,
-} from '@docsearch/docusaurus-adapter';
+} from 'typesense-docsearch-docusaurus-adapter';
 /**
  * Copyright (c) Facebook, Inc. And its affiliates.
  *

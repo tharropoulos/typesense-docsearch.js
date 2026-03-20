@@ -1,4 +1,4 @@
-# @docsearch/sidepanel-js
+# typesense-docsearch-sidepanel-js
 
 ## 5.0.2
 
@@ -11,8 +11,8 @@
 ### Patch Changes
 
 - Updated dependencies [4ac53c4]
-  - @docsearch/react@5.0.1
-  - @docsearch/core@5.0.1
+  - typesense-docsearch-react@5.0.1
+  - typesense-docsearch-core@5.0.1
 
 ## 5.0.0
 
@@ -42,7 +42,7 @@
 
   ## Packaging & architecture
 
-  - New `@docsearch/cli` package for MCP setup and search
+  - New `typesense-docsearch-cli` package for MCP setup and search
   - MCP plugin support
   - Split JS bundles for search-only usage and JS-based hybrid mode
   - Migrated the build system to tsdown
@@ -69,16 +69,16 @@
 - Updated dependencies [ecd905d]
 - Updated dependencies [ecd905d]
 - Updated dependencies [ecd905d]
-  - @docsearch/react@5.0.0
-  - @docsearch/core@5.0.0
+  - typesense-docsearch-react@5.0.0
+  - typesense-docsearch-core@5.0.0
 
 ## 5.0.0-beta.4
 
 ### Patch Changes
 
 - Updated dependencies [ee9fddb]
-  - @docsearch/react@5.0.0-beta.4
-  - @docsearch/core@5.0.0-beta.4
+  - typesense-docsearch-react@5.0.0-beta.4
+  - typesense-docsearch-core@5.0.0-beta.4
 
 ## 5.0.0-beta.3
 
@@ -91,8 +91,8 @@
 - Updated dependencies [4e44b55]
 - Updated dependencies [9a1b3e4]
 - Updated dependencies [b28bc84]
-  - @docsearch/core@5.0.0-beta.3
-  - @docsearch/react@5.0.0-beta.3
+  - typesense-docsearch-core@5.0.0-beta.3
+  - typesense-docsearch-react@5.0.0-beta.3
 
 ## 5.0.0-beta.2
 
@@ -101,8 +101,8 @@
 - Updated dependencies [5eac1fd]
 - Updated dependencies [4f6b5b1]
 - Updated dependencies [9fe6738]
-  - @docsearch/react@5.0.0-beta.2
-  - @docsearch/core@5.0.0-beta.2
+  - typesense-docsearch-react@5.0.0-beta.2
+  - typesense-docsearch-core@5.0.0-beta.2
 
 ## 5.0.0-beta.1
 
@@ -110,8 +110,8 @@
 
 - Updated dependencies [f8e0678]
 - Updated dependencies [09861c8]
-  - @docsearch/react@5.0.0-beta.1
-  - @docsearch/core@5.0.0-beta.1
+  - typesense-docsearch-react@5.0.0-beta.1
+  - typesense-docsearch-core@5.0.0-beta.1
 
 ## 5.0.0-beta.0
 
@@ -141,7 +141,7 @@
 
   ## Packaging & architecture
 
-  - New `@docsearch/cli` package for MCP setup and search
+  - New `typesense-docsearch-cli` package for MCP setup and search
   - MCP plugin support
   - Split JS bundles for search-only usage and JS-based hybrid mode
   - Migrated the build system to tsdown
@@ -155,5 +155,5 @@
 ### Patch Changes
 
 - Updated dependencies [a8ed1ea]
-  - @docsearch/core@5.0.0-beta.0
-  - @docsearch/react@5.0.0-beta.0
+  - typesense-docsearch-core@5.0.0-beta.0
+  - typesense-docsearch-react@5.0.0-beta.0

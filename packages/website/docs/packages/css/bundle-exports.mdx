@@ -1,9 +1,9 @@
 ---
 title: CSS bundles and exports
-description: Choose the @docsearch/css v5 beta bundle for each DocSearch surface.
+description: Choose the typesense-docsearch-css v5 beta bundle for each DocSearch surface.
 ---
 
-`@docsearch/css` publishes compiled CSS and SCSS-named assets in `dist`. The package doesn't define an `exports` map, so import the root entry or a listed `dist` file.
+`typesense-docsearch-css` publishes compiled CSS and SCSS-named assets in `dist`. The package doesn't define an `exports` map, so import the root entry or a listed `dist` file.
 
 ## Root entry
 
@@ -12,8 +12,8 @@ The package fields `main`, `unpkg`, and `jsdelivr` all point to `dist/style.css`
 These imports load the same full search-and-modal bundle:
 
 ```js title="app.js"
-import '@docsearch/css';
-import '@docsearch/css/dist/style.css';
+import 'typesense-docsearch-css';
+import 'typesense-docsearch-css/dist/style.css';
 ```
 
 Use only one of them.
@@ -25,14 +25,14 @@ Each surface needs a different set of assets. See [Published assets](#published-
 ### Search button only
 
 ```js title="app.js"
-import '@docsearch/css/dist/button.css';
+import 'typesense-docsearch-css/dist/button.css';
 ```
 
 ### Keyword-search modal
 
 ```js title="app.js"
-import '@docsearch/css/dist/button.css';
-import '@docsearch/css/dist/modal.css';
+import 'typesense-docsearch-css/dist/button.css';
+import 'typesense-docsearch-css/dist/modal.css';
 ```
 
 Use the root bundle instead if your modal can show Agent Studio responses.
@@ -40,14 +40,14 @@ Use the root bundle instead if your modal can show Agent Studio responses.
 ### Agent Studio modal
 
 ```js title="app.js"
-import '@docsearch/css';
+import 'typesense-docsearch-css';
 ```
 
 ### Sidepanel
 
 ```js title="app.js"
-import '@docsearch/css';
-import '@docsearch/css/dist/sidepanel.css';
+import 'typesense-docsearch-css';
+import 'typesense-docsearch-css/dist/sidepanel.css';
 ```
 
 The Sidepanel reuses Agent Studio response and Markdown classes from the root bundle, so `sidepanel.css` isn't the complete Sidepanel presentation by itself.
@@ -57,7 +57,7 @@ The Sidepanel reuses Agent Studio response and Markdown classes from the root bu
 ```html title="index.html"
 <link
   rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/@docsearch/css@^5/dist/style.css"
+  href="https://cdn.jsdelivr.net/npm/typesense-docsearch-css@^5/dist/style.css"
 />
 ```
 
@@ -66,7 +66,7 @@ Add the Sidepanel asset when needed:
 ```html title="index.html"
 <link
   rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/@docsearch/css@^5/dist/sidepanel.css"
+  href="https://cdn.jsdelivr.net/npm/typesense-docsearch-css@^5/dist/sidepanel.css"
 />
 ```
 
@@ -76,26 +76,26 @@ Use the caret beta range so compatible beta updates remain available.
 
 | Path | Contents |
 | --- | --- |
-| `@docsearch/css/dist/style.css` | Variables, search button, modal, and Agent Studio response styles. |
-| `@docsearch/css/dist/_variables.css` | Shared light and dark custom properties. |
-| `@docsearch/css/dist/button.css` | Variables and search-button styles. |
-| `@docsearch/css/dist/modal.css` | Variables and keyword-search modal styles. |
-| `@docsearch/css/dist/_askai.css` | Agent Studio modal response and Markdown styles. |
-| `@docsearch/css/dist/sidepanel.css` | Variables, Sidepanel button, panel layout, and Sidepanel-specific overrides. |
+| `typesense-docsearch-css/dist/style.css` | Variables, search button, modal, and Agent Studio response styles. |
+| `typesense-docsearch-css/dist/_variables.css` | Shared light and dark custom properties. |
+| `typesense-docsearch-css/dist/button.css` | Variables and search-button styles. |
+| `typesense-docsearch-css/dist/modal.css` | Variables and keyword-search modal styles. |
+| `typesense-docsearch-css/dist/_askai.css` | Agent Studio modal response and Markdown styles. |
+| `typesense-docsearch-css/dist/sidepanel.css` | Variables, Sidepanel button, panel layout, and Sidepanel-specific overrides. |
 
 Each asset also has an equivalent `.scss` file: `style.scss`, `_variables.scss`, `button.scss`, `modal.scss`, `_askai.scss`, and `sidepanel.scss`. The build writes the compiled bundle to both extensions; these aren't Sass source partials.
 
 ## React style bridge exports
 
-`@docsearch/react` v5 beta also exposes JavaScript style bridge entry points. They re-export files from `@docsearch/css`:
+`typesense-docsearch-react` v5 beta also exposes JavaScript style bridge entry points. They re-export files from `typesense-docsearch-css`:
 
 | Import path                        | CSS target                           |
 | ---------------------------------- | ------------------------------------ |
-| `@docsearch/react/style`           | `@docsearch/css`                     |
-| `@docsearch/react/style/variables` | `@docsearch/css/dist/_variables.css` |
-| `@docsearch/react/style/button`    | `@docsearch/css/dist/button.css`     |
-| `@docsearch/react/style/modal`     | `@docsearch/css/dist/modal.css`      |
-| `@docsearch/react/style/askai`     | `@docsearch/css/dist/_askai.css`     |
-| `@docsearch/react/style/sidepanel` | `@docsearch/css/dist/sidepanel.css`  |
+| `typesense-docsearch-react/style`           | `typesense-docsearch-css`                     |
+| `typesense-docsearch-react/style/variables` | `typesense-docsearch-css/dist/_variables.css` |
+| `typesense-docsearch-react/style/button`    | `typesense-docsearch-css/dist/button.css`     |
+| `typesense-docsearch-react/style/modal`     | `typesense-docsearch-css/dist/modal.css`      |
+| `typesense-docsearch-react/style/askai`     | `typesense-docsearch-css/dist/_askai.css`     |
+| `typesense-docsearch-react/style/sidepanel` | `typesense-docsearch-css/dist/sidepanel.css`  |
 
-Prefer direct `@docsearch/css` imports when your bundler supports CSS package imports. They show which assets enter your bundle and work across the DocSearch React packages.
+Prefer direct `typesense-docsearch-css` imports when your bundler supports CSS package imports. They show which assets enter your bundle and work across the DocSearch React packages.

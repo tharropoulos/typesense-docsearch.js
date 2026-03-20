@@ -4,14 +4,14 @@
   "commit": false,
   "fixed": [
     [
-      "@docsearch/css",
-      "@docsearch/core",
-      "@docsearch/js",
-      "@docsearch/modal",
-      "@docsearch/react",
-      "@docsearch/sidepanel",
-      "@docsearch/sidepanel-js",
-      "@docsearch/docusaurus-adapter"
+      "typesense-docsearch-css",
+      "typesense-docsearch-core",
+      "typesense-docsearch.js",
+      "typesense-docsearch-modal",
+      "typesense-docsearch-react",
+      "typesense-docsearch-sidepanel",
+      "typesense-docsearch-sidepanel-js",
+      "typesense-docsearch-docusaurus-adapter"
     ]
   ],
   "linked": [],

@@ -11,7 +11,7 @@
 // the real assistant.
 
 // Matches the Agent Studio completions endpoint used by `getAgentStudioTransport`
-// in `@docsearch/react` (`.../agent-studio/1/agents/<id>/completions`).
+// in `typesense-docsearch-react` (`.../agent-studio/1/agents/<id>/completions`).
 const COMPLETIONS_RE = /\/agent-studio\/1\/agents\/[^/]+\/completions/;
 
 // Canned answers. We pick one based on the user's question so the demo reads as
@@ -24,12 +24,12 @@ const ANSWERS = [
 ### React
 
 \`\`\`bash
-npm install @docsearch/react@4 @docsearch/css@4
+npm install typesense-docsearch-react@4 typesense-docsearch-css@4
 \`\`\`
 
 \`\`\`jsx
-import { DocSearch } from '@docsearch/react';
-import '@docsearch/css';
+import { DocSearch } from 'typesense-docsearch-react';
+import 'typesense-docsearch-css';
 
 <DocSearch appId="YOUR_APP_ID" indices=["YOUR_INDEX"] apiKey="YOUR_SEARCH_KEY" />
 \`\`\`
@@ -37,12 +37,12 @@ import '@docsearch/css';
 ### Docusaurus (recommended)
 
 \`\`\`bash
-npm install @docsearch/docusaurus-adapter
+npm install typesense-docsearch-docusaurus-adapter
 \`\`\`
 
 \`\`\`js
 // docusaurus.config.js
-plugins: ['@docsearch/docusaurus-adapter'],
+plugins: ['typesense-docsearch-docusaurus-adapter'],
 themeConfig: {
   docsearch: {
     appId: 'YOUR_APP_ID',

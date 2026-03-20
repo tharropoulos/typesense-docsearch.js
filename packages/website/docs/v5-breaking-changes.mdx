@@ -9,12 +9,12 @@ This page lists the user-facing changes between the v4.6.0 package source and `5
 
 ### The root export is AI-capable
 
-In v4, the root `@docsearch/js` export rendered the combined component and allowed Ask AI to be omitted. In v5, it renders `DocSearchAI`, and its `DocSearchProps` type requires `askAi`.
+In v4, the root `typesense-docsearch.js` export rendered the combined component and allowed Ask AI to be omitted. In v5, it renders `DocSearchAI`, and its `DocSearchProps` type requires `askAi`.
 
 Use the root entry when you configure Agent Studio:
 
 ```js title="app.js"
-import docsearch from '@docsearch/js';
+import docsearch from 'typesense-docsearch.js';
 ```
 
 ### Keyword-only search moved to `/docsearch`
@@ -22,7 +22,7 @@ import docsearch from '@docsearch/js';
 Use the new subpath when you don't need Ask AI:
 
 ```js title="app.js"
-import docsearch from '@docsearch/js/docsearch';
+import docsearch from 'typesense-docsearch.js/docsearch';
 ```
 
 This entry excludes Ask AI code.
@@ -36,7 +36,7 @@ This entry excludes Ask AI code.
 
 ### An exports map restricts JavaScript imports
 
-`@docsearch/js` now exports only `.` and `./docsearch`. Replace imports of internal distribution files with one of these public entry points. Direct CDN URLs to the two documented UMD files remain supported by the package layout.
+`typesense-docsearch.js` now exports only `.` and `./docsearch`. Replace imports of internal distribution files with one of these public entry points. Direct CDN URLs to the two documented UMD files remain supported by the package layout.
 
 ## React components
 
@@ -49,18 +49,18 @@ V4's `DocSearch` accepted `askAi` and `interceptAskAiEvent`. V5's `DocSearch` co
 Use `DocSearchAI` for keyword search and Ask AI:
 
 ```jsx title="Search.jsx"
-import { DocSearchAI } from '@docsearch/react';
+import { DocSearchAI } from 'typesense-docsearch-react';
 ```
 
 `DocSearchAIProps` extends `DocSearchProps`, requires `askAi`, and adds `interceptAskAiEvent`.
 
-The package also adds `@docsearch/react/docsearchAi` and `@docsearch/react/askaiModal` subpaths.
+The package also adds `typesense-docsearch-react/docsearchAi` and `typesense-docsearch-react/askaiModal` subpaths.
 
 ### The Ask AI modal is separate
 
 `DocSearchModal` is keyword-only. `DocSearchAskAiModal` contains the combined keyword and AI modal. Composable integrations that rendered `DocSearchModal` with `askAi` must switch to `DocSearchAskAiModal` and its required provider callbacks. Review the [Composable API](/docs/composable-api) instead of constructing these props without the provider.
 
-`@docsearch/modal` exports the AI modal from its root and from `@docsearch/modal/askai`.
+`typesense-docsearch-modal` exports the AI modal from its root and from `typesense-docsearch-modal/askai`.
 
 ## Ask AI and Agent Studio
 
@@ -143,13 +143,13 @@ Use public component props for behavior and review [Styling](/docs/packages/css/
 
 ### Ask AI styles have a separate source bundle
 
-The complete `@docsearch/css` stylesheet still imports button, modal, and Ask AI rules. React also exposes split style entries:
+The complete `typesense-docsearch-css` stylesheet still imports button, modal, and Ask AI rules. React also exposes split style entries:
 
-- `@docsearch/react/style/variables`
-- `@docsearch/react/style/button`
-- `@docsearch/react/style/modal`
-- `@docsearch/react/style/askai`
-- `@docsearch/react/style/sidepanel`
+- `typesense-docsearch-react/style/variables`
+- `typesense-docsearch-react/style/button`
+- `typesense-docsearch-react/style/modal`
+- `typesense-docsearch-react/style/askai`
+- `typesense-docsearch-react/style/sidepanel`
 
 If you assemble styles by component, add `style/askai` for `DocSearchAI` or `DocSearchAskAiModal`.
 
@@ -159,7 +159,7 @@ The documented package subpaths remain stable, but their targets changed from na
 
 ### The React `main` field now points to ESM
 
-`@docsearch/react` changes `main` from `dist/umd/index.js` to `dist/esm/index.js`. Consumers that resolve `main` instead of the package exports need an ESM-compatible build pipeline. The explicit `unpkg` and `jsdelivr` fields continue to point to `dist/umd/index.js`.
+`typesense-docsearch-react` changes `main` from `dist/umd/index.js` to `dist/esm/index.js`. Consumers that resolve `main` instead of the package exports need an ESM-compatible build pipeline. The explicit `unpkg` and `jsdelivr` fields continue to point to `dist/umd/index.js`.
 
 ### The browser target is ES2017
 
@@ -185,13 +185,13 @@ See [hybrid mode](/docs/hybrid-mode) for the supported integration.
 
 ### React peer range
 
-`@docsearch/react`, `@docsearch/core`, `@docsearch/modal`, and `@docsearch/sidepanel` declare these optional peers:
+`typesense-docsearch-react`, `typesense-docsearch-core`, `typesense-docsearch-modal`, and `typesense-docsearch-sidepanel` declare these optional peers:
 
 - `react`: `>=16.8.0 <20.0.0`
 - `react-dom`: `>=16.8.0 <20.0.0`
 - `@types/react`: `>=16.8.0 <20.0.0`
 
-`@docsearch/react` also accepts optional `search-insights` versions `>=1 <3`.
+`typesense-docsearch-react` also accepts optional `search-insights` versions `>=1 <3`.
 
 ### Package versions must match
 
@@ -199,7 +199,7 @@ The `v5` packages depend on matching versions of the other DocSearch packages. D
 
 ### CSS remains a separate install for top-level integrations
 
-Install `@docsearch/css@^5`, then import `@docsearch/css`. For a CDN integration, load `@docsearch/css/dist/style.css`.
+Install `typesense-docsearch-css@^5`, then import `typesense-docsearch-css`. For a CDN integration, load `typesense-docsearch-css/dist/style.css`.
 
 ## Additive v5 APIs
 

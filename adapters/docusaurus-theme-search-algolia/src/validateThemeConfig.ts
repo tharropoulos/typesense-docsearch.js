@@ -8,7 +8,7 @@
 import type {
   ThemeConfig,
   ThemeConfigDocSearch,
-} from '@docsearch/docusaurus-adapter';
+} from 'typesense-docsearch-docusaurus-adapter';
 import type { ThemeConfigValidationContext } from '@docusaurus/types';
 import Joi from 'joi';
 
@@ -168,7 +168,7 @@ function assertNoRemovedKeys(themeConfig: ThemeConfig): void {
 
   if (themeConfigRecord.algolia !== undefined) {
     throw new Error(
-      '`themeConfig.algolia` is no longer supported by @docsearch/docusaurus-adapter v5. Move the configuration to `themeConfig.docsearch`.'
+      '`themeConfig.algolia` is no longer supported by typesense-docsearch-docusaurus-adapter v5. Move the configuration to `themeConfig.docsearch`.'
     );
   }
 

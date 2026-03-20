@@ -49,8 +49,8 @@ Pass the Agent Studio **agent ID** as `askAi.agentId`, or as the `askAi` string 
 Use `DocSearchAI`. Keyword-only `DocSearch` doesn't accept `askAi`.
 
 ```tsx title="Search.tsx"
-import { DocSearchAI } from '@docsearch/react';
-import '@docsearch/css';
+import { DocSearchAI } from 'typesense-docsearch-react';
+import 'typesense-docsearch-css';
 
 export function Search() {
   return (
@@ -80,11 +80,11 @@ The string shorthand remains supported:
   </TabItem>
   <TabItem value="js" label="JavaScript">
 
-Keep the root `@docsearch/js` import. It renders the AI-capable component:
+Keep the root `typesense-docsearch.js` import. It renders the AI-capable component:
 
 ```js title="load-docsearch.js"
-import docsearch from '@docsearch/js';
-import '@docsearch/css';
+import docsearch from 'typesense-docsearch.js';
+import 'typesense-docsearch-css';
 
 docsearch({
   container: '#docsearch',

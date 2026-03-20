@@ -1,8 +1,8 @@
-import type { DocSearchRef, InitialAskAiMessage } from '@docsearch/core';
+import type { DocSearchRef, InitialAskAiMessage } from 'typesense-docsearch-core';
 import type {
   ResultsFooterComponentProps,
   HitComponentProps,
-} from '@docsearch/react';
+} from 'typesense-docsearch-react';
 import htm from 'htm';
 import type { ComponentType, JSX, Attributes } from 'preact';
 import {

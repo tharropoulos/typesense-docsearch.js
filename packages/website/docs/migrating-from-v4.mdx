@@ -21,28 +21,28 @@ Upgrade every DocSearch package in the integration together with the `^5` range.
   <TabItem value="npm" label="npm">
 
 ```bash
-npm install @docsearch/react@^5 @docsearch/css@^5
+npm install typesense-docsearch-react@^5 typesense-docsearch-css@^5
 ```
 
   </TabItem>
   <TabItem value="yarn" label="Yarn">
 
 ```bash
-yarn add @docsearch/react@^5 @docsearch/css@^5
+yarn add typesense-docsearch-react@^5 typesense-docsearch-css@^5
 ```
 
   </TabItem>
   <TabItem value="pnpm" label="pnpm">
 
 ```bash
-pnpm add @docsearch/react@^5 @docsearch/css@^5
+pnpm add typesense-docsearch-react@^5 typesense-docsearch-css@^5
 ```
 
   </TabItem>
   <TabItem value="bun" label="Bun">
 
 ```bash
-bun add @docsearch/react@^5 @docsearch/css@^5
+bun add typesense-docsearch-react@^5 typesense-docsearch-css@^5
 ```
 
   </TabItem>
@@ -55,28 +55,28 @@ bun add @docsearch/react@^5 @docsearch/css@^5
   <TabItem value="npm" label="npm">
 
 ```bash
-npm install @docsearch/js@^5 @docsearch/css@^5
+npm install typesense-docsearch.js@^5 typesense-docsearch-css@^5
 ```
 
   </TabItem>
   <TabItem value="yarn" label="Yarn">
 
 ```bash
-yarn add @docsearch/js@^5 @docsearch/css@^5
+yarn add typesense-docsearch.js@^5 typesense-docsearch-css@^5
 ```
 
   </TabItem>
   <TabItem value="pnpm" label="pnpm">
 
 ```bash
-pnpm add @docsearch/js@^5 @docsearch/css@^5
+pnpm add typesense-docsearch.js@^5 typesense-docsearch-css@^5
 ```
 
   </TabItem>
   <TabItem value="bun" label="Bun">
 
 ```bash
-bun add @docsearch/js@^5 @docsearch/css@^5
+bun add typesense-docsearch.js@^5 typesense-docsearch-css@^5
 ```
 
   </TabItem>
@@ -85,7 +85,7 @@ bun add @docsearch/js@^5 @docsearch/css@^5
   </TabItem>
 </Tabs>
 
-If you use the Composable API or Sidepanel, also upgrade `@docsearch/core@^5`, `@docsearch/modal@^5`, `@docsearch/sidepanel@^5`, or `@docsearch/sidepanel-js@^5`.
+If you use the Composable API or Sidepanel, also upgrade `typesense-docsearch-core@^5`, `typesense-docsearch-modal@^5`, `typesense-docsearch-sidepanel@^5`, or `typesense-docsearch-sidepanel-js@^5`.
 
 ## 2. Choose keyword-only or AI-capable search
 
@@ -96,8 +96,8 @@ The v4 root export rendered the combined component. In v5, the root export is AI
 Change the import:
 
 ```diff title="app.js"
--import docsearch from '@docsearch/js';
-+import docsearch from '@docsearch/js/docsearch';
+-import docsearch from 'typesense-docsearch.js';
++import docsearch from 'typesense-docsearch.js/docsearch';
 ```
 
 Your keyword options can remain unchanged while you migrate deprecated options in a later step.
@@ -105,8 +105,8 @@ Your keyword options can remain unchanged while you migrate deprecated options i
 For a CDN integration, replace the root bundle with the keyword-only UMD file:
 
 ```diff title="index.html"
--<script src="https://cdn.jsdelivr.net/npm/@docsearch/js@4"></script>
-+<script src="https://cdn.jsdelivr.net/npm/@docsearch/js@^5/dist/umd/docsearch.js"></script>
+-<script src="https://cdn.jsdelivr.net/npm/typesense-docsearch.js@4"></script>
++<script src="https://cdn.jsdelivr.net/npm/typesense-docsearch.js@^5/dist/umd/docsearch.js"></script>
 ```
 
 ### JavaScript with Ask AI
@@ -114,7 +114,7 @@ For a CDN integration, replace the root bundle with the keyword-only UMD file:
 Keep the root import. It now renders the AI-capable `DocSearchAI` component:
 
 ```js title="app.js"
-import docsearch from '@docsearch/js';
+import docsearch from 'typesense-docsearch.js';
 
 docsearch({
   container: '#docsearch',
@@ -134,7 +134,7 @@ For a CDN integration, use `dist/umd/index.js`. It exposes `window.docsearch`, a
 Keep `DocSearch`, but remove any AI props. In v5 it renders keyword search only:
 
 ```jsx title="Search.jsx"
-import { DocSearch } from '@docsearch/react';
+import { DocSearch } from 'typesense-docsearch-react';
 
 <DocSearch
   appId="YOUR_APP_ID"
@@ -148,8 +148,8 @@ import { DocSearch } from '@docsearch/react';
 Replace `DocSearch` with `DocSearchAI`:
 
 ```diff title="Search.jsx"
--import { DocSearch } from '@docsearch/react';
-+import { DocSearchAI } from '@docsearch/react';
+-import { DocSearch } from 'typesense-docsearch-react';
++import { DocSearchAI } from 'typesense-docsearch-react';
 
 -<DocSearch
 +<DocSearchAI
@@ -264,15 +264,15 @@ To show a badge from a custom record property, add the property to the per-index
 
 ## 6. Verify styles and package exports
 
-The full stylesheet remains available from `@docsearch/css` and the CDN `dist/style.css` file:
+The full stylesheet remains available from `typesense-docsearch-css` and the CDN `dist/style.css` file:
 
 ```js title="app.js"
-import '@docsearch/css';
+import 'typesense-docsearch-css';
 ```
 
 The React package adds split style entries for variables, button, modal, Ask AI, and Sidepanel. See [Styling](/docs/packages/css/styling).
 
-`@docsearch/js` now defines an exports map. Replace unsupported deep imports with `@docsearch/js` or `@docsearch/js/docsearch`. Continue to use documented React subpaths such as `@docsearch/react/button`, `/modal`, `/sidepanel`, and `/version`; their generated file names changed, but the package subpaths remain the public API.
+`typesense-docsearch.js` now defines an exports map. Replace unsupported deep imports with `typesense-docsearch.js` or `typesense-docsearch.js/docsearch`. Continue to use documented React subpaths such as `typesense-docsearch-react/button`, `/modal`, `/sidepanel`, and `/version`; their generated file names changed, but the package subpaths remain the public API.
 
 ## 7. Verify programmatic controls
 

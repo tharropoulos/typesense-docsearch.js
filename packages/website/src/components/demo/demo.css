@@ -1,5 +1,5 @@
 /* Mini docs-site chrome for the homepage auto-demo (rendered inside the
-   /demo-embed iframe). Widget styles come from @docsearch/css; everything here
+   /demo-embed iframe). Widget styles come from typesense-docsearch-css; everything here
    is the light "your docs" frame behind it. Colours + fonts reuse the site's
    own design tokens from custom.css (theme-scoped on <html data-theme>), so the
    demo always matches the surrounding page in both light and dark mode. */

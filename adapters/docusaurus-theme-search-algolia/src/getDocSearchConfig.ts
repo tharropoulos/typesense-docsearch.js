@@ -8,7 +8,7 @@
 import type {
   ThemeConfig,
   ThemeConfigDocSearch,
-} from '@docsearch/docusaurus-adapter';
+} from 'typesense-docsearch-docusaurus-adapter';
 
 export function getDocSearchConfig(
   themeConfig: ThemeConfig

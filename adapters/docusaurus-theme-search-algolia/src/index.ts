@@ -5,7 +5,7 @@
  * in the root directory of this source tree.
  */
 
-import type { ThemeConfig } from '@docsearch/docusaurus-adapter';
+import type { ThemeConfig } from 'typesense-docsearch-docusaurus-adapter';
 import { readDefaultCodeTranslationMessages } from '@docusaurus/theme-translations';
 import type { LoadContext, Plugin } from '@docusaurus/types';
 

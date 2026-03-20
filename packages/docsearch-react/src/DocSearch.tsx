@@ -2,8 +2,8 @@ import type {
   AutocompleteOptions,
   AutocompleteState,
 } from '@algolia/autocomplete-core';
-import { DocSearch as DocSearchProvider, useDocSearch } from '@docsearch/core';
-import type { DocSearchModalShortcuts, DocSearchRef } from '@docsearch/core';
+import { DocSearch as DocSearchProvider, useDocSearch } from 'typesense-docsearch-core';
+import type { DocSearchModalShortcuts, DocSearchRef } from 'typesense-docsearch-core';
 import type {
   LiteClient,
   SearchParamsObject,
@@ -29,7 +29,7 @@ import type {
   StoredDocSearchHit,
 } from './types';
 
-export type { DocSearchRef } from '@docsearch/core';
+export type { DocSearchRef } from 'typesense-docsearch-core';
 
 export type DocSearchTranslations = Partial<{
   button: ButtonTranslations;

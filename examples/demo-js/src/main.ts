@@ -1,9 +1,9 @@
-import docsearch, { type DocSearchInstance } from '@docsearch/js';
-import sidepanel, { type SidepanelInstance } from '@docsearch/sidepanel-js';
+import docsearch, { type DocSearchInstance } from 'typesense-docsearch.js';
+import sidepanel, { type SidepanelInstance } from 'typesense-docsearch-sidepanel-js';
 
 import './app.css';
-import '@docsearch/css/dist/style.css';
-import '@docsearch/css/dist/sidepanel.css';
+import 'typesense-docsearch-css/dist/style.css';
+import 'typesense-docsearch-css/dist/sidepanel.css';
 
 declare global {
   interface Window {

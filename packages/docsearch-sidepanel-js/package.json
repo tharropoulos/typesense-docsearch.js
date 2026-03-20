@@ -42,7 +42,7 @@
   },
   "nx": {
     "implicitDependencies": [
-      "@docsearch/react"
+      "typesense-docsearch-react"
     ]
   }
 }

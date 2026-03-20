@@ -1,4 +1,4 @@
-# @docsearch/core
+# typesense-docsearch-core
 
 ## 5.0.2
 
@@ -32,7 +32,7 @@
 
   ## Packaging & architecture
 
-  - New `@docsearch/cli` package for MCP setup and search
+  - New `typesense-docsearch-cli` package for MCP setup and search
   - MCP plugin support
   - Split JS bundles for search-only usage and JS-based hybrid mode
   - Migrated the build system to tsdown
@@ -48,7 +48,7 @@
 - ecd905d: feat(v5): UI and DX updates
 
   - Rename the Ask AI assistantId option to agentId (adapter theme.SearchModal.askAi.assistantId → agentId)
-  - appId and apiKey moved up into @docsearch/core, so they're configured once and shared
+  - appId and apiKey moved up into typesense-docsearch-core, so they're configured once and shared
   - Removed the indexName prop from the Sidepanel
   - Facet defaults can now be read from the index searchParameters
   - Restored nested grouping of search results
@@ -70,7 +70,7 @@
 - 4f6b5b1: feat(v5): UI and DX updates
 
   - Rename the Ask AI assistantId option to agentId (adapter theme.SearchModal.askAi.assistantId → agentId)
-  - appId and apiKey moved up into @docsearch/core, so they're configured once and shared
+  - appId and apiKey moved up into typesense-docsearch-core, so they're configured once and shared
   - Removed the indexName prop from the Sidepanel
   - Facet defaults can now be read from the index searchParameters
   - Restored nested grouping of search results
@@ -105,7 +105,7 @@
 
   ## Packaging & architecture
 
-  - New `@docsearch/cli` package for MCP setup and search
+  - New `typesense-docsearch-cli` package for MCP setup and search
   - MCP plugin support
   - Split JS bundles for search-only usage and JS-based hybrid mode
   - Migrated the build system to tsdown

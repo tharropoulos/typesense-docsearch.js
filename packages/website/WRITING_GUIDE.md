@@ -83,7 +83,7 @@ The different tags (required/optional/experimental) are optional on their own, b
 
 ## Package names
 
-- When referencing @docsearch/sidepanel package, the component MUST be named `Sidepanel` (capital 'S')
+- When referencing typesense-docsearch-sidepanel package, the component MUST be named `Sidepanel` (capital 'S')
 
 ## Code blocks
 
