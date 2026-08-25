@@ -180,7 +180,10 @@ describe('utils', () => {
         id: '123',
         role: 'assistant',
         parts: [
-          { type: 'reasoning', text: 'Need to search using the [Algolia](https://algolia.com) searchIndex tool' },
+          {
+            type: 'reasoning',
+            text: 'Need to search using the [Algolia](https://algolia.com) searchIndex tool',
+          },
           {
             type: 'text',
             text,

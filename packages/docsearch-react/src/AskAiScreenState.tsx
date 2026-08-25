@@ -86,13 +86,6 @@ export const AskAiScreenState = React.memo(
     selectAskAiQuestion,
     ...props
   }: AskAiScreenStateProps<InternalDocSearchHit>): JSX.Element => {
-    const handleSelectPromptSuggestion = React.useCallback(
-      (prompt: string) => {
-        selectAskAiQuestion(true, prompt);
-      },
-      [selectAskAiQuestion]
-    );
-
     if (
       props.canHandleAskAi &&
       props.isAskAiActive &&
@@ -129,7 +122,6 @@ export const AskAiScreenState = React.memo(
           askAiError={props.askAiError}
           translations={translations?.askAiScreen}
           selectAskAiQuestion={selectAskAiQuestion}
-          onSelectPromptSuggestion={handleSelectPromptSuggestion}
         />
       );
     }

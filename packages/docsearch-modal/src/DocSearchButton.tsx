@@ -1,10 +1,10 @@
+import type { JSX } from 'react';
+import React from 'react';
 import { useDocSearch } from 'typesense-docsearch-core';
 import {
   DocSearchButton as Button,
   type DocSearchButtonProps as ButtonProps,
 } from 'typesense-docsearch-react/button';
-import type { JSX } from 'react';
-import React from 'react';
 
 export type DocSearchButtonProps = Omit<
   ButtonProps,

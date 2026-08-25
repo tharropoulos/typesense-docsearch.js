@@ -11,7 +11,7 @@ const externals = [
   'react-dom',
   /^react\//,
   'typesense-docsearch-core',
-  /^@docsearch\/react/,
+  /^typesense-docsearch-react(?:\/|$)/,
 ];
 
 const sharedConfig: UserConfig = {

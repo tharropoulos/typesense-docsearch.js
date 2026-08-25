@@ -155,7 +155,9 @@ function Result<TItem extends StoredDocSearchHit>({
   const Hit = hitComponent!;
   const { recentConversationTimestampFallback = 'A while ago' } = translations;
   const titleAttribute =
-    item.type === 'content' ? 'content' : `hierarchy.${item.type}`;
+    item.type === 'content' || item.type === 'askAI'
+      ? ('content' as const)
+      : (`hierarchy.${item.type}` as const);
   const breadcrumbs = getHitItemBreadcrumbs(item);
 
   return (

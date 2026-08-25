@@ -5,8 +5,13 @@ import type { MultiSearchRequestSchema } from 'typesense/lib/Typesense/Types';
 import type { Exchange } from './AskAiScreen';
 import type { StoredSearchPlugin } from './stored-searches';
 import { createStoredConversations } from './stored-searches';
+import type {
+  AIMessage,
+  AskAiStatus,
+  TypesenseAskAiParams,
+  UseAskAiSendMessageOptions,
+} from './types/AskiAi';
 import type { StoredAskAiState } from './types/StoredDocSearchHit';
-import type { AIMessage, AskAiStatus, TypesenseAskAiParams, UseAskAiSendMessageOptions } from './types/AskiAi';
 
 type UseAskAiParams = {
   typesenseServerConfig: TypesenseConfigurationOptions;
@@ -16,7 +21,10 @@ type UseAskAiParams = {
 type UseAskAiReturn = {
   messages: AIMessage[];
   status: AskAiStatus;
-  sendMessage: (query: string, options?: UseAskAiSendMessageOptions) => Promise<void>;
+  sendMessage: (
+    query: string,
+    options?: UseAskAiSendMessageOptions
+  ) => Promise<void>;
   setMessages: (messages: AIMessage[]) => void;
   stopAskAiStreaming: () => Promise<void>;
   askAiError?: Error;
@@ -60,7 +68,9 @@ const createId = (): string => {
   return `msg_${Math.random().toString(36).slice(2, 10)}`;
 };
 
-const getFirstNode = (config: TypesenseConfigurationOptions): TypesenseNodeConfig => {
+const getFirstNode = (
+  config: TypesenseConfigurationOptions
+): TypesenseNodeConfig => {
   const node = config.nearestNode ?? config.nodes?.[0];
 
   if (!node) {
@@ -78,7 +88,9 @@ const getBaseUrl = (config: TypesenseConfigurationOptions): string => {
   }
 
   if (!node.host) {
-    throw new Error('Typesense node configuration must include either `url` or `host`.');
+    throw new Error(
+      'Typesense node configuration must include either `url` or `host`.'
+    );
   }
 
   const protocol = node.protocol ?? 'https';
@@ -134,7 +146,9 @@ const parseSseEvent = (event: string): string[] =>
     .map((line) => line.slice(5).trim())
     .filter(Boolean);
 
-const splitSseEvents = (buffer: string): { events: string[]; remainder: string } => {
+const splitSseEvents = (
+  buffer: string
+): { events: string[]; remainder: string } => {
   const normalizedBuffer = buffer.replace(/\r\n/g, '\n');
   const events = normalizedBuffer.split('\n\n');
 
@@ -149,11 +163,14 @@ const buildSearchRequest = ({
   queryBy,
   excludeFields,
   searchParameters,
-}: Omit<TypesenseAskAiParams, 'conversationModelId'>): MultiSearchRequestSchema<Record<string, unknown>, string> => ({
+}: Omit<TypesenseAskAiParams, 'conversationModelId'>): MultiSearchRequestSchema<
+  Record<string, unknown>,
+  string
+> => ({
   collection,
   query_by: queryBy,
   exclude_fields: excludeFields,
-  ...(searchParameters ?? {}),
+  ...searchParameters,
 });
 
 export const useAskAi = ({
@@ -191,10 +208,17 @@ export const useAskAi = ({
   }, []);
 
   const sendMessage = useCallback(
-    async (query: string, _options?: UseAskAiSendMessageOptions): Promise<void> => {
+    async (
+      query: string,
+      _options?: UseAskAiSendMessageOptions
+    ): Promise<void> => {
       const userMessage = buildUserMessage(query);
       const assistantMessage = buildAssistantMessage(conversationIdRef.current);
-      const nextMessages = [...messagesRef.current, userMessage, assistantMessage];
+      const nextMessages = [
+        ...messagesRef.current,
+        userMessage,
+        assistantMessage,
+      ];
 
       abortControllerRef.current?.abort();
       const abortController = new AbortController();
@@ -238,11 +262,15 @@ export const useAskAi = ({
 
         if (!response.ok) {
           const errorText = await response.text();
-          throw new Error(errorText || 'Typesense conversational search failed.');
+          throw new Error(
+            errorText || 'Typesense conversational search failed.'
+          );
         }
 
         if (!response.body) {
-          throw new Error('Typesense conversational search did not return a stream.');
+          throw new Error(
+            'Typesense conversational search did not return a stream.'
+          );
         }
 
         setStatus('streaming');
@@ -253,6 +281,69 @@ export const useAskAi = ({
         let streamedText = '';
         let streamedConversationId = conversationIdRef.current;
 
+        // Rendering a chunk is hoisted out of the read loop so the state
+        // updaters don't close over loop-scoped bindings.
+        const renderStreamedText = (state: 'streaming' | 'done'): void => {
+          setMessagesState((currentMessages) =>
+            updateAssistantMessage(
+              currentMessages,
+              assistantMessage.id,
+              (message) => ({
+                ...message,
+                metadata: {
+                  ...message.metadata,
+                  ...(streamedConversationId
+                    ? { conversationId: streamedConversationId }
+                    : {}),
+                },
+                parts: [
+                  {
+                    type: 'text',
+                    text: streamedText,
+                    state,
+                  },
+                ],
+              })
+            )
+          );
+        };
+
+        /** Returns true when the chunk advanced the streamed answer. */
+        const consumeChunk = (payload: string): boolean => {
+          if (payload === '[DONE]') {
+            return false;
+          }
+
+          const chunk = JSON.parse(payload) as StreamChunk;
+          const finalAnswer = chunk.conversation?.answer;
+          const chunkText = chunk.message ?? chunk.conversation?.message ?? '';
+          const chunkConversationId =
+            chunk.conversation_id ?? chunk.conversation?.conversation_id;
+
+          if (chunkConversationId) {
+            streamedConversationId = chunkConversationId;
+            conversationIdRef.current = chunkConversationId;
+          }
+
+          // `conversation.answer` carries the whole answer, so only use it when
+          // nothing streamed incrementally.
+          if (finalAnswer) {
+            if (streamedText.length > 0) {
+              return false;
+            }
+
+            streamedText = finalAnswer;
+            return true;
+          }
+
+          if (chunkText.length === 0) {
+            return false;
+          }
+
+          streamedText += chunkText;
+          return true;
+        };
+
         while (true) {
           const { done, value } = await reader.read();
 
@@ -260,97 +351,21 @@ export const useAskAi = ({
             break;
           }
 
-          const decodedChunk = decoder.decode(value, { stream: true });
-          buffer += decodedChunk;
+          buffer += decoder.decode(value, { stream: true });
 
           const { events, remainder } = splitSseEvents(buffer);
           buffer = remainder;
 
-          for (const rawEvent of events) {
-            const payloads = parseSseEvent(rawEvent);
+          const payloads = events.flatMap((rawEvent) =>
+            parseSseEvent(rawEvent)
+          );
 
-            for (const payload of payloads) {
-              if (payload === '[DONE]') {
-                continue;
-              }
-
-              const chunk = JSON.parse(payload) as StreamChunk;
-              const finalAnswer = chunk.conversation?.answer;
-              const chunkText = chunk.message ?? chunk.conversation?.message ?? '';
-              const chunkConversationId = chunk.conversation_id ?? chunk.conversation?.conversation_id;
-
-              if (chunkConversationId) {
-                streamedConversationId = chunkConversationId;
-                conversationIdRef.current = chunkConversationId;
-              }
-
-              if (finalAnswer) {
-                if (streamedText.length === 0) {
-                  streamedText = finalAnswer;
-
-                  setMessagesState((currentMessages) =>
-                    updateAssistantMessage(currentMessages, assistantMessage.id, (message) => ({
-                      ...message,
-                      metadata: {
-                        ...message.metadata,
-                        ...(streamedConversationId ? { conversationId: streamedConversationId } : {}),
-                      },
-                      parts: [
-                        {
-                          type: 'text',
-                          text: streamedText,
-                          state: 'streaming',
-                        },
-                      ],
-                    }))
-                  );
-                }
-
-                continue;
-              }
-
-              if (chunkText.length === 0) {
-                continue;
-              }
-
-              streamedText += chunkText;
-
-              setMessagesState((currentMessages) =>
-                updateAssistantMessage(currentMessages, assistantMessage.id, (message) => ({
-                  ...message,
-                  metadata: {
-                    ...message.metadata,
-                    ...(streamedConversationId ? { conversationId: streamedConversationId } : {}),
-                  },
-                  parts: [
-                    {
-                      type: 'text',
-                      text: streamedText,
-                      state: 'streaming',
-                    },
-                  ],
-                }))
-              );
-            }
+          if (payloads.map(consumeChunk).some(Boolean)) {
+            renderStreamedText('streaming');
           }
         }
 
-        setMessagesState((currentMessages) =>
-          updateAssistantMessage(currentMessages, assistantMessage.id, (message) => ({
-            ...message,
-            metadata: {
-              ...message.metadata,
-              ...(streamedConversationId ? { conversationId: streamedConversationId } : {}),
-            },
-            parts: [
-              {
-                type: 'text',
-                text: streamedText,
-                state: 'done',
-              },
-            ],
-          }))
-        );
+        renderStreamedText('done');
         setStatus('ready');
       } catch (error) {
         if (abortController.signal.aborted) {
@@ -362,13 +377,23 @@ export const useAskAi = ({
         setStatus('error');
       }
     },
-    [collection, conversationModelId, excludeFields, queryBy, searchParameters, setMessages, typesenseServerConfig]
+    [
+      collection,
+      conversationModelId,
+      excludeFields,
+      queryBy,
+      searchParameters,
+      setMessages,
+      typesenseServerConfig,
+    ]
   );
 
-  const stopAskAiStreaming = useCallback(async (): Promise<void> => {
+  const stopAskAiStreaming = useCallback((): Promise<void> => {
     abortControllerRef.current?.abort();
     abortControllerRef.current = null;
     setStatus('ready');
+
+    return Promise.resolve();
   }, []);
 
   const startNewConversation = useCallback((): void => {
@@ -401,7 +426,8 @@ export const useAskAi = ({
     for (let i = 0; i < messages.length; i++) {
       if (messages[i].role === 'user') {
         const userMessage = messages[i];
-        const assistantMessage = messages[i + 1]?.role === 'assistant' ? messages[i + 1] : null;
+        const assistantMessage =
+          messages[i + 1]?.role === 'assistant' ? messages[i + 1] : null;
 
         grouped.push({ id: userMessage.id, userMessage, assistantMessage });
 

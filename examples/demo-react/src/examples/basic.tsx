@@ -1,6 +1,6 @@
+import type { JSX } from 'react';
 /* eslint-disable react/react-in-jsx-scope */
 import { DocSearch } from 'typesense-docsearch-react';
-import type { JSX } from 'react';
 
 import type { DemoTheme } from '../App';
 import {

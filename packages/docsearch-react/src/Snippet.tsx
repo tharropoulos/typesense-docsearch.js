@@ -2,7 +2,14 @@ import { type JSX, createElement } from 'react';
 
 import type { DocSearchHit, StoredDocSearchHit } from './types';
 
-type HierarchyLevel = 'lvl0' | 'lvl1' | 'lvl2' | 'lvl3' | 'lvl4' | 'lvl5' | 'lvl6';
+type HierarchyLevel =
+  | 'lvl0'
+  | 'lvl1'
+  | 'lvl2'
+  | 'lvl3'
+  | 'lvl4'
+  | 'lvl5'
+  | 'lvl6';
 type SnippetAttribute = 'content' | `hierarchy.${HierarchyLevel}`;
 type SnippetHit = StoredDocSearchHit &
   Partial<Pick<DocSearchHit, '_highlightResult' | '_snippetResult'>>;
@@ -13,7 +20,9 @@ function parseHierarchyAttribute(attribute: string): HierarchyLevel | null {
   }
 
   const level = attribute.replace('hierarchy.', '') as HierarchyLevel;
-  return ['lvl0', 'lvl1', 'lvl2', 'lvl3', 'lvl4', 'lvl5', 'lvl6'].includes(level)
+  return ['lvl0', 'lvl1', 'lvl2', 'lvl3', 'lvl4', 'lvl5', 'lvl6'].includes(
+    level
+  )
     ? level
     : null;
 }
@@ -31,7 +40,10 @@ function getRawValue(hit: SnippetHit, attribute: SnippetAttribute): string {
   return hit[attribute] ?? hit.hierarchy[level] ?? '';
 }
 
-function getHighlightedValue(hit: SnippetHit, attribute: SnippetAttribute): string {
+function getHighlightedValue(
+  hit: SnippetHit,
+  attribute: SnippetAttribute
+): string {
   const highlight = hit._highlightResult;
   if (!highlight) {
     return '';
@@ -46,7 +58,9 @@ function getHighlightedValue(hit: SnippetHit, attribute: SnippetAttribute): stri
     return '';
   }
 
-  return highlight[attribute]?.value ?? highlight.hierarchy?.[level]?.value ?? '';
+  return (
+    highlight[attribute]?.value ?? highlight.hierarchy?.[level]?.value ?? ''
+  );
 }
 
 function getSnippetValue(hit: SnippetHit, attribute: SnippetAttribute): string {

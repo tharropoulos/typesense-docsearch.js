@@ -1,5 +1,5 @@
-import type { SidepanelShortcuts } from 'typesense-docsearch-core';
 import { useEffect } from 'react';
+import type { SidepanelShortcuts } from 'typesense-docsearch-core';
 
 type UseSidepanelKeyboardEventsProps = {
   onClose: () => void;

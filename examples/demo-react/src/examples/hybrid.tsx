@@ -1,8 +1,11 @@
+import type { JSX } from 'react';
 /* eslint-disable react/react-in-jsx-scope */
 import { DocSearch } from 'typesense-docsearch-core';
-import { DocSearchButton, DocSearchAskAiModal } from 'typesense-docsearch-modal';
+import {
+  DocSearchButton,
+  DocSearchAskAiModal,
+} from 'typesense-docsearch-modal';
 import { Sidepanel, SidepanelButton } from 'typesense-docsearch-sidepanel';
-import type { JSX } from 'react';
 
 import type { DemoTheme } from '../App';
 import {

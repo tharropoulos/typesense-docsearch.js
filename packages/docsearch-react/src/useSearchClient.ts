@@ -1,13 +1,13 @@
 import type { SearchResponses } from 'algoliasearch/lite';
 import React from 'react';
 import { SearchClient as TypesenseSearchClient } from 'typesense';
+import { SearchResponseAdapter as TypesenseSearchResponseAdapter } from 'typesense-instantsearch-adapter/lib/SearchResponseAdapter';
 import type { ConfigurationOptions as TypesenseConfigurationOptions } from 'typesense/lib/Typesense/Configuration';
 import type {
   DocumentSchema,
   SearchResponse as TypesenseSearchResponse,
 } from 'typesense/lib/Typesense/Documents';
 import type { MultiSearchRequestSchema } from 'typesense/lib/Typesense/Types';
-import { SearchResponseAdapter as TypesenseSearchResponseAdapter } from 'typesense-instantsearch-adapter/lib/SearchResponseAdapter';
 
 import type { TypesenseDocsearchTransformClient } from './DocSearch';
 

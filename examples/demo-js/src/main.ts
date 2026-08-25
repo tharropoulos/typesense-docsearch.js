@@ -1,5 +1,7 @@
+import sidepanel, {
+  type SidepanelInstance,
+} from 'typesense-docsearch-sidepanel-js';
 import docsearch, { type DocSearchInstance } from 'typesense-docsearch.js';
-import sidepanel, { type SidepanelInstance } from 'typesense-docsearch-sidepanel-js';
 
 import './app.css';
 import 'typesense-docsearch-css/dist/style.css';
@@ -100,7 +102,10 @@ docsearchInstance = docsearch({
   resultsFooterComponent: ({ state }, { html }) => {
     return html`
       <div class="DocSearch-HitsFooter">
-        <a href="https://typesense.org/docs/guide/docsearch.html" target="_blank">
+        <a
+          href="https://typesense.org/docs/guide/docsearch.html"
+          target="_blank"
+        >
           See all ${state.context?.nbHits || 0} results
         </a>
       </div>

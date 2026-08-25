@@ -1,12 +1,19 @@
-import type { SidepanelShortcuts, InitialAskAiMessage } from 'typesense-docsearch-core';
 import React, { useCallback } from 'react';
 import type { JSX } from 'react';
+import type {
+  SidepanelShortcuts,
+  InitialAskAiMessage,
+} from 'typesense-docsearch-core';
 
 import type { DocSearchSidepanelProps } from '../Sidepanel';
 import type { StoredAskAiState, SuggestedQuestionHit } from '../types';
-import { TypesenseLogo, type TypesenseLogoTranslations } from '../TypesenseLogo';
+import {
+  TypesenseLogo,
+  type TypesenseLogoTranslations,
+} from '../TypesenseLogo';
 import { useAskAi } from '../useAskAi';
 import { useIsMobile } from '../useIsMobile';
+import { noop } from '../utils';
 import {
   buildDummyAskAiHit,
   getAskAiBlockingBannerMessage,
@@ -207,7 +214,7 @@ function SidepanelInner(
     (prompt: string): void => {
       setStoppedStreaming(false);
 
-      void sendMessage(prompt);
+      sendMessage(prompt).catch(noop);
       setSidepanelState('conversation');
     },
     [sendMessage]
@@ -221,9 +228,9 @@ function SidepanelInner(
   const handleSelectQuestion = (question: SuggestedQuestionHit): void => {
     setStoppedStreaming(false);
     startNewConversation();
-    void sendMessage(question.question, {
+    sendMessage(question.question, {
       suggestedQuestionId: question.objectID,
-    });
+    }).catch(noop);
     setSidepanelState('conversation');
   };
 
@@ -237,7 +244,7 @@ function SidepanelInner(
       if (conversation.messages) {
         restoreConversation(conversation.messages, conversation.chatId);
       } else if (conversation.query) {
-        void sendMessage(conversation.query);
+        sendMessage(conversation.query).catch(noop);
       }
 
       setSidepanelState('conversation');
@@ -327,9 +334,9 @@ function SidepanelInner(
       handleSelectConversation(selectedConversation);
     } else {
       startNewConversation();
-      void sendMessage(initialMessage.query, {
+      sendMessage(initialMessage.query, {
         suggestedQuestionId: initialMessage.suggestedQuestionId,
-      });
+      }).catch(noop);
       setSidepanelState('conversation');
     }
   }, [

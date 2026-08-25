@@ -40,4 +40,3 @@ export function getFacetLabel(facet: DocSearchFacet): string {
     .replace(/[._-]+/g, ' ')
     .replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
-

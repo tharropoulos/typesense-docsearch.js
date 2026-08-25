@@ -24,10 +24,7 @@
     "longDescription": "Search current public documentation for libraries, frameworks, SDKs, APIs, CLIs, and cloud services. DocSearch resolves the relevant documentation set, returns ranked excerpts, and provides source URLs for grounded answers.",
     "developerName": "Algolia",
     "category": "Developer Tools",
-    "capabilities": [
-      "Interactive",
-      "Read"
-    ],
+    "capabilities": ["Interactive", "Read"],
     "websiteURL": "https://docsearch.algolia.com/docs/mcp/overview",
     "privacyPolicyURL": "https://www.algolia.com/policies/privacy",
     "termsOfServiceURL": "https://www.algolia.com/policies/terms",

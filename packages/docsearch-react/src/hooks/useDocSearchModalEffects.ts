@@ -1,5 +1,5 @@
-import { useTheme } from 'typesense-docsearch-core/useTheme';
 import React from 'react';
+import { useTheme } from 'typesense-docsearch-core/useTheme';
 
 import type { DocSearchTheme } from '../types';
 import { manageLocalStorageQuota } from '../utils/storage';

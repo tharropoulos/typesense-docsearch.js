@@ -1,6 +1,6 @@
+import { useState, type JSX } from 'react';
 /* eslint-disable react/react-in-jsx-scope */
 import { version } from 'typesense-docsearch-react';
-import { useState, type JSX } from 'react';
 
 import './App.css';
 import 'typesense-docsearch-css/dist/style.css';

@@ -21,44 +21,42 @@ import {
   showAskAiBlockingBannerNewConversationLink,
 } from './utils/ai';
 
-export type AskAiScreenTranslations = Partial<
-  {
-    // Misc texts
-    disclaimerText: string;
-    /** Text shown describing a singular related source. */
-    relatedSourcesText: string;
-    /** Text shown describing multiple related sources. */
-    relatedSourcesTextPlural: string;
-    thinkingText: string;
-    copyButtonText: string;
-    copyButtonCopiedText: string;
-    // Feedback buttons
-    copyButtonTitle: string;
-    likeButtonTitle: string;
-    dislikeButtonTitle: string;
-    thanksForFeedbackText: string;
-    // Negative feedback note panel
-    feedbackPanelTitle: string;
-    feedbackDetailsPlaceholder: string;
-    feedbackDisclaimerText: string;
-    feedbackSubmitButtonText: string;
-    feedbackCloseButtonTitle: string;
-    feedbackTagIncorrect: string;
-    feedbackTagNotWhatIAsked: string;
-    feedbackTagSlowOrBuggy: string;
-    feedbackTagStyleOrTone: string;
-    feedbackTagSafetyOrLegal: string;
-    feedbackTagOther: string;
-    /** Message that's shown when user has stopped the streaming of a message. */
-    stoppedStreamingText: string;
-    /** Error title shown if there is an error while chatting. */
-    errorTitleText: string;
-    /** Message shown when thread depth limit is exceeded (AI-217 error). */
-    threadDepthExceededMessage: string;
-    /** Button text for starting a new conversation after thread depth error. */
-    startNewConversationButtonText: string;
-  }
->;
+export type AskAiScreenTranslations = Partial<{
+  // Misc texts
+  disclaimerText: string;
+  /** Text shown describing a singular related source. */
+  relatedSourcesText: string;
+  /** Text shown describing multiple related sources. */
+  relatedSourcesTextPlural: string;
+  thinkingText: string;
+  copyButtonText: string;
+  copyButtonCopiedText: string;
+  // Feedback buttons
+  copyButtonTitle: string;
+  likeButtonTitle: string;
+  dislikeButtonTitle: string;
+  thanksForFeedbackText: string;
+  // Negative feedback note panel
+  feedbackPanelTitle: string;
+  feedbackDetailsPlaceholder: string;
+  feedbackDisclaimerText: string;
+  feedbackSubmitButtonText: string;
+  feedbackCloseButtonTitle: string;
+  feedbackTagIncorrect: string;
+  feedbackTagNotWhatIAsked: string;
+  feedbackTagSlowOrBuggy: string;
+  feedbackTagStyleOrTone: string;
+  feedbackTagSafetyOrLegal: string;
+  feedbackTagOther: string;
+  /** Message that's shown when user has stopped the streaming of a message. */
+  stoppedStreamingText: string;
+  /** Error title shown if there is an error while chatting. */
+  errorTitleText: string;
+  /** Message shown when thread depth limit is exceeded (AI-217 error). */
+  threadDepthExceededMessage: string;
+  /** Button text for starting a new conversation after thread depth error. */
+  startNewConversationButtonText: string;
+}>;
 
 type AskAiScreenProps = Omit<
   AskAiScreenStateProps<InternalDocSearchHit>,

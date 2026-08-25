@@ -140,9 +140,9 @@ describe('api', () => {
         fireEvent.click(await screen.findByText('Search'));
       });
 
-      expect(document.querySelector('.DocSearch-Footer-Action')).toHaveTextContent(
-        '0'
-      );
+      expect(
+        document.querySelector('.DocSearch-Footer-Action')
+      ).toHaveTextContent('0');
     });
 
     it('renders the action in the Ask AI modal', async () => {

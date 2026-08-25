@@ -33,9 +33,9 @@ export type FacetSelections = Record<string, string>;
 
 /**
  * Translates the FacetBar selections into a Typesense `filter_by` expression,
- * e.g. `{ language: 'en', version: 'v2' }` → `language:=[\`en\`] &&
- * version:=[\`v2\`]`. Values are backtick-quoted so they can contain spaces
- * and punctuation.
+ * e.g. `{ language: 'en', version: 'v2' }` → `language:=[\`en`] &&
+ * version:=[`v2`]`. Values are backtick-quoted so they can contain spaces and
+ * punctuation.
  */
 export function createFilterBy(facetSelections: FacetSelections): string {
   return Object.entries(facetSelections)
@@ -43,7 +43,6 @@ export function createFilterBy(facetSelections: FacetSelections): string {
     .map(([facet, selection]) => `${facet}:=[\`${selection}\`]`)
     .join(' && ');
 }
-
 
 export function buildNoQuerySources({
   recentSearches,

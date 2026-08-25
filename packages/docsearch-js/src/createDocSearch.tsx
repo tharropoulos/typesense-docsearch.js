@@ -1,8 +1,3 @@
-import type { DocSearchRef, InitialAskAiMessage } from 'typesense-docsearch-core';
-import type {
-  ResultsFooterComponentProps,
-  HitComponentProps,
-} from 'typesense-docsearch-react';
 import htm from 'htm';
 import type { ComponentType, JSX, Attributes } from 'preact';
 import {
@@ -12,6 +7,14 @@ import {
   render,
   unmountComponentAtNode,
 } from 'preact/compat';
+import type {
+  DocSearchRef,
+  InitialAskAiMessage,
+} from 'typesense-docsearch-core';
+import type {
+  ResultsFooterComponentProps,
+  HitComponentProps,
+} from 'typesense-docsearch-react';
 
 export interface DocSearchInstance {
   readonly isReady: boolean;

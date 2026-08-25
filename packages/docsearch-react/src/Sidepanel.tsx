@@ -1,3 +1,6 @@
+import type { JSX } from 'react';
+import React from 'react';
+import { createPortal } from 'react-dom';
 import { DocSearch, useDocSearch } from 'typesense-docsearch-core';
 import type {
   DocSearchCallbacks,
@@ -5,9 +8,6 @@ import type {
   DocSearchTheme,
   SidepanelShortcuts,
 } from 'typesense-docsearch-core';
-import type { JSX } from 'react';
-import React from 'react';
-import { createPortal } from 'react-dom';
 import type { ConfigurationOptions as TypesenseConfigurationOptions } from 'typesense/lib/Typesense/Configuration';
 
 import type { DocSearchAskAi } from './DocSearchAI';
@@ -17,7 +17,10 @@ import type {
 } from './Sidepanel/index';
 import { SidepanelButton, Sidepanel } from './Sidepanel/index';
 
-export type { DocSearchRef, DocSearchCallbacks } from 'typesense-docsearch-core';
+export type {
+  DocSearchRef,
+  DocSearchCallbacks,
+} from 'typesense-docsearch-core';
 
 export type DocSearchSidepanelProps = DocSearchCallbacks & {
   /** Typesense server configuration used by sidepanel search. */

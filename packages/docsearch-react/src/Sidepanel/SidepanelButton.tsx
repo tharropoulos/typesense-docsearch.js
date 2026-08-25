@@ -1,6 +1,6 @@
-import type { SidepanelShortcuts } from 'typesense-docsearch-core';
 import React, { useEffect, useState } from 'react';
 import type { JSX } from 'react';
+import type { SidepanelShortcuts } from 'typesense-docsearch-core';
 
 import { SparklesIcon } from '../icons';
 import { ACTION_KEY_APPLE, ACTION_KEY_DEFAULT, isAppleDevice } from '../utils';

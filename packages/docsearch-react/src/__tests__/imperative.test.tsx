@@ -1,6 +1,6 @@
-import type { DocSearchCallbacks } from 'typesense-docsearch-core';
 import { render, act, cleanup } from '@testing-library/react';
 import React, { type JSX, useRef, type RefObject } from 'react';
+import type { DocSearchCallbacks } from 'typesense-docsearch-core';
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 

@@ -1,5 +1,3 @@
-import type { DocSearchProps } from 'typesense-docsearch-core';
-import { DocSearch } from 'typesense-docsearch-core';
 import type { RenderResult } from '@testing-library/react';
 import {
   render,
@@ -9,6 +7,8 @@ import {
   fireEvent,
 } from '@testing-library/react';
 import React from 'react';
+import type { DocSearchProps } from 'typesense-docsearch-core';
+import { DocSearch } from 'typesense-docsearch-core';
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 

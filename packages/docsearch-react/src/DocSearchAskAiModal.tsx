@@ -1,6 +1,9 @@
 import { createAutocomplete } from '@algolia/autocomplete-core';
-import type { InitialAskAiMessage, OnAskAiToggle } from 'typesense-docsearch-core';
 import React, { type JSX } from 'react';
+import type {
+  InitialAskAiMessage,
+  OnAskAiToggle,
+} from 'typesense-docsearch-core';
 
 import type { AskAiScreenStateTranslations } from './AskAiScreenState';
 import { AskAiScreenState } from './AskAiScreenState';
@@ -320,12 +323,12 @@ export function DocSearchAskAiModal({
 
       setStoppedStream(false);
 
-      void sendMessage(
+      sendMessage(
         query,
         suggestedQuestion
           ? { suggestedQuestionId: suggestedQuestion.objectID }
           : undefined
-      );
+      ).catch(noop);
 
       if (dropdownRef.current) {
         // some test environments (like jsdom) don't implement element.scrollTo
@@ -409,17 +412,11 @@ export function DocSearchAskAiModal({
           facetSelections: facetSelectionsRef,
         });
 
-        const askAiSourcesPromise = canHandleAskAi
-          ? buildAskAiActionSources({
-              query,
-              handleSelectAskAiQuestion,
-            })
-          : Promise.resolve([]);
+        const askAiSources = canHandleAskAi
+          ? buildAskAiActionSources({ query, handleSelectAskAiQuestion })
+          : [];
 
-        const [askAiSources, keywordSources] = await Promise.all([
-          askAiSourcesPromise,
-          keywordSourcesPromise,
-        ]);
+        const keywordSources = await keywordSourcesPromise;
 
         // Combine keyword results (once resolved) with the Ask AI source
         return [...askAiSources, ...keywordSources];

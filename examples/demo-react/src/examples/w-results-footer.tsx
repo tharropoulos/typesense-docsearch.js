@@ -1,8 +1,8 @@
 /* eslint-disable react/react-in-jsx-scope */
 import type { AutocompleteState } from '@algolia/autocomplete-core';
+import type { JSX } from 'react';
 import { DocSearch } from 'typesense-docsearch-react';
 import type { InternalDocSearchHit } from 'typesense-docsearch-react';
-import type { JSX } from 'react';
 
 import type { DemoTheme } from '../App';
 import {

@@ -1,9 +1,9 @@
+import { useCallback, useRef, useState, type JSX } from 'react';
+import { createPortal } from 'react-dom';
 /* eslint-disable react/react-in-jsx-scope */
 import { useDocSearchKeyboardEvents } from 'typesense-docsearch-core/useDocSearchKeyboardEvents';
 import type { DocSearchAskAiModal as DocSearchAskAiModalType } from 'typesense-docsearch-react/askaiModal';
 import { DocSearchButton } from 'typesense-docsearch-react/button';
-import { useCallback, useRef, useState, type JSX } from 'react';
-import { createPortal } from 'react-dom';
 
 import type { DemoTheme } from '../App';
 import {

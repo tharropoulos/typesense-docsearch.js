@@ -213,35 +213,37 @@ export function FeedbackActions({
     />
   );
 
+  // Feedback needs a backend to submit to; without `onFeedback` only the copy
+  // button is rendered.
+  const feedbackControls =
+    view === 'thanks' ? (
+      <p className="DocSearch-AskAiScreen-FeedbackText DocSearch-AskAiScreen-FeedbackText--visible">
+        {thanksForFeedbackText}
+      </p>
+    ) : (
+      <>
+        {saving && view === 'actions' ? (
+          <LoadingIcon className="DocSearch-AskAiScreen-SmallerLoadingIcon" />
+        ) : (
+          <>
+            <LikeButton title={likeButtonTitle} onClick={handleLike} />
+            <DislikeButton title={dislikeButtonTitle} onClick={handleDislike} />
+          </>
+        )}
+        {savingError && view === 'actions' ? (
+          <p className="DocSearch-AskAiScreen-FeedbackText">
+            {savingError.message || 'An error occured'}
+          </p>
+        ) : null}
+      </>
+    );
+
   return (
     <>
       <div className="DocSearch-AskAiScreen-Actions-Controls">
         {isSidepanel ? copyButton : null}
 
-        {!onFeedback ? null : view === 'thanks' ? (
-          <p className="DocSearch-AskAiScreen-FeedbackText DocSearch-AskAiScreen-FeedbackText--visible">
-            {thanksForFeedbackText}
-          </p>
-        ) : (
-          <>
-            {saving && view === 'actions' ? (
-              <LoadingIcon className="DocSearch-AskAiScreen-SmallerLoadingIcon" />
-            ) : (
-              <>
-                <LikeButton title={likeButtonTitle} onClick={handleLike} />
-                <DislikeButton
-                  title={dislikeButtonTitle}
-                  onClick={handleDislike}
-                />
-              </>
-            )}
-            {savingError && view === 'actions' ? (
-              <p className="DocSearch-AskAiScreen-FeedbackText">
-                {savingError.message || 'An error occured'}
-              </p>
-            ) : null}
-          </>
-        )}
+        {onFeedback ? feedbackControls : null}
 
         {isSidepanel ? null : copyButton}
       </div>

@@ -702,12 +702,7 @@
   margin: 0;
   border-radius: var(--docsearch-border-radius);
   font-family:
-    ui-monospace,
-    SFMono-Regular,
-    'SF Mono',
-    Menlo,
-    Consolas,
-    'Liberation Mono',
+    ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono',
     monospace;
   font-size: 0.9rem;
   letter-spacing: normal;

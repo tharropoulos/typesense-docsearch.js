@@ -1,7 +1,13 @@
-import { DocSearch as DocSearchProvider, useDocSearch } from 'typesense-docsearch-core';
-import type { DocSearchRef, InitialAskAiMessage } from 'typesense-docsearch-core';
 import React, { type JSX } from 'react';
 import { createPortal } from 'react-dom';
+import {
+  DocSearch as DocSearchProvider,
+  useDocSearch,
+} from 'typesense-docsearch-core';
+import type {
+  DocSearchRef,
+  InitialAskAiMessage,
+} from 'typesense-docsearch-core';
 
 import type { DocSearchProps } from './DocSearch';
 import { DocSearchAskAiModal } from './DocSearchAskAiModal';

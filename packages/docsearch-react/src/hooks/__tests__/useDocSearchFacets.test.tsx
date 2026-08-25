@@ -1,24 +1,31 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
-import type { SearchClient } from 'algoliasearch';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type { DocSearchFacet, DocSearchIndex } from '../../DocSearch';
+import type {
+  DocSearchFacet,
+  TypesenseDocsearchTransformClient,
+} from '../../DocSearch';
 import { useDocSearchFacets } from '../useDocSearchFacets';
 
 describe('useDocSearchFacets', () => {
   const search = vi.fn();
-  const searchClient = { search } as unknown as SearchClient;
-  const indexes: DocSearchIndex[] = [{ name: 'docs' }];
+  const searchClient = {
+    search,
+  } as unknown as TypesenseDocsearchTransformClient;
+  const typesenseCollectionName = 'docs';
 
   beforeEach(() => {
     vi.clearAllMocks();
     search.mockResolvedValue({
       results: [
         {
-          facets: {
-            language: { en: 10, fr: 4 },
-            version: { 'v1.0': 6 },
-          },
+          facet_counts: [
+            {
+              field_name: 'language',
+              counts: [{ value: 'en' }, { value: 'fr' }],
+            },
+            { field_name: 'version', counts: [{ value: 'v1.0' }] },
+          ],
         },
       ],
     });
@@ -32,7 +39,7 @@ describe('useDocSearchFacets', () => {
     ];
 
     const { result } = renderHook(() =>
-      useDocSearchFacets({ facets, indexes, searchClient })
+      useDocSearchFacets({ facets, typesenseCollectionName, searchClient })
     );
 
     expect(result.current.visibleFacets).toEqual([]);
@@ -50,7 +57,7 @@ describe('useDocSearchFacets', () => {
     const { result } = renderHook(() =>
       useDocSearchFacets({
         facets: [{ key: 'language' }],
-        indexes,
+        typesenseCollectionName,
         searchClient,
         onSelectionsChange,
       })
@@ -71,7 +78,7 @@ describe('useDocSearchFacets', () => {
     const { result } = renderHook(() =>
       useDocSearchFacets({
         facets: [{ key: 'language' }],
-        indexes,
+        typesenseCollectionName,
         searchClient,
       })
     );
@@ -90,7 +97,7 @@ describe('useDocSearchFacets', () => {
     const { result } = renderHook(() =>
       useDocSearchFacets({
         facets: [{ key: 'language' }],
-        indexes,
+        typesenseCollectionName,
         searchClient,
         onSelectionsChange,
       })
@@ -113,7 +120,7 @@ describe('useDocSearchFacets', () => {
       ({ onSelectionsChange }: { onSelectionsChange: () => void }) =>
         useDocSearchFacets({
           facets: [{ key: 'language' }],
-          indexes,
+          typesenseCollectionName,
           searchClient,
           onSelectionsChange,
         }),

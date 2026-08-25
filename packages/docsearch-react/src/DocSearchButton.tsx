@@ -1,6 +1,6 @@
+import React, { useEffect, useState, type JSX } from 'react';
 import type { DocSearchModalShortcuts } from 'typesense-docsearch-core';
 import { useTheme } from 'typesense-docsearch-core/useTheme';
-import React, { useEffect, useState, type JSX } from 'react';
 
 import { getKeyboardShortcuts } from './constants/keyboardShortcuts';
 import { usePlatformKeys } from './hooks/usePlatformKeys';

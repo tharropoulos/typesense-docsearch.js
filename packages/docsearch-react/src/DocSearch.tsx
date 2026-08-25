@@ -2,11 +2,17 @@ import type {
   AutocompleteOptions,
   AutocompleteState,
 } from '@algolia/autocomplete-core';
-import { DocSearch as DocSearchProvider, useDocSearch } from 'typesense-docsearch-core';
-import type { DocSearchModalShortcuts, DocSearchRef } from 'typesense-docsearch-core';
 import type { SearchResponses } from 'algoliasearch/lite';
 import React, { type JSX } from 'react';
 import { createPortal } from 'react-dom';
+import {
+  DocSearch as DocSearchProvider,
+  useDocSearch,
+} from 'typesense-docsearch-core';
+import type {
+  DocSearchModalShortcuts,
+  DocSearchRef,
+} from 'typesense-docsearch-core';
 import type { ConfigurationOptions as TypesenseConfigurationOptions } from 'typesense/lib/Typesense/Configuration';
 import type {
   DocumentSchema,

@@ -163,7 +163,9 @@ describe('AskAiScreenState', () => {
     });
     const view = render(<AskAiScreenState {...props} />);
 
-    expect(document.querySelector('.DocSearch-AskAiScreen')).toBeInTheDocument();
+    expect(
+      document.querySelector('.DocSearch-AskAiScreen')
+    ).toBeInTheDocument();
 
     view.rerender(
       <AskAiScreenState
@@ -195,6 +197,8 @@ describe('AskAiScreenState', () => {
     expect(
       screen.queryByText('How can I help you today?')
     ).not.toBeInTheDocument();
-    expect(document.querySelector('.DocSearch-AskAiScreen')).toBeInTheDocument();
+    expect(
+      document.querySelector('.DocSearch-AskAiScreen')
+    ).toBeInTheDocument();
   });
 });

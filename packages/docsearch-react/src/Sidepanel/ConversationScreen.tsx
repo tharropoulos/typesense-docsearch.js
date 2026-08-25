@@ -15,49 +15,47 @@ import {
   isAskAiPromptBlockingError,
 } from '../utils/ai';
 
-export type ConversationScreenTranslations = Partial<
-  {
-    /** Text shown as an LLM disclaimer. */
-    conversationDisclaimer: string;
-    /** Text show while assistant is thinking. */
-    thinkingText: string;
-    /** Text shown describing a singular related source. */
-    relatedSourcesText: string;
-    /** Text shown describing multiple related sources. */
-    relatedSourcesTextPlural: string;
-    /** Message that's shown when user has stopped the streaming of a message. */
-    stoppedStreamingText: string;
-    /** Text shown for copy button on code snippets. */
-    copyButtonText: string;
-    /** Message shown after clicking copy. */
-    copyButtonCopiedText: string;
-    /** Title for thumbs up feedback icon. */
-    likeButtonTitle: string;
-    /** Title for thumbs down feedback icon. */
-    dislikeButtonTitle: string;
-    /** Message displayed after feedback action. */
-    thanksForFeedbackText: string;
-    /** Title shown at the top of the negative feedback note panel. */
-    feedbackPanelTitle: string;
-    /** Placeholder for the negative feedback details textarea. */
-    feedbackDetailsPlaceholder: string;
-    /** Disclaimer shown inside the negative feedback note panel. */
-    feedbackDisclaimerText: string;
-    /** Submit button text for the negative feedback note panel. */
-    feedbackSubmitButtonText: string;
-    /** Accessible title for the negative feedback note panel close button. */
-    feedbackCloseButtonTitle: string;
-    /** Reason chip labels for the negative feedback note panel. */
-    feedbackTagIncorrect: string;
-    feedbackTagNotWhatIAsked: string;
-    feedbackTagSlowOrBuggy: string;
-    feedbackTagStyleOrTone: string;
-    feedbackTagSafetyOrLegal: string;
-    feedbackTagOther: string;
-    /** Error title shown if there is an error while chatting. */
-    errorTitleText: string;
-  }
->;
+export type ConversationScreenTranslations = Partial<{
+  /** Text shown as an LLM disclaimer. */
+  conversationDisclaimer: string;
+  /** Text show while assistant is thinking. */
+  thinkingText: string;
+  /** Text shown describing a singular related source. */
+  relatedSourcesText: string;
+  /** Text shown describing multiple related sources. */
+  relatedSourcesTextPlural: string;
+  /** Message that's shown when user has stopped the streaming of a message. */
+  stoppedStreamingText: string;
+  /** Text shown for copy button on code snippets. */
+  copyButtonText: string;
+  /** Message shown after clicking copy. */
+  copyButtonCopiedText: string;
+  /** Title for thumbs up feedback icon. */
+  likeButtonTitle: string;
+  /** Title for thumbs down feedback icon. */
+  dislikeButtonTitle: string;
+  /** Message displayed after feedback action. */
+  thanksForFeedbackText: string;
+  /** Title shown at the top of the negative feedback note panel. */
+  feedbackPanelTitle: string;
+  /** Placeholder for the negative feedback details textarea. */
+  feedbackDetailsPlaceholder: string;
+  /** Disclaimer shown inside the negative feedback note panel. */
+  feedbackDisclaimerText: string;
+  /** Submit button text for the negative feedback note panel. */
+  feedbackSubmitButtonText: string;
+  /** Accessible title for the negative feedback note panel close button. */
+  feedbackCloseButtonTitle: string;
+  /** Reason chip labels for the negative feedback note panel. */
+  feedbackTagIncorrect: string;
+  feedbackTagNotWhatIAsked: string;
+  feedbackTagSlowOrBuggy: string;
+  feedbackTagStyleOrTone: string;
+  feedbackTagSafetyOrLegal: string;
+  feedbackTagOther: string;
+  /** Error title shown if there is an error while chatting. */
+  errorTitleText: string;
+}>;
 
 export type ConversationScreenProps = {
   exchanges: Exchange[];
@@ -124,7 +122,8 @@ const ConversationExchange = React.forwardRef<
     const wasStopped =
       userMessage.metadata?.stopped || assistantMessage?.metadata?.stopped;
     const isThinking =
-      ['submitted', 'streaming'].includes(status) && assistantParts.length === 0;
+      ['submitted', 'streaming'].includes(status) &&
+      assistantParts.length === 0;
     const showActions =
       !wasStopped &&
       (!isLastExchange ||

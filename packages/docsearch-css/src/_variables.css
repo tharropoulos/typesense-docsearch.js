@@ -16,7 +16,9 @@
   --typesense-border-color: #eaeaea;
   --typesense-logo-text: #000;
   --typesense-logo-mark: #000;
-  --docsearch-font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  --docsearch-font-family:
+    system-ui, -apple-system, blinkmacsystemfont, 'Segoe UI', roboto, oxygen,
+    ubuntu, cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   --docsearch-primary-color: var(--typesense-primary);
   --docsearch-primary-dark-color: var(--typesense-primary);
   --docsearch-soft-primary-color: var(--typesense-soft-primary);
@@ -51,8 +53,7 @@
   --docsearch-modal-background: var(--typesense-surface);
   --docsearch-modal-shadow:
     inset 0 1px 0 0 rgb(255 255 255 / 60%),
-    0 24px 48px -12px rgb(50 90 12 / 20%),
-    0 0 0 1px rgb(222 255 151 / 32.5%);
+    0 24px 48px -12px rgb(50 90 12 / 20%), 0 0 0 1px rgb(222 255 151 / 32.5%);
 
   /* searchbox */
   --docsearch-searchbox-height: 56px;
@@ -103,14 +104,14 @@
   --docsearch-chip-background: var(--typesense-soft-primary);
 
   /* Menu */
-  --docsearch-menu-trigger-active-background: var(--docsearch-soft-primary-color);
+  --docsearch-menu-trigger-active-background: var(
+    --docsearch-soft-primary-color
+  );
   --docsearch-menu-trigger-active-text-color: var(--typesense-primary);
 
   /* Popover */
   --docsearch-popover-background: var(--typesense-surface);
-  --docsearch-popover-shadow:
-    0 0 0 1px rgb(0 0 0 / 5%),
-    0 4px 8px -2px rgb(0 0 0 / 25%);
+  --docsearch-popover-shadow: 0 0 0 1px rgb(0 0 0 / 5%), 0 4px 8px -2px rgb(0 0 0 / 25%);
   --docsearch-popover-arrow-color: var(--typesense-border-color);
 
   /* markdown */
@@ -119,6 +120,9 @@
 
 /* Darkmode */
 
+/* stylelint-disable selector-no-qualifying-type, selector-class-pattern --
+   `html.dark` and `html[data-theme]` are the dark-mode conventions used by
+   Docusaurus and VitePress, so consumers get themed without extra config. */
 html.dark,
 html[data-theme='dark'],
 :root[data-theme='dark'] {
@@ -149,7 +153,9 @@ html[data-theme='dark'],
   --docsearch-searchbox-background: var(--typesense-surface);
   --docsearch-searchbox-focus-background: var(--typesense-surface-line);
   --docsearch-dropdown-menu-background: var(--typesense-surface-dim);
-  --docsearch-dropdown-menu-item-hover-background: var(--typesense-surface-line);
+  --docsearch-dropdown-menu-item-hover-background: var(
+    --typesense-surface-line
+  );
   --docsearch-hit-color: var(--typesense-ink);
   --docsearch-hit-shadow: none;
   --docsearch-hit-background: #191919;
@@ -186,9 +192,7 @@ html[data-theme='dark'],
 
   /* Popover */
   --docsearch-popover-background: var(--typesense-surface-line);
-  --docsearch-popover-shadow:
-    0 0 0 1px rgb(255 255 255 / 8%),
-    0 4px 8px -2px rgb(0 0 0 / 55%);
+  --docsearch-popover-shadow: 0 0 0 1px rgb(255 255 255 / 8%), 0 4px 8px -2px rgb(0 0 0 / 55%);
   --docsearch-popover-arrow-color: var(--typesense-surface-line);
 
   /* markdown */
@@ -204,12 +208,20 @@ html[data-theme='dark'],
 
 @supports (color: color-mix(in srgb, blue, red)) {
   :root {
-    --typesense-primary-muted: color-mix(in srgb, var(--typesense-brand), #000 5%);
+    --typesense-primary-muted: color-mix(
+      in srgb,
+      var(--typesense-brand),
+      #000 5%
+    );
   }
 
   html.dark,
   html[data-theme='dark'],
   :root[data-theme='dark'] {
-    --typesense-primary-muted: color-mix(in srgb, var(--typesense-brand), #000 10%);
+    --typesense-primary-muted: color-mix(
+      in srgb,
+      var(--typesense-brand),
+      #000 10%
+    );
   }
 }

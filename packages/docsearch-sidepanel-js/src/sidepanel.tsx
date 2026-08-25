@@ -1,15 +1,15 @@
-import type { DocSearchRef, InitialAskAiMessage } from 'typesense-docsearch-core';
-import type {
-  DocSearchSidepanelProps,
-  SidepanelSearchParameters,
-} from 'typesense-docsearch-react/sidepanel';
-import { DocSearchSidepanel } from 'typesense-docsearch-react/sidepanel';
 import {
   render,
   createElement,
   unmountComponentAtNode,
   createRef,
 } from 'preact/compat';
+import type {
+  DocSearchRef,
+  InitialAskAiMessage,
+} from 'typesense-docsearch-core';
+import type { DocSearchSidepanelProps } from 'typesense-docsearch-react/sidepanel';
+import { DocSearchSidepanel } from 'typesense-docsearch-react/sidepanel';
 
 /** Instance returned by sidepanel() for programmatic control. */
 export interface SidepanelInstance {
@@ -36,8 +36,7 @@ export interface SidepanelCallbacks {
 }
 
 export type SidepanelProps = DocSearchSidepanelProps &
-  SidepanelCallbacks &
-  SidepanelSearchParameters & {
+  SidepanelCallbacks & {
     container: HTMLElement | string;
     environment?: typeof window;
   };

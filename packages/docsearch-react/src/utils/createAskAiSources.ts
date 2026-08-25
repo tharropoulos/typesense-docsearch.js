@@ -98,13 +98,13 @@ function createAskAiHit({
   };
 }
 
-export async function buildAskAiActionSources({
+export function buildAskAiActionSources({
   query,
   handleSelectAskAiQuestion,
 }: {
   query: string;
   handleSelectAskAiQuestion: (toggle: boolean, query: string) => void;
-}): Promise<Array<AutocompleteSource<InternalDocSearchHit>>> {
+}): Array<AutocompleteSource<InternalDocSearchHit>> {
   return [
     {
       sourceId: SOURCE_IDS.askAI,

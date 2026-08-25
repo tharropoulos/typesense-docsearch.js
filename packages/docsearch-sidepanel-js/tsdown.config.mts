@@ -21,9 +21,12 @@ const sharedConfig: UserConfig = {
   }),
   sourcemap: true,
   deps: {
-    alwaysBundle: [/^@docsearch\/(react|core)/],
+    alwaysBundle: [/^typesense-docsearch-(react|core)(?:\/|$)/],
     dts: {
       alwaysBundle: [],
+      // `typesense` pulls in axios and loglevel, whose CommonJS .d.ts files
+      // rolldown-plugin-dts cannot bundle.
+      neverBundle: ['axios', 'loglevel', /^typesense(?:\/|$)/],
     },
     onlyBundle: false,
   },
