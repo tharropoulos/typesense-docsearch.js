@@ -1,6 +1,4 @@
-import type { DocSearchFacet, DocSearchIndex } from '../DocSearch';
-
-import type { FacetSelections } from './createDocSearchSources';
+import type { DocSearchFacet } from '../DocSearch';
 
 export const MAX_FACETS = 5;
 
@@ -43,35 +41,3 @@ export function getFacetLabel(facet: DocSearchFacet): string {
     .replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
-export function deriveDefaultSelectedFacetsFromIndex(
-  indices: DocSearchIndex[]
-): FacetSelections {
-  const defaultFacets: FacetSelections = {};
-
-  for (const index of indices) {
-    const facetFilters = index.searchParameters?.facetFilters;
-
-    for (const facetFilter of Array.isArray(facetFilters)
-      ? facetFilters
-      : [facetFilters]) {
-      if (typeof facetFilter !== 'string') {
-        continue;
-      }
-
-      const separatorIndex = facetFilter.indexOf(':');
-
-      if (separatorIndex <= 0) {
-        continue;
-      }
-
-      const key = facetFilter.slice(0, separatorIndex);
-      const value = facetFilter.slice(separatorIndex + 1);
-
-      if (key && value) {
-        defaultFacets[key] = value;
-      }
-    }
-  }
-
-  return defaultFacets;
-}

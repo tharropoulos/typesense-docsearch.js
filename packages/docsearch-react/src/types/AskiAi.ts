@@ -30,10 +30,6 @@ export type UseAskAiSendMessageOptions = {
   suggestedQuestionId?: string;
 };
 
-export interface PromptSuggestion {
-  prompt: string;
-}
-
 export type TypesenseAskAiSearchParameters = Omit<
   Partial<MultiSearchRequestSchema<Record<string, unknown>, string>>,
   'collection' | 'exclude_fields' | 'q' | 'query_by'

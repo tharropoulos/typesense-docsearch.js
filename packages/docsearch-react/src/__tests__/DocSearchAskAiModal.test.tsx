@@ -1,9 +1,9 @@
 import { render } from '@testing-library/react';
-import type { UIMessage } from 'ai';
 import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { DocSearchAskAiModal } from '../DocSearchAskAiModal';
+import type { AIMessage } from '../types/AskiAi';
 
 const mocks = vi.hoisted(() => ({
   startNewConversation: vi.fn(),
@@ -15,7 +15,7 @@ vi.mock('../useAskAi', () => ({
 }));
 
 describe('DocSearchAskAiModal', () => {
-  let messages: UIMessage[] = [];
+  let messages: AIMessage[] = [];
 
   beforeEach(() => {
     messages = [];
@@ -28,7 +28,6 @@ describe('DocSearchAskAiModal', () => {
       isStreaming: false,
       messages,
       restoreConversation: vi.fn(),
-      sendFeedback: vi.fn(),
       sendMessage: vi.fn(),
       setMessages: vi.fn(),
       startNewConversation: mocks.startNewConversation,
@@ -43,10 +42,12 @@ describe('DocSearchAskAiModal', () => {
 
   it('does not reset a conversation when its first message arrives before Ask AI activates', () => {
     const props = {
-      apiKey: 'api-key',
-      appId: 'app-id',
-      askAi: 'agent-id',
-      indices: ['index-name'],
+      typesenseCollectionName: 'docs',
+      typesenseServerConfig: {
+        apiKey: 'test-key',
+        nodes: [{ host: 'localhost', port: 8108, protocol: 'http' as const }],
+      },
+      askAi: 'conv-model-1',
       initialScrollY: 0,
       onAskAiToggle: vi.fn(),
     };

@@ -2,12 +2,8 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 import type { AIMessage } from '../types/AskiAi';
 import { extractLinksFromMessage } from '../utils/ai';
-import { createFacetFilters } from '../utils/createDocSearchSources';
-import {
-  deriveDefaultSelectedFacetsFromIndex,
-  getFacetLabel,
-  normalizeFacets,
-} from '../utils/facets';
+import { createFilterBy } from '../utils/createDocSearchSources';
+import { getFacetLabel, normalizeFacets } from '../utils/facets';
 import {
   createObjectStorage,
   createStorage,
@@ -70,62 +66,26 @@ describe('utils', () => {
       );
     });
 
-    it('derives default selections from index facet filters', () => {
-      expect(
-        deriveDefaultSelectedFacetsFromIndex([
-          { name: 'docs' },
-          {
-            name: 'blog',
-            searchParameters: {
-              facetFilters: [
-                'language:en',
-                'version:v2',
-                'invalid',
-                'empty:',
-                ':value',
-              ],
-            },
-          },
-          {
-            name: 'api',
-            searchParameters: { facetFilters: ['language:fr'] },
-          },
-          {
-            name: 'guides',
-            searchParameters: { facetFilters: 'format:guide' as never },
-          },
-        ])
-      ).toEqual({ language: 'fr', version: 'v2', format: 'guide' });
+    it('builds an empty filter_by without selections', () => {
+      expect(createFilterBy({})).toBe('');
     });
 
-    it('returns configured facetFilters when no dynamic facets are selected', () => {
-      expect(createFacetFilters(['language:en'], {})).toEqual(['language:en']);
+    it('joins selections into a Typesense filter_by expression', () => {
+      expect(createFilterBy({ language: 'en', version: 'v2' })).toBe(
+        'language:=[`en`] && version:=[`v2`]'
+      );
     });
 
-    it('merges configured and dynamic facetFilters', () => {
-      expect(
-        createFacetFilters(['docusaurus_tag:default'], {
-          language: 'en',
-          version: 'v2',
-        })
-      ).toEqual(['docusaurus_tag:default', 'language:en', 'version:v2']);
+    it('skips cleared facet selections', () => {
+      expect(createFilterBy({ language: '', type: 'guide' })).toBe(
+        'type:=[`guide`]'
+      );
     });
 
-    it('overrides configured filters with dynamic selections for the same facet', () => {
-      expect(
-        createFacetFilters(['language:en', 'version:v2'], {
-          language: 'fr',
-        })
-      ).toEqual(['version:v2', 'language:fr']);
-    });
-
-    it('removes configured filters for cleared facet selections', () => {
-      expect(
-        createFacetFilters(['language:en', 'version:v2'], {
-          language: '',
-          type: 'guide',
-        })
-      ).toEqual(['version:v2', 'type:guide']);
+    it('backtick-quotes values containing spaces', () => {
+      expect(createFilterBy({ type: 'Getting Started' })).toBe(
+        'type:=[`Getting Started`]'
+      );
     });
   });
 

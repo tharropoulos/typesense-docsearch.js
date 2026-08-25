@@ -1,21 +1,11 @@
 import { describe, it, expect } from 'vitest';
 
-import { getAgentStudioErrorMessage } from '../../askai';
-import type {
-  AIMessage,
-  AIMessagePart,
-  SearchToolPart,
-} from '../../types/AskiAi';
+import type { AIMessage, AIMessagePart } from '../../types/AskiAi';
 import {
   getAskAiBlockingBannerMessage,
-  getAgentPromptSuggestions,
-  getSearchToolQueries,
-  isAIToolPart,
-  isAlgoliaMCPSearchOutputPart,
   isThreadDepthError,
   isAskAiPromptBlockingError,
   showAskAiBlockingBannerNewConversationLink,
-  sanitizeMessagesForRequest,
   getMessageContent,
 } from '../ai';
 
@@ -55,7 +45,7 @@ describe('isThreadDepthError', () => {
   });
 });
 
-describe('Agent Studio prompt-blocking errors', () => {
+describe('Ask AI prompt-blocking errors', () => {
   it.each(['AI-203', 'AI-205', 'AI-224', 'AI-225'])(
     'blocks error code %s',
     (code) => {
@@ -126,20 +116,6 @@ describe('Agent Studio prompt-blocking errors', () => {
     expect(getAskAiBlockingBannerMessage(error)).toBeUndefined();
   });
 
-  it('normalizes nested JSON while preserving the error code', () => {
-    const error = getAgentStudioErrorMessage(
-      new Error(
-        JSON.stringify(
-          JSON.stringify({ message: 'Too many requests', code: 'AI-205' })
-        )
-      )
-    );
-
-    expect(error.message).toBe('Too many requests (AI-205)');
-    expect(isAskAiPromptBlockingError(error)).toBe(true);
-    expect(getAskAiBlockingBannerMessage(error)).toBe('Too many requests');
-  });
-
   it('uses a fallback for type-only token output errors', () => {
     const error = new Error(JSON.stringify({ type: 'TokenOutputLimitError' }));
 
@@ -158,352 +134,20 @@ function message(id: string, parts: AIMessagePart[]): AIMessage {
   };
 }
 
-describe('isAIToolPart', () => {
-  it.each([
-    {
-      part: {
-        type: 'tool-searchIndex',
-        toolCallId: 'id-1',
-        state: 'output-available',
-        input: { query: 'test' },
-        output: { hits: [] },
-      },
-      expected: true,
-    },
-    {
-      part: {
-        type: 'tool-algolia_search_index',
-        toolCallId: 'id-2',
-        state: 'input-streaming',
-        input: {},
-      },
-      expected: true,
-    },
-    {
-      part: { type: 'text', text: 'Hello' },
-      expected: false,
-    },
-    {
-      part: { type: 'reasoning', text: 'Thinking...' },
-      expected: false,
-    },
-  ] satisfies Array<{ part: AIMessagePart; expected: boolean }>)(
-    'returns $expected for $part.type',
-    ({ part, expected }) => {
-      expect(isAIToolPart(part)).toBe(expected);
-    }
-  );
-});
-
-describe('isAlgoliaMCPSearchOutputPart', () => {
-  it.each([
-    {
-      part: {
-        type: 'tool-algolia_search_index',
-        toolCallId: 'id-1',
-        state: 'output-available',
-        input: { query: 'foo', index: 'docs' },
-        output: { hits: [] },
-      },
-      expected: true,
-    },
-    {
-      part: {
-        type: 'tool-algolia_search_index_custom',
-        toolCallId: 'id-2',
-        state: 'output-available',
-        input: { query: 'foo', index: 'docs' },
-        output: { hits: [] },
-      },
-      expected: true,
-    },
-    {
-      part: {
-        type: 'tool-algolia_search_indexer',
-        toolCallId: 'id-3',
-        state: 'output-available',
-        input: { query: 'foo', index: 'docs' },
-        output: { hits: [] },
-      },
-      expected: false,
-    },
-  ] satisfies Array<{ part: AIMessagePart; expected: boolean }>)(
-    'returns $expected for $part.type',
-    ({ part, expected }) => {
-      expect(isAlgoliaMCPSearchOutputPart(part)).toBe(expected);
-    }
-  );
-});
-
-describe('sanitizeMessagesForRequest', () => {
-  it('returns the original messages array when there are no data parts', () => {
-    const messages = [message('message-1', [{ type: 'text', text: 'Hello' }])];
-
-    expect(sanitizeMessagesForRequest(messages)).toBe(messages);
-  });
-
-  it('removes data parts from messages', () => {
-    const textPart: AIMessagePart = { type: 'text', text: 'Hello' };
-    const reasoningPart: AIMessagePart = {
-      type: 'reasoning',
-      state: 'done',
-      text: 'Thinking...',
-    };
-    const messages = [
-      message('message-1', [
-        textPart,
-        {
-          type: 'data-suggestions',
-          data: { suggestions: ['How do I configure DocSearch?'] },
-        },
-        reasoningPart,
-      ]),
-    ];
-
-    expect(sanitizeMessagesForRequest(messages)).toEqual([
-      message('message-1', [textPart, reasoningPart]),
-    ]);
-  });
-
-  it('keeps unchanged messages by reference when a later message is sanitized', () => {
-    const unchangedMessage = message('message-1', [
-      { type: 'text', text: 'Hello' },
-    ]);
-    const sanitizedMessage = message('message-2', [
-      { type: 'text', text: 'Hi' },
-      {
-        type: 'data-suggestions',
-        data: { suggestions: ['What is DocSearch?'] },
-      },
-    ]);
-
-    const result = sanitizeMessagesForRequest([
-      unchangedMessage,
-      sanitizedMessage,
-    ]);
-
-    expect(result[0]).toBe(unchangedMessage);
-    expect(result[1]).not.toBe(sanitizedMessage);
-    expect(result[1].parts).toEqual([{ type: 'text', text: 'Hi' }]);
-  });
-
-  it('removes an aborted tool call from the assistant message', () => {
-    const initialQuestion: AIMessage = {
-      id: 'message-1',
-      role: 'user',
-      parts: [{ type: 'text', text: 'Find installation instructions' }],
-    };
-    const assistantMessage = message('message-2', [
-      { type: 'step-start' },
-      {
-        type: 'tool-algolia_search_index',
-        toolCallId: 'tool-1',
-        state: 'input-streaming',
-        input: undefined,
-      },
-    ]);
-    const followUpQuestion: AIMessage = {
-      id: 'message-3',
-      role: 'user',
-      parts: [{ type: 'text', text: 'What are the prerequisites?' }],
-    };
-
-    expect(
-      sanitizeMessagesForRequest([
-        initialQuestion,
-        assistantMessage,
-        followUpQuestion,
-      ])
-    ).toEqual([
-      initialQuestion,
-      message('message-2', [{ type: 'step-start' }]),
-      followUpQuestion,
-    ]);
-  });
-
-  it('keeps streamed text while removing an incomplete tool call', () => {
-    const result = sanitizeMessagesForRequest([
-      message('message-1', [
-        { type: 'text', text: 'Let me look that up.' },
-        {
-          type: 'tool-searchIndex',
-          toolCallId: 'tool-1',
-          state: 'input-available',
-          input: { query: 'installation' },
-        },
-      ]),
-    ]);
-
-    expect(result).toEqual([
-      message('message-1', [{ type: 'text', text: 'Let me look that up.' }]),
-    ]);
-  });
-
-  it.each([
-    {
-      state: 'output-available' as const,
-      output: { hits: [] },
-    },
-    {
-      state: 'output-error' as const,
-      errorText: 'Search failed',
-    },
-  ])('keeps a $state tool call', (toolPart) => {
-    const messages = [
-      message('message-1', [
-        {
-          type: 'tool-searchIndex',
-          toolCallId: 'tool-1',
-          input: { query: 'installation' },
-          ...toolPart,
-        },
-      ]),
-    ];
-
-    expect(sanitizeMessagesForRequest(messages)).toBe(messages);
-  });
-});
-
-describe('getAgentPromptSuggestions', () => {
-  it('returns an empty array when there is no suggestions part', () => {
-    expect(
-      getAgentPromptSuggestions([{ type: 'text', text: 'Hello' }])
-    ).toEqual([]);
-  });
-
-  it('returns suggestions from the data suggestions part', () => {
-    expect(
-      getAgentPromptSuggestions([
-        { type: 'text', text: 'Hello' },
-        {
-          type: 'data-suggestions',
-          data: {
-            suggestions: [
-              'How do I install DocSearch?',
-              'How do I configure facets?',
-            ],
-          },
-        },
-      ])
-    ).toEqual(['How do I install DocSearch?', 'How do I configure facets?']);
-  });
-
-  it('returns suggestions from the first suggestions part', () => {
-    expect(
-      getAgentPromptSuggestions([
-        {
-          type: 'data-suggestions',
-          data: { suggestions: ['First suggestion'] },
-        },
-        {
-          type: 'data-suggestions',
-          data: { suggestions: ['Second suggestion'] },
-        },
-      ])
-    ).toEqual(['First suggestion']);
-  });
-});
-
-describe('getSearchToolQueries', () => {
-  it('returns input query for tool-searchIndex', () => {
-    const queries = getSearchToolQueries({
-      toolCallId: 'testing-123',
-      type: 'tool-searchIndex',
-      state: 'input-available',
-      input: {
-        query: 'testing',
-      },
-      output: undefined,
-    });
-
-    expect(queries).toEqual(['testing']);
-  });
-
-  it('returns queries for MCP search tool', () => {
-    const queries = getSearchToolQueries({
-      type: 'tool-algolia_search_index_testing',
-      toolCallId: 'testing-456',
-      state: 'input-available',
-      input: {
-        clickAnalytics: false,
-        originalQuery: 'testing',
-        queries: [
-          {
-            query: 'first',
-          },
-          {
-            query: '',
-          },
-          {
-            query: 'second',
-          },
-        ],
-      },
-      output: undefined,
-    });
-
-    expect(queries).toEqual(['first', 'second']);
-  });
-
-  it('extracts query from stored MCP tool call with v1 input', () => {
-    const part: SearchToolPart = {
-      type: 'tool-algolia_search_index',
-      toolCallId: 'legacy-id',
-      state: 'output-available',
-      input: {
-        query: '  foo  ',
-        index: 'docs',
-      },
-      output: { hits: [] },
-    };
-
-    expect(getSearchToolQueries(part)).toEqual(['foo']);
-  });
-});
-
 describe('getMessageContent', () => {
-  it('joins the text parts around tool calls so copying returns the full answer', () => {
+  it('joins consecutive text parts so copying returns the full answer', () => {
     expect(
       getMessageContent(
         message('a1', [
-          { type: 'text', text: 'Let me look that up.', state: 'done' },
-          {
-            type: 'tool-algolia_search_index',
-            toolCallId: 't1',
-            state: 'output-available',
-            input: {
-              query: 'foo',
-              index: 'bar',
-            },
-            output: { hits: [] },
-          },
-          {
-            type: 'text',
-            text: 'Docusaurus is a static site generator.',
-            state: 'done',
-          },
+          { type: 'text', text: 'Let me look that up.' },
+          { type: 'text', text: 'Typesense is a search engine.' },
         ])
       )
-    ).toBe('Let me look that up.\n\nDocusaurus is a static site generator.');
+    ).toBe('Let me look that up.\n\nTypesense is a search engine.');
   });
 
   it('returns an empty string without a message or text parts', () => {
     expect(getMessageContent(null)).toBe('');
-    expect(
-      getMessageContent(
-        message('a2', [
-          {
-            type: 'tool-algolia_search_index',
-            toolCallId: 't2',
-            state: 'output-available',
-            input: {
-              query: 'foo',
-              index: 'bar',
-            },
-            output: { hits: [] },
-          },
-        ])
-      )
-    ).toBe('');
+    expect(getMessageContent(message('a2', []))).toBe('');
   });
 });

@@ -1,10 +1,7 @@
 import type { AutocompleteSource } from '@algolia/autocomplete-core';
-import type { SearchResponse } from 'algoliasearch/lite';
 
-import type { DocSearchTransformClient } from '../DocSearch';
-import type { PromptSuggestions } from '../DocSearchAI';
 import type { InternalDocSearchHit } from '../types';
-import type { AIMessage, PromptSuggestion } from '../types/AskiAi';
+import type { AIMessage } from '../types/AskiAi';
 
 import { SOURCE_IDS } from './collections';
 
@@ -101,71 +98,19 @@ function createAskAiHit({
   };
 }
 
-async function getPromptSuggestions({
-  query,
-  indexName,
-  searchClient,
-  hitsPerPage = 3,
-}: {
-  query: string;
-  indexName: string;
-  searchClient: DocSearchTransformClient;
-  hitsPerPage?: number;
-}): Promise<InternalDocSearchHit[]> {
-  try {
-    const { results } = await searchClient.search<PromptSuggestion>({
-      requests: [
-        {
-          query,
-          indexName,
-          hitsPerPage,
-          attributesToRetrieve: ['prompt'],
-        },
-      ],
-    });
-
-    const res = results[0] as SearchResponse<PromptSuggestion>;
-
-    return res.hits.map((hit) =>
-      createAskAiHit({
-        query: hit.prompt,
-        objectID: hit.objectID,
-        lvl0: 'Prompt Suggestions',
-      })
-    );
-    // NOTE: Not checking the exception here and just returning empty array since this isn't the hot path
-  } catch {
-    return [];
-  }
-}
-
 export async function buildAskAiActionSources({
   query,
   handleSelectAskAiQuestion,
-  promptSuggestionsOptions,
-  searchClient,
 }: {
   query: string;
   handleSelectAskAiQuestion: (toggle: boolean, query: string) => void;
-  promptSuggestionsOptions?: PromptSuggestions;
-  searchClient: DocSearchTransformClient;
 }): Promise<Array<AutocompleteSource<InternalDocSearchHit>>> {
-  const promptSuggestions = promptSuggestionsOptions
-    ? await getPromptSuggestions({
-        query,
-        indexName: promptSuggestionsOptions.indexName,
-        hitsPerPage: promptSuggestionsOptions.hitsPerPage,
-        searchClient,
-      })
-    : [];
-
   return [
     {
       sourceId: SOURCE_IDS.askAI,
       getItems(): InternalDocSearchHit[] {
         return [
           createAskAiHit({ query, objectID: 'ask-ai-button', lvl0: 'Ask AI' }),
-          ...promptSuggestions,
         ];
       },
       onSelect({ item }): void {

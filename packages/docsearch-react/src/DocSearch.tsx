@@ -4,11 +4,7 @@ import type {
 } from '@algolia/autocomplete-core';
 import { DocSearch as DocSearchProvider, useDocSearch } from 'typesense-docsearch-core';
 import type { DocSearchModalShortcuts, DocSearchRef } from 'typesense-docsearch-core';
-import type {
-  LiteClient,
-  SearchParamsObject,
-  SearchResponses,
-} from 'algoliasearch/lite';
+import type { SearchResponses } from 'algoliasearch/lite';
 import React, { type JSX } from 'react';
 import { createPortal } from 'react-dom';
 import type { ConfigurationOptions as TypesenseConfigurationOptions } from 'typesense/lib/Typesense/Configuration';
@@ -36,23 +32,13 @@ export type DocSearchTranslations = Partial<{
   modal: ModalTranslations;
 }>;
 
-// The interface that describes the minimal implementation required for the algoliasearch client, when using the [`transformSearchClient`](https://docsearch.algolia.com/docs/api/#transformsearchclient) option.
+// The minimal implementation required for the Typesense client, when using the
+// `transformSearchClient` option.
 export type TypesenseDocsearchTransformClient = {
   search: <T extends DocumentSchema>(searchMethodParams: {
     requests: Array<MultiSearchRequestSchema<T, string>>;
   }) => Promise<SearchResponses<T>>;
 };
-
-export type DocSearchTransformClient = {
-  search: LiteClient['search'];
-  addAlgoliaAgent: LiteClient['addAlgoliaAgent'];
-  transporter: Pick<LiteClient['transporter'], 'algoliaAgent'>;
-};
-
-export interface DocSearchIndex {
-  name: string;
-  searchParameters?: SearchParamsObject;
-}
 
 export interface DocSearchFacet {
   key: string;
@@ -78,12 +64,6 @@ export interface DocSearchProps {
     Record<string, unknown>,
     string
   >;
-  /**
-   * List of indices and _optional_ searchParameters to be used for search.
-   *
-   * @see {@link https://docsearch.algolia.com/docs/api#indices}
-   */
-  indices: Array<DocSearchIndex | string>;
   /**
    * Facets to display as keyword-search filter controls. Values are read
    * dynamically from the configured Typesense collection.

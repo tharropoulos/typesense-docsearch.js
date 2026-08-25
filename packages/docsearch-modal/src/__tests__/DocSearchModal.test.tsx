@@ -14,14 +14,15 @@ import '@testing-library/jest-dom/vitest';
 
 import { DocSearchModal, type DocSearchModalProps } from '../DocSearchModal';
 
-const APP_ID = 'test_app';
-const API_KEY = 'test_api_key';
-const INDEX_NAME = 'test_index';
+const COLLECTION_NAME = 'test_collection';
+const TYPESENSE_SERVER_CONFIG = {
+  apiKey: 'test_api_key',
+  nodes: [{ host: 'localhost', port: 8108, protocol: 'http' as const }],
+};
 
 const DEFAULT_PROPS: DocSearchModalProps = {
-  appId: APP_ID,
-  apiKey: API_KEY,
-  indices: [INDEX_NAME],
+  typesenseCollectionName: COLLECTION_NAME,
+  typesenseServerConfig: TYPESENSE_SERVER_CONFIG,
   transformSearchClient(searchClient) {
     return {
       ...searchClient,
@@ -47,11 +48,6 @@ const DEFAULT_PROPS: DocSearchModalProps = {
   },
 };
 
-const PROVIDER_DEFAULT_PROPS: DocSearchModalProps = {
-  indices: [INDEX_NAME],
-  transformSearchClient: DEFAULT_PROPS.transformSearchClient,
-};
-
 const renderComponent = (
   props: DocSearchModalProps = DEFAULT_PROPS,
   docsearchProps: Omit<DocSearchProps, 'children'> = {}
@@ -70,22 +66,6 @@ describe('typesense-docsearch-modal', () => {
   describe('DocSearchModal', () => {
     it('renders modal component', () => {
       renderComponent();
-    });
-
-    it('uses credentials configured on the provider', () => {
-      renderComponent(PROVIDER_DEFAULT_PROPS, {
-        appId: APP_ID,
-        apiKey: API_KEY,
-      });
-
-      act(() => {
-        fireEvent.keyDown(document, {
-          key: 'k',
-          ctrlKey: true,
-        });
-      });
-
-      expect(screen.getByText('Search')).toBeInTheDocument();
     });
 
     it('opens modal on keyboard shortcut', () => {

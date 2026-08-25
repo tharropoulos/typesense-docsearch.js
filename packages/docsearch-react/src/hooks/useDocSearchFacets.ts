@@ -1,18 +1,15 @@
 import React from 'react';
 
 import type { FacetBarFacet } from '../components/FacetBar';
-import type { DocSearchFacet, DocSearchIndex } from '../DocSearch';
+import type { DocSearchFacet } from '../DocSearch';
 import { useFacetValues } from '../useFacetValues';
 import type { useSearchClient } from '../useSearchClient';
 import type { FacetSelections } from '../utils/createDocSearchSources';
-import {
-  deriveDefaultSelectedFacetsFromIndex,
-  normalizeFacets,
-} from '../utils/facets';
+import { normalizeFacets } from '../utils/facets';
 
 export interface UseDocSearchFacetsProps {
   facets?: DocSearchFacet[];
-  indexes: DocSearchIndex[];
+  typesenseCollectionName: string;
   searchClient: ReturnType<typeof useSearchClient>;
   /**
    * Called after any facet selection change. Modals use this to refresh the
@@ -33,7 +30,7 @@ export interface UseDocSearchFacetsResult {
 
 export function useDocSearchFacets({
   facets,
-  indexes,
+  typesenseCollectionName,
   searchClient,
   onSelectionsChange,
 }: UseDocSearchFacetsProps): UseDocSearchFacetsResult {
@@ -44,11 +41,11 @@ export function useDocSearchFacets({
   const normalizedFacetsRef = React.useRef(normalizedFacets);
   const facetValues = useFacetValues({
     facets: normalizedFacets,
-    indexes,
+    typesenseCollectionName,
     searchClient,
   });
   const [facetSelections, setFacetSelections] = React.useState<FacetSelections>(
-    () => deriveDefaultSelectedFacetsFromIndex(indexes)
+    () => ({})
   );
   const facetSelectionsRef = React.useRef(facetSelections);
 

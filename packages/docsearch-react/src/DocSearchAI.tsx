@@ -8,45 +8,6 @@ import { DocSearchAskAiModal } from './DocSearchAskAiModal';
 import { DocSearchButton } from './DocSearchButton';
 import type { TypesenseAskAiSearchParameters } from './types/AskiAi';
 
-export interface AskAiSearchParameters {
-  facetFilters?: string[];
-  filters?: string;
-  attributesToRetrieve?: string[];
-  restrictSearchableAttributes?: string[];
-  distinct?: boolean | number | string;
-}
-
-export type AgentStudioSearchParameters = Record<
-  string,
-  Omit<AskAiSearchParameters, 'facetFilters'>
->;
-
-export interface Memory {
-  /**
-   * Determines whether or not to display the memory based tool calls.
-   *
-   * @default false
-   */
-  enabled?: boolean;
-  /**
-   * The JWT used by the agent to know which user's memory to read.
-   *
-   * @see https://www.algolia.com/doc/guides/algolia-ai/agent-studio/how-to/user-authentication
-   */
-  userToken?: string;
-}
-
-export interface PromptSuggestions {
-  /** The name of the index where the prompt suggestions are stored. */
-  indexName: string;
-  /**
-   * The number of prompt suggestions that are retrieved and displayed.
-   *
-   * @default 3
-   */
-  hitsPerPage?: number;
-}
-
 export interface DocSearchAskAi {
   /** Typesense conversational model id. */
   conversationModelId: string;
@@ -79,17 +40,12 @@ export interface DocSearchAskAi {
    * shipping questions directly in frontend config.
    */
   suggestedQuestions?: string[];
-  /**
-   * Enables and configures prompt suggestions that are displayed during keyword
-   * search.
-   */
-  promptSuggestions?: PromptSuggestions;
 }
 
 export interface DocSearchAIProps extends DocSearchProps {
   /**
-   * Configuration or assistant id to enable ask ai mode. Pass a string
-   * assistant id or a full config object.
+   * Configuration to enable ask ai mode. Pass a bare Typesense conversation
+   * model id or a full config object.
    */
   askAi: DocSearchAskAi | string;
   /**
@@ -104,11 +60,11 @@ export interface DocSearchAIProps extends DocSearchProps {
 }
 
 function DocSearchAIComponent(
-  { appId, apiKey, ...props }: DocSearchAIProps,
+  props: DocSearchAIProps,
   ref: React.ForwardedRef<DocSearchRef>
 ): JSX.Element {
   return (
-    <DocSearchProvider {...props} appId={appId} apiKey={apiKey} ref={ref}>
+    <DocSearchProvider {...props} ref={ref}>
       <DocSearchAIInner {...props} />
     </DocSearchProvider>
   );
@@ -116,9 +72,7 @@ function DocSearchAIComponent(
 
 export const DocSearchAI = React.forwardRef(DocSearchAIComponent);
 
-export function DocSearchAIInner(
-  props: Omit<DocSearchAIProps, 'appId' | 'apiKey'>
-): JSX.Element {
+export function DocSearchAIInner(props: DocSearchAIProps): JSX.Element {
   const {
     searchButtonRef,
     keyboardShortcuts,
@@ -129,13 +83,7 @@ export function DocSearchAIInner(
     openModal,
     closeModal,
     isHybridModeSupported,
-    appId,
-    apiKey,
   } = useDocSearch();
-
-  if (!appId || !apiKey) {
-    throw new Error('`DocSearchAI` requires `appId` and `apiKey` props.');
-  }
 
   return (
     <>
@@ -149,8 +97,6 @@ export function DocSearchAIInner(
         createPortal(
           <DocSearchAskAiModal
             {...props}
-            appId={appId}
-            apiKey={apiKey}
             initialScrollY={window.scrollY}
             initialQuery={initialQuery}
             translations={props?.translations?.modal}
@@ -164,5 +110,3 @@ export function DocSearchAIInner(
     </>
   );
 }
-
-export type { ToolCalls } from './types/AskiAi';

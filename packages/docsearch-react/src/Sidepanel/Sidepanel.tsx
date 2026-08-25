@@ -192,7 +192,7 @@ function SidepanelInner(
     return staticQuestions.map((question, index) => ({
       objectID: `suggested-question-${index}`,
       question,
-    })) as SuggestedQuestionHit[];
+    }));
   }, [askAi.suggestedQuestions]);
 
   const prevStatus = React.useRef(status);

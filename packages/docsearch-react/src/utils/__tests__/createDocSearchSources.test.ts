@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import type { DocSearchHit, InternalDocSearchHit } from '../../types';
-import { buildQuerySources } from '../createDocSearchSources';
+import { buildTypesenseQuerySources } from '../createDocSearchSources';
 
 function createHit({
   objectID,
@@ -61,7 +61,7 @@ function createHit({
   return hit;
 }
 
-describe('buildQuerySources', () => {
+describe('buildTypesenseQuerySources', () => {
   it('creates a source per lvl0 group and scopes parents to that group', async () => {
     const search = vi.fn().mockResolvedValue({
       results: [
@@ -97,7 +97,7 @@ describe('buildQuerySources', () => {
         },
       ],
     });
-    const sources = await buildQuerySources({
+    const sources = await buildTypesenseQuerySources({
       query: 'install',
       state: { context: { searchSuggestions: [] } },
       setContext: vi.fn(),
@@ -105,25 +105,19 @@ describe('buildQuerySources', () => {
       searchClient: {
         search,
       } as any,
-      indexes: [{ name: 'docs' }],
-      insights: false,
+      typesenseCollectionName: 'docs',
       saveRecentSearch: vi.fn(),
       onClose: vi.fn(),
-      facetSelections: { current: {} },
+      facetSelections: { current: { language: 'en' } },
     });
 
     expect(search).toHaveBeenCalledWith({
       requests: [
         expect.objectContaining({
-          attributesToSnippet: [
-            'hierarchy.lvl1:15',
-            'hierarchy.lvl2:15',
-            'hierarchy.lvl3:15',
-            'hierarchy.lvl4:15',
-            'hierarchy.lvl5:15',
-            'hierarchy.lvl6:15',
-            'content:15',
-          ],
+          collection: 'docs',
+          q: 'install',
+          group_by: 'url',
+          filter_by: 'language:=[`en`]',
         }),
       ],
     });

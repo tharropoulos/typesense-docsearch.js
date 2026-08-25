@@ -1,50 +1,57 @@
-import type { SearchResponse } from 'algoliasearch/lite';
 import React from 'react';
+import type { DocumentSchema } from 'typesense/lib/Typesense/Documents';
 
-import type { DocSearchFacet, DocSearchIndex } from './DocSearch';
+import type { DocSearchFacet } from './DocSearch';
 import type { DocSearchHit } from './types';
 import type { useSearchClient } from './useSearchClient';
 
 export type FacetValues = Record<string, string[]>;
 
+type TypesenseFacetCounts = {
+  facet_counts?: Array<{
+    field_name?: string;
+    counts?: Array<{ value?: string }>;
+  }>;
+};
+
 export function useFacetValues({
   facets,
-  indexes,
+  typesenseCollectionName,
   searchClient,
 }: {
   facets: DocSearchFacet[];
-  indexes: DocSearchIndex[];
+  typesenseCollectionName: string;
   searchClient: ReturnType<typeof useSearchClient>;
 }): FacetValues {
   const [facetValues, setFacetValues] = React.useState<FacetValues>({});
 
-  // Derive stable string keys so the effect only re-runs when the actual
-  // facet keys or index names/searchParameters change, not on every render (the `facets` and
-  // `indexes` props are recreated on each render and would otherwise loop).
+  // Derive a stable string key so the effect only re-runs when the actual facet
+  // keys change, not on every render (the `facets` prop is recreated on each
+  // render and would otherwise loop).
   const stableFacetKeys = facets.map((facet) => facet.key).join(',');
-  const stableIndexes = JSON.stringify(
-    indexes.map((index) => [index.name, index.searchParameters ?? null])
-  );
 
   React.useEffect(() => {
     let isMounted = true;
 
     const facetKeys = stableFacetKeys ? stableFacetKeys.split(',') : [];
 
-    if (facetKeys.length === 0 || indexes.length === 0) {
+    if (facetKeys.length === 0 || !typesenseCollectionName) {
       return () => {
         isMounted = false;
       };
     }
 
     searchClient
-      .search<DocSearchHit>({
-        requests: indexes.map((index) => ({
-          indexName: index.name,
-          query: '',
-          hitsPerPage: 0,
-          facets: facetKeys,
-        })),
+      .search<DocSearchHit & DocumentSchema>({
+        requests: [
+          {
+            collection: typesenseCollectionName,
+            q: '*',
+            per_page: 0,
+            facet_by: facetKeys.join(','),
+            max_facet_values: 100,
+          },
+        ],
       })
       .then(({ results }) => {
         if (!isMounted) {
@@ -56,19 +63,23 @@ export function useFacetValues({
           return acc;
         }, {});
 
-        results.forEach((res) => {
-          const result = res as SearchResponse<DocSearchHit>;
-          Object.entries(result.facets ?? {}).forEach(([facet, values]) => {
-            if (!valuesByFacet[facet]) {
-              return;
-            }
+        const { facet_counts: facetCounts } = (results[0] ??
+          {}) as TypesenseFacetCounts;
 
-            valuesByFacet[facet] = Array.from(
-              new Set([...valuesByFacet[facet], ...Object.keys(values)])
-            ).sort((a, b) =>
-              a.localeCompare(b, undefined, { sensitivity: 'base' })
-            );
-          });
+        (facetCounts ?? []).forEach(({ field_name: fieldName, counts }) => {
+          if (!fieldName || !valuesByFacet[fieldName]) {
+            return;
+          }
+
+          const values = (counts ?? [])
+            .map((count) => count.value)
+            .filter((value): value is string => typeof value === 'string');
+
+          valuesByFacet[fieldName] = Array.from(
+            new Set([...valuesByFacet[fieldName], ...values])
+          ).sort((a, b) =>
+            a.localeCompare(b, undefined, { sensitivity: 'base' })
+          );
         });
 
         setFacetValues(valuesByFacet);
@@ -82,8 +93,7 @@ export function useFacetValues({
     return () => {
       isMounted = false;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stableFacetKeys, stableIndexes, searchClient]);
+  }, [stableFacetKeys, typesenseCollectionName, searchClient]);
 
   return facetValues;
 }

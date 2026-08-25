@@ -1,4 +1,3 @@
-import type { UseChatHelpers } from '@ai-sdk/react';
 import type {
   AutocompleteApi,
   AutocompleteState,
@@ -15,7 +14,7 @@ import {
 import { Menu } from '../Menu';
 import { ModalHeading } from '../ModalHeading';
 import type { InternalDocSearchHit } from '../types';
-import type { AIMessage, AskAiState } from '../types/AskiAi';
+import type { AskAiState, AskAiStatus } from '../types/AskiAi';
 import { getCollection, isQueryEmpty } from '../utils';
 
 import { SearchBoxForm } from './ui/SearchBoxForm';
@@ -55,7 +54,7 @@ interface AskAiSearchBoxProps extends AutocompleteApi<
   onStopAskAiStreaming: () => Promise<void>;
   placeholder: string;
   isAskAiActive: boolean;
-  askAiStatus: UseChatHelpers<AIMessage>['status'];
+  askAiStatus: AskAiStatus;
   askAiError?: Error;
   isFromSelection: boolean;
   translations?: AskAiSearchBoxTranslations;

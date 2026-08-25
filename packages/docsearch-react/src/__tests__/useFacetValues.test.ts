@@ -1,7 +1,7 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type { DocSearchFacet, DocSearchIndex } from '../DocSearch';
+import type { DocSearchFacet } from '../DocSearch';
 import { useFacetValues } from '../useFacetValues';
 
 describe('useFacetValues', () => {
@@ -13,10 +13,13 @@ describe('useFacetValues', () => {
     search.mockResolvedValue({
       results: [
         {
-          facets: {
-            language: { en: 10, fr: 4 },
-            version: { 'v1.0': 6 },
-          },
+          facet_counts: [
+            {
+              field_name: 'language',
+              counts: [{ value: 'en' }, { value: 'fr' }],
+            },
+            { field_name: 'version', counts: [{ value: 'v1.0' }] },
+          ],
         },
       ],
     });
@@ -28,10 +31,13 @@ describe('useFacetValues', () => {
 
   it('fetches facet values once and merges them per facet', async () => {
     const facets: DocSearchFacet[] = [{ key: 'language' }, { key: 'version' }];
-    const indexes: DocSearchIndex[] = [{ name: 'docs' }];
 
     const { result } = renderHook(() =>
-      useFacetValues({ facets, indexes, searchClient })
+      useFacetValues({
+        facets,
+        typesenseCollectionName: 'docs',
+        searchClient,
+      })
     );
 
     await waitFor(() => {
@@ -42,6 +48,15 @@ describe('useFacetValues', () => {
     });
 
     expect(search).toHaveBeenCalledTimes(1);
+    expect(search).toHaveBeenCalledWith({
+      requests: [
+        expect.objectContaining({
+          collection: 'docs',
+          facet_by: 'language,version',
+          per_page: 0,
+        }),
+      ],
+    });
   });
 
   it('sorts facet values without case or accent sensitivity', async () => {
@@ -49,9 +64,17 @@ describe('useFacetValues', () => {
     search.mockResolvedValue({
       results: [
         {
-          facets: {
-            language: { zulu: 1, Éclair: 1, eclair: 1, alpha: 1 },
-          },
+          facet_counts: [
+            {
+              field_name: 'language',
+              counts: [
+                { value: 'zulu' },
+                { value: 'Éclair' },
+                { value: 'eclair' },
+                { value: 'alpha' },
+              ],
+            },
+          ],
         },
       ],
     });
@@ -59,7 +82,7 @@ describe('useFacetValues', () => {
     const { result } = renderHook(() =>
       useFacetValues({
         facets: [{ key: 'language' }],
-        indexes: [{ name: 'docs' }],
+        typesenseCollectionName: 'docs',
         searchClient,
       })
     );
@@ -77,21 +100,15 @@ describe('useFacetValues', () => {
     });
   });
 
-  it('does not re-fetch when facet/index props are recreated with identical content', async () => {
+  it('does not re-fetch when the facets prop is recreated with identical content', async () => {
     const { result, rerender } = renderHook(
-      ({
-        facets,
-        indexes,
-      }: {
-        facets: DocSearchFacet[];
-        indexes: DocSearchIndex[];
-      }) => useFacetValues({ facets, indexes, searchClient }),
-      {
-        initialProps: {
-          facets: [{ key: 'language' }] as DocSearchFacet[],
-          indexes: [{ name: 'docs' }] as DocSearchIndex[],
-        },
-      }
+      ({ facets }: { facets: DocSearchFacet[] }) =>
+        useFacetValues({
+          facets,
+          typesenseCollectionName: 'docs',
+          searchClient,
+        }),
+      { initialProps: { facets: [{ key: 'language' }] as DocSearchFacet[] } }
     );
 
     await waitFor(() => {
@@ -100,66 +117,59 @@ describe('useFacetValues', () => {
 
     // New array/object identities but identical content (mirrors the
     // per-render prop recreation that previously caused an infinite loop).
-    rerender({ facets: [{ key: 'language' }], indexes: [{ name: 'docs' }] });
-    rerender({ facets: [{ key: 'language' }], indexes: [{ name: 'docs' }] });
+    rerender({ facets: [{ key: 'language' }] });
+    rerender({ facets: [{ key: 'language' }] });
 
     expect(search).toHaveBeenCalledTimes(1);
   });
 
-  it('re-fetches when searchParameters change', async () => {
+  it('re-fetches when the collection changes', async () => {
     const { result, rerender } = renderHook(
-      ({
-        facets,
-        indexes,
-      }: {
-        facets: DocSearchFacet[];
-        indexes: DocSearchIndex[];
-      }) => useFacetValues({ facets, indexes, searchClient }),
-      {
-        initialProps: {
-          facets: [{ key: 'language' }] as DocSearchFacet[],
-          indexes: [
-            { name: 'docs', searchParameters: { analytics: true } },
-          ] as DocSearchIndex[],
-        },
-      }
+      ({ collection }: { collection: string }) =>
+        useFacetValues({
+          facets: [{ key: 'language' }],
+          typesenseCollectionName: collection,
+          searchClient,
+        }),
+      { initialProps: { collection: 'docs' } }
     );
 
     await waitFor(() => {
       expect(result.current.language).toBeDefined();
     });
 
-    rerender({
-      facets: [{ key: 'language' }],
-      indexes: [{ name: 'docs', searchParameters: { analytics: true } }],
-    });
-    rerender({
-      facets: [{ key: 'language' }],
-      indexes: [{ name: 'docs', searchParameters: { analytics: false } }],
-    });
+    rerender({ collection: 'guides' });
 
-    expect(search).toHaveBeenCalledTimes(2);
+    await waitFor(() => {
+      expect(search).toHaveBeenCalledTimes(2);
+    });
   });
 
-  it('does not search when there are no facets', () => {
-    const { result } = renderHook(() =>
-      useFacetValues({ facets: [], indexes: [{ name: 'docs' }], searchClient })
-    );
-
-    expect(result.current).toEqual({});
-    expect(search).not.toHaveBeenCalled();
-  });
-
-  it('does not search when there are no indexes', () => {
-    const { result } = renderHook(() =>
+  it('skips the request when no facets are configured', () => {
+    renderHook(() =>
       useFacetValues({
-        facets: [{ key: 'language' }],
-        indexes: [],
+        facets: [],
+        typesenseCollectionName: 'docs',
         searchClient,
       })
     );
 
-    expect(result.current).toEqual({});
     expect(search).not.toHaveBeenCalled();
+  });
+
+  it('resets to empty values when the request fails', async () => {
+    search.mockRejectedValue(new Error('boom'));
+
+    const { result } = renderHook(() =>
+      useFacetValues({
+        facets: [{ key: 'language' }],
+        typesenseCollectionName: 'docs',
+        searchClient,
+      })
+    );
+
+    await waitFor(() => {
+      expect(result.current).toEqual({});
+    });
   });
 });

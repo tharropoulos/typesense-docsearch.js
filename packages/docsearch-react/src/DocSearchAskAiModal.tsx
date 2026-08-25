@@ -1,6 +1,5 @@
 import { createAutocomplete } from '@algolia/autocomplete-core';
 import type { InitialAskAiMessage, OnAskAiToggle } from 'typesense-docsearch-core';
-import type { ChatRequestOptions } from 'ai';
 import React, { type JSX } from 'react';
 
 import type { AskAiScreenStateTranslations } from './AskAiScreenState';
@@ -10,7 +9,7 @@ import { AskAiSearchBox } from './components/AskAiSearchBox';
 import type { FacetBarTranslations } from './components/FacetBar';
 import { FacetBar } from './components/FacetBar';
 import { ModalShell } from './components/ui/ModalShell';
-import type { DocSearchAIProps } from './DocSearchAI';
+import type { DocSearchAIProps, DocSearchAskAi } from './DocSearchAI';
 import type { FooterTranslations } from './Footer';
 import { Footer } from './Footer';
 import { Hit } from './Hit';
@@ -26,7 +25,6 @@ import type { NewConversationTranslations } from './NewConversationScreen';
 import type {
   DocSearchState,
   InternalDocSearchHit,
-  OnAskAiFeedback,
   StoredAskAiMessage,
   StoredAskAiState,
   SuggestedQuestionHit,
@@ -34,7 +32,6 @@ import type {
 import { type AskAiState } from './types/AskiAi';
 import { useAskAi } from './useAskAi';
 import { useSearchClient } from './useSearchClient';
-import { useSuggestedQuestions } from './useSuggestedQuestions';
 import {
   identity,
   isModifierEvent,
@@ -45,10 +42,8 @@ import {
 } from './utils';
 import {
   buildDummyAskAiHit,
-  isAgentStudioTokenOutputLimitError,
   isAskAiPromptBlockingError,
   isThreadDepthError,
-  EMPTY_TOOLS,
 } from './utils/ai';
 import {
   buildAskAiActionSources,
@@ -56,10 +51,9 @@ import {
 } from './utils/createAskAiSources';
 import {
   buildNoQuerySources,
-  buildQuerySources,
+  buildTypesenseQuerySources,
   type BuildQuerySourcesState,
 } from './utils/createDocSearchSources';
-import { normalizeDocSearchIndexes } from './utils/normalizeDocSearchIndexes';
 
 export type DocSearchAskAiModalTranslations = AskAiScreenStateTranslations &
   Partial<{
@@ -79,8 +73,9 @@ export type DocSearchAskAiModalProps = DocSearchAIProps & {
 };
 
 export function DocSearchAskAiModal({
-  appId,
-  apiKey,
+  typesenseCollectionName,
+  typesenseServerConfig,
+  typesenseSearchParameters,
   askAi,
   maxResultsPerGroup,
   theme,
@@ -101,7 +96,6 @@ export function DocSearchAskAiModal({
   isAskAiActive = false,
   recentSearchesLimit = 7,
   recentSearchesWithFavoritesLimit = 4,
-  indices,
   facets,
   isHybridModeSupported = false,
   footerAction,
@@ -151,30 +145,20 @@ export function DocSearchAskAiModal({
   const { initialQuery, initialQueryFromSelection } =
     useInitialModalQuery(initialQueryFromProp);
 
-  const searchClient = useSearchClient(appId, apiKey, transformSearchClient);
-
-  const askAiConfig = typeof askAi === 'object' ? askAi : null;
-  const askAiConfigurationId = askAiConfig
-    ? askAiConfig.agentId
-    : (askAi as string);
-  const askAiSearchParameters = askAiConfig?.searchParameters;
-  const [askAiState, setAskAiState] = React.useState<AskAiState>('initial');
-  const suggestedQuestions = useSuggestedQuestions({
-    agentId: askAiConfigurationId,
-    searchClient,
-    suggestedQuestionsEnabled: askAiConfig?.suggestedQuestions,
-  });
-  const memoryEnabled = askAiConfig?.memory?.enabled ?? false;
-  const tools = askAiConfig?.tools ?? EMPTY_TOOLS;
-
-  const indexes = React.useMemo(
-    () =>
-      normalizeDocSearchIndexes({
-        indices,
-      }),
-    [indices]
+  const searchClient = useSearchClient(
+    transformSearchClient,
+    typesenseServerConfig
   );
-  const defaultIndexName = indexes[0].name;
+
+  // `askAi` accepts a bare conversation model id as a shorthand for the full
+  // config object.
+  const askAiConfig: DocSearchAskAi = React.useMemo(
+    () => (typeof askAi === 'object' ? askAi : { conversationModelId: askAi }),
+    [askAi]
+  );
+  const [askAiState, setAskAiState] = React.useState<AskAiState>('initial');
+
+  const defaultIndexName = typesenseCollectionName;
 
   const autocompleteRef =
     React.useRef<
@@ -196,7 +180,7 @@ export function DocSearchAskAiModal({
     clearFacetSelections,
   } = useDocSearchFacets({
     facets,
-    indexes,
+    typesenseCollectionName,
     searchClient,
     onSelectionsChange: () => autocompleteRef.current?.refresh(),
   });
@@ -217,19 +201,27 @@ export function DocSearchAskAiModal({
     sendMessage,
     stopAskAiStreaming,
     askAiError,
-    sendFeedback,
     conversations,
     startNewConversation,
     restoreConversation,
   } = useAskAi({
-    agentId: askAiConfigurationId,
-    apiKey: askAiConfig?.apiKey || apiKey,
-    appId: askAiConfig?.appId || appId,
-    searchParameters: askAiSearchParameters,
-    tools,
-    memory: askAiConfig?.memory,
-    indices: askAiConfig?.indices,
+    typesenseServerConfig,
+    storageKey: `__DOCSEARCH_ASKAI_CONVERSATIONS__${typesenseCollectionName}`,
+    collection: askAiConfig.collection || typesenseCollectionName,
+    conversationModelId: askAiConfig.conversationModelId,
+    queryBy: askAiConfig.queryBy || 'embedding',
+    excludeFields: askAiConfig.excludeFields || 'embedding',
+    searchParameters: askAiConfig.searchParameters,
   });
+
+  const suggestedQuestions: SuggestedQuestionHit[] = React.useMemo(() => {
+    const staticQuestions = askAiConfig.suggestedQuestions ?? [];
+
+    return staticQuestions.map((question, index) => ({
+      objectID: `suggested-question-${index}`,
+      question,
+    }));
+  }, [askAiConfig.suggestedQuestions]);
 
   const prevStatus = React.useRef(status);
   React.useEffect(() => {
@@ -241,6 +233,7 @@ export function DocSearchAskAiModal({
       // if we stopped the stream, store it on the most recent message
       if (stoppedStream && messages.at(-1)) {
         messages.at(-1)!.metadata = {
+          ...messages.at(-1)!.metadata,
           stopped: true,
         };
       }
@@ -281,10 +274,8 @@ export function DocSearchAskAiModal({
       return undefined;
     }
 
-    return isAgentStudioTokenOutputLimitError(askAiError)
-      ? ('minimal' as const)
-      : ('full' as const);
-  }, [askAiError, askAiState, shouldBlockPrompt]);
+    return 'full' as const;
+  }, [askAiState, shouldBlockPrompt]);
 
   const saveRecentSearch = useSaveRecentSearch({
     favoriteSearches,
@@ -329,25 +320,11 @@ export function DocSearchAskAiModal({
 
       setStoppedStream(false);
 
-      const messageOptions: ChatRequestOptions = {};
-
-      if (suggestedQuestion) {
-        messageOptions.body = {
-          suggestedQuestionId: suggestedQuestion.objectID,
-        };
-      }
-
-      sendMessage(
-        {
-          role: 'user',
-          parts: [
-            {
-              type: 'text',
-              text: query,
-            },
-          ],
-        },
-        messageOptions
+      void sendMessage(
+        query,
+        suggestedQuestion
+          ? { suggestedQuestionId: suggestedQuestion.objectID }
+          : undefined
       );
 
       if (dropdownRef.current) {
@@ -374,15 +351,6 @@ export function DocSearchAskAiModal({
       dropdownRef,
       interceptAskAiEvent,
     ]
-  );
-
-  // feedback handler
-  const handleFeedbackSubmit = React.useCallback<OnAskAiFeedback>(
-    async (messageId, feedback): Promise<void> => {
-      if (!askAiConfigurationId || !appId) return;
-      await sendFeedback(messageId, feedback);
-    },
-    [askAiConfigurationId, appId, sendFeedback]
   );
 
   if (!autocompleteRef.current) {
@@ -426,16 +394,14 @@ export function DocSearchAskAiModal({
           context: sourcesState.context,
         };
 
-        const algoliaSourcesPromise = buildQuerySources({
+        const keywordSourcesPromise = buildTypesenseQuerySources({
           query,
           state: querySourcesState,
           setContext,
           setStatus,
           searchClient,
-          indexes,
-          insights: Boolean(insights),
-          appId,
-          apiKey,
+          typesenseCollectionName,
+          typesenseSearchParameters,
           maxResultsPerGroup,
           transformItems,
           saveRecentSearch,
@@ -447,18 +413,16 @@ export function DocSearchAskAiModal({
           ? buildAskAiActionSources({
               query,
               handleSelectAskAiQuestion,
-              promptSuggestionsOptions: askAiConfig?.promptSuggestions,
-              searchClient,
             })
           : Promise.resolve([]);
 
-        const [askAiSources, algoliaSources] = await Promise.all([
+        const [askAiSources, keywordSources] = await Promise.all([
           askAiSourcesPromise,
-          algoliaSourcesPromise,
+          keywordSourcesPromise,
         ]);
 
-        // Combine Algolia results (once resolved) with the Ask AI source
-        return [...askAiSources, ...algoliaSources];
+        // Combine keyword results (once resolved) with the Ask AI source
+        return [...askAiSources, ...keywordSources];
       },
     });
   }
@@ -617,7 +581,6 @@ export function DocSearchAskAiModal({
           isAskAiActive={isAskAiActive}
           canHandleAskAi={canHandleAskAi}
           messages={messages}
-          tools={tools}
           askAiError={askAiError}
           status={status}
           hasCollections={hasCollections}
@@ -625,7 +588,6 @@ export function DocSearchAskAiModal({
           selectAskAiQuestion={handleSelectAskAiQuestion}
           suggestedQuestions={suggestedQuestions}
           selectSuggestedQuestion={selectSuggestedQuestion}
-          memoryEnabled={memoryEnabled}
           resultBadgeKey={props.resultBadgeKey}
           promptBlockingErrorId={promptBlockingErrorId}
           onAskAiToggle={onAskAiToggle}
@@ -666,7 +628,6 @@ export function DocSearchAskAiModal({
               onClose();
             }
           }}
-          onFeedback={handleFeedbackSubmit}
         />
       }
       footer={

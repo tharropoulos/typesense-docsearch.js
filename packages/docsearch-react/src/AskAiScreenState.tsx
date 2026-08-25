@@ -1,4 +1,3 @@
-import type { UseChatHelpers } from '@ai-sdk/react';
 import type {
   AutocompleteApi,
   AutocompleteState,
@@ -29,7 +28,7 @@ import type {
   StoredDocSearchHit,
   SuggestedQuestionHit,
 } from './types';
-import type { AIMessage, AskAiState, ToolCalls } from './types/AskiAi';
+import type { AIMessage, AskAiState, AskAiStatus } from './types/AskiAi';
 import { isQueryEmpty } from './utils';
 
 export type AskAiScreenStateTranslations = Partial<{
@@ -63,9 +62,8 @@ export interface AskAiScreenStateProps<
   inputRef: React.MutableRefObject<HTMLInputElement | null>;
   hitComponent: DocSearchProps['hitComponent'];
   indexName: string;
-  messages: UseChatHelpers<AIMessage>['messages'];
-  tools: ToolCalls;
-  status: UseChatHelpers<AIMessage>['status'];
+  messages: AIMessage[];
+  status: AskAiStatus;
   askAiError?: Error;
   disableUserPersonalization: boolean;
   resultsFooterComponent: DocSearchProps['resultsFooterComponent'];
@@ -78,7 +76,6 @@ export interface AskAiScreenStateProps<
   suggestedQuestions: SuggestedQuestionHit[];
   selectSuggestedQuestion: (question: SuggestedQuestionHit) => void;
   onNewConversation: () => void;
-  memoryEnabled?: boolean;
   resultBadgeKey?: string;
   promptBlockingErrorId?: string;
 }
@@ -128,11 +125,9 @@ export const AskAiScreenState = React.memo(
         <AskAiScreen
           {...props}
           messages={props.messages}
-          tools={props.tools}
           status={props.status}
           askAiError={props.askAiError}
           translations={translations?.askAiScreen}
-          memoryEnabled={props.memoryEnabled}
           selectAskAiQuestion={selectAskAiQuestion}
           onSelectPromptSuggestion={handleSelectPromptSuggestion}
         />

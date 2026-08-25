@@ -7,33 +7,12 @@ import { createPortal } from 'react-dom';
 
 export type DocSearchModalProps = Omit<
   ReactDocSearchModalProps,
-  | 'appId'
-  | 'apiKey'
-  | 'initialScrollY'
-  | 'keyboardShortcuts'
-  | 'onClose'
-  | 'theme'
-> &
-  Partial<Pick<ReactDocSearchModalProps, 'appId' | 'apiKey'>>;
+  'initialScrollY' | 'keyboardShortcuts' | 'onClose' | 'theme'
+>;
 
 export function DocSearchModal(props: DocSearchModalProps): JSX.Element | null {
-  const {
-    appId: providerAppId,
-    apiKey: providerApiKey,
-    isModalActive,
-    closeModal,
-    initialQuery,
-    registerView,
-  } = useDocSearch();
-
-  const appId = props.appId ?? providerAppId;
-  const apiKey = props.apiKey ?? providerApiKey;
-
-  if (!appId || !apiKey) {
-    throw new Error(
-      '`DocSearchModal` requires `appId` and `apiKey` props or values configured on the `DocSearch` provider.'
-    );
-  }
+  const { isModalActive, closeModal, initialQuery, registerView } =
+    useDocSearch();
 
   const containerElement = React.useMemo(
     () => props.portalContainer ?? document.body,
@@ -49,13 +28,11 @@ export function DocSearchModal(props: DocSearchModalProps): JSX.Element | null {
   const modalProps: ReactDocSearchModalProps = React.useMemo(
     () => ({
       ...props,
-      appId,
-      apiKey,
       initialQuery: props.initialQuery ?? initialQuery,
       initialScrollY: initialScroll,
       onClose: closeModal,
     }),
-    [props, appId, apiKey, initialQuery, initialScroll, closeModal]
+    [props, initialQuery, initialScroll, closeModal]
   );
 
   return isModalActive

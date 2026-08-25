@@ -34,7 +34,6 @@ import {
   buildTypesenseQuerySources,
   type BuildQuerySourcesState,
 } from './utils/createDocSearchSources';
-import { normalizeDocSearchIndexes } from './utils/normalizeDocSearchIndexes';
 
 export type ModalTranslations = Partial<{
   searchBox: KeywordSearchBoxTranslations;
@@ -69,7 +68,6 @@ export function DocSearchModal({
   insights = false,
   recentSearchesLimit = 7,
   recentSearchesWithFavoritesLimit = 4,
-  indices,
   facets,
   footerAction,
   ...props
@@ -107,15 +105,6 @@ export function DocSearchModal({
     typesenseServerConfig
   );
 
-  // The Typesense collection is the single source of truth for this fork; the
-  // Algolia `indices` prop is kept only so downstream consumers keep compiling.
-  const indexes = React.useMemo(
-    () =>
-      normalizeDocSearchIndexes({
-        indices: indices ?? [typesenseCollectionName],
-      }),
-    [indices, typesenseCollectionName]
-  );
   const defaultIndexName = typesenseCollectionName;
 
   const autocompleteRef =
@@ -133,11 +122,12 @@ export function DocSearchModal({
   const {
     visibleFacets,
     facetSelections,
+    facetSelectionsRef,
     handleFacetSelectionChange,
     clearFacetSelections,
   } = useDocSearchFacets({
     facets,
-    indexes,
+    typesenseCollectionName,
     searchClient,
     onSelectionsChange: () => autocompleteRef.current?.refresh(),
   });
@@ -198,6 +188,7 @@ export function DocSearchModal({
           transformItems,
           saveRecentSearch,
           onClose,
+          facetSelections: facetSelectionsRef,
         });
       },
     });
