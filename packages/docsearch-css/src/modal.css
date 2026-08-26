@@ -750,6 +750,14 @@
 
 /* Hit */
 
+.DocSearch-Hits {
+  padding-block-end: 10px;
+}
+
+.DocSearch-Hits + .DocSearch-Hits {
+  border-block-start: 1px solid var(--docsearch-subtle-color);
+}
+
 .DocSearch-Hits:last-of-type {
   margin-block-end: 24px;
 }
@@ -774,7 +782,7 @@
 }
 
 .DocSearch-Hit {
-  border-radius: 4px;
+  border-radius: var(--docsearch-hit-radius);
   display: flex;
   padding-block-end: 4px;
   position: relative;
@@ -786,17 +794,24 @@
 }
 
 .DocSearch-Hit a {
-  background: var(--docsearch-hit-background);
-  border-radius: 4px;
+  background: transparent;
+  border-radius: var(--docsearch-hit-radius);
   display: block;
   padding-inline-start: 0.5rem;
   width: 100%;
   cursor: pointer;
+  transition: background-color 120ms var(--ease-smooth);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .DocSearch-Hit a {
+    transition: none;
+  }
 }
 
 .DocSearch-Hit-source {
   background: var(--docsearch-modal-background);
-  color: var(--docsearch-text-color);
+  color: var(--docsearch-secondary-text-color);
   font-size: 0.9em;
   font-weight: 400;
   line-height: 32px;
@@ -817,7 +832,7 @@
 }
 
 .DocSearch-Dropdown-Container .DocSearch-Hits-padded {
-  padding-inline-start: 1em;
+  padding-inline-start: 4px;
 }
 
 .DocSearch-Hit-Tree {

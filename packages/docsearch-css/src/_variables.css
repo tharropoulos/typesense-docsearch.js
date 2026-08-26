@@ -65,6 +65,7 @@
 
   /* hit */
   --docsearch-hit-height: 56px;
+  --docsearch-hit-radius: 10px;
   --docsearch-hit-color: var(--typesense-ink);
   --docsearch-hit-highlight-color: var(--typesense-soft-primary);
   --docsearch-hit-background: var(--typesense-surface-dim);
