@@ -11,25 +11,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
-          node-version: 22
-          cache: yarn
+          node-version-file: .tool-versions
 
-      - name: Enable Corepack
-        run: corepack enable
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: .tool-versions
 
       - name: Install
-        run: yarn install --immutable
+        run: bun install --frozen-lockfile
 
       - name: Build
-        run: yarn build
+        run: bun run build
 
       - name: Typecheck
-        run: yarn test:types
+        run: bun run test:types
 
       - name: Unit Tests
-        run: yarn test --run
+        run: bun run test --run
