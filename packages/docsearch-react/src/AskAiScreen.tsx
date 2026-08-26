@@ -317,21 +317,18 @@ export function AskAiScreen({
 
       <div className="DocSearch-AskAiScreen-Body">
         <div className="DocSearch-AskAiScreen-ExchangesList">
-          {exchanges
-            .slice()
-            .reverse()
-            .map((exchange, index) => (
-              <AskAiExchangeCard
-                key={exchange.id}
-                exchange={exchange}
-                askAiError={props.askAiError}
-                isLastExchange={index === 0}
-                loadingStatus={props.status}
-                translations={translations}
-                conversations={props.conversations}
-                onFeedback={props.onFeedback}
-              />
-            ))}
+          {exchanges.map((exchange, index) => (
+            <AskAiExchangeCard
+              key={exchange.id}
+              exchange={exchange}
+              askAiError={props.askAiError}
+              isLastExchange={index === exchanges.length - 1}
+              loadingStatus={props.status}
+              translations={translations}
+              conversations={props.conversations}
+              onFeedback={props.onFeedback}
+            />
+          ))}
         </div>
       </div>
     </div>

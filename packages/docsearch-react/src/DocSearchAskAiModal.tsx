@@ -330,17 +330,6 @@ export function DocSearchAskAiModal({
           : undefined
       ).catch(noop);
 
-      if (dropdownRef.current) {
-        // some test environments (like jsdom) don't implement element.scrollTo
-        const el = dropdownRef.current;
-        if (typeof (el as any).scrollTo === 'function') {
-          el.scrollTo({ top: 0, behavior: 'smooth' });
-        } else {
-          // fallback for environments without scrollTo support
-          el.scrollTop = 0;
-        }
-      }
-
       // clear the query
       if (autocompleteRef.current) {
         autocompleteRef.current.setQuery('');
@@ -351,7 +340,6 @@ export function DocSearchAskAiModal({
       onAskAiToggle,
       isHybridModeSupported,
       sendMessage,
-      dropdownRef,
       interceptAskAiEvent,
     ]
   );
@@ -444,6 +432,73 @@ export function DocSearchAskAiModal({
       scrollToUtils(dropdownRef.current);
     }
   }, [state.query, isAskAiActive, dropdownRef]);
+
+  // Follow the conversation: when a new user message is added, scroll to it
+  const userMessageCount = messages.filter(
+    (message) => message.role === 'user'
+  ).length;
+
+  // Auto-follow is pinned until the user scrolls up; scrolling back to the
+  // bottom re-pins it
+  const isPinnedToBottomRef = React.useRef(true);
+
+  React.useEffect(() => {
+    const el = dropdownRef.current;
+    if (!el || !isAskAiActive) {
+      return undefined;
+    }
+    const handleWheel = (event: WheelEvent): void => {
+      if (event.deltaY < 0) {
+        isPinnedToBottomRef.current = false;
+      }
+    };
+    const handleTouchMove = (): void => {
+      isPinnedToBottomRef.current = false;
+    };
+    const handleScroll = (): void => {
+      if (el.scrollHeight - el.scrollTop - el.clientHeight < 80) {
+        isPinnedToBottomRef.current = true;
+      }
+    };
+    el.addEventListener('wheel', handleWheel, { passive: true });
+    el.addEventListener('touchmove', handleTouchMove, { passive: true });
+    el.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      el.removeEventListener('wheel', handleWheel);
+      el.removeEventListener('touchmove', handleTouchMove);
+      el.removeEventListener('scroll', handleScroll);
+    };
+  }, [isAskAiActive, dropdownRef]);
+
+  React.useEffect(() => {
+    if (!isAskAiActive || userMessageCount === 0 || !dropdownRef.current) {
+      return;
+    }
+    isPinnedToBottomRef.current = true;
+    const el = dropdownRef.current;
+    // some test environments (like jsdom) don't implement element.scrollTo
+    if (typeof el.scrollTo === 'function') {
+      el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
+    } else {
+      // fallback for environments without scrollTo support
+      el.scrollTop = el.scrollHeight;
+    }
+  }, [userMessageCount, isAskAiActive, dropdownRef]);
+
+  // Keep the newest tokens in view while the answer streams in
+  React.useEffect(() => {
+    const el = dropdownRef.current;
+    if (
+      !isAskAiActive ||
+      status !== 'streaming' ||
+      messages.length === 0 ||
+      !isPinnedToBottomRef.current ||
+      !el
+    ) {
+      return;
+    }
+    el.scrollTop = el.scrollHeight;
+  }, [messages, status, isAskAiActive, dropdownRef]);
 
   useRefreshOnInitialQuery({ initialQuery, inputRef, refresh });
 
