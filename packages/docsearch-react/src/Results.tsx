@@ -182,14 +182,12 @@ function Result<TItem extends StoredDocSearchHit>({
           {renderIcon({ item, index })}
 
           {/* lvl0 is special where there wouldn't be any "parent" to use for breadcrumbs */}
-          {item.type === 'lvl0' && (
+          {item.type === 'lvl0' ? (
             <HitContent
               title={<Snippet hit={item} attribute="hierarchy.lvl0" />}
               subText={<Snippet hit={item} attribute="content" />}
             />
-          )}
-
-          {item.type === 'askAI' ? (
+          ) : item.type === 'askAI' ? (
             <AskAIResultContent
               item={item}
               relativeDateFallbackText={recentConversationTimestampFallback}
