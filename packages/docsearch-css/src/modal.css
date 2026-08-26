@@ -650,6 +650,33 @@
     var(--docsearch-modal-background);
   scrollbar-width: thin;
   scrollbar-gutter: stable;
+  animation: docsearch-dropdown-in 250ms var(--ease-smooth);
+  transition:
+    height 250ms var(--ease-smooth),
+    visibility 0s;
+}
+
+/* Compound selector so this outranks the mobile height override */
+.DocSearch-Dropdown.DocSearch-Dropdown--collapsed {
+  height: 0;
+  min-height: 0;
+  visibility: hidden;
+  transition:
+    height 200ms var(--ease-smooth),
+    visibility 0s 200ms;
+}
+
+@keyframes docsearch-dropdown-in {
+  from {
+    height: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .DocSearch-Dropdown {
+    animation: none;
+    transition: none;
+  }
 }
 
 .DocSearch-Dropdown::-webkit-scrollbar {
@@ -1173,6 +1200,7 @@ assistive tech users */
   .DocSearch-Dropdown {
     height: 100%;
     max-height: none;
+    animation: none;
   }
 
   .DocSearch-Container {

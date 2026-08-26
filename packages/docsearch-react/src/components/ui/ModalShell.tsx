@@ -64,11 +64,17 @@ export function ModalShell({
 
         {filterBar}
 
-        {showDropdown && (
-          <div className="DocSearch-Dropdown" ref={dropdownRef}>
-            {screenState}
-          </div>
-        )}
+        <div
+          className={[
+            'DocSearch-Dropdown',
+            !showDropdown && 'DocSearch-Dropdown--collapsed',
+          ]
+            .filter(Boolean)
+            .join(' ')}
+          ref={dropdownRef}
+        >
+          {screenState}
+        </div>
 
         <footer className="DocSearch-Footer">{footer}</footer>
       </div>
