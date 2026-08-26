@@ -1027,6 +1027,7 @@
   display: flex;
   align-items: center;
   gap: 1ch;
+  font-size: 0.75em;
   border-radius: 100vw;
   border: 1px solid var(--docsearch-subtle-color);
   background-color: transparent;
@@ -1055,15 +1056,11 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 100vw;
-  border: 1px solid var(--docsearch-subtle-color);
-  height: 1.8em;
-  width: 1.8em;
 }
 
 .DocSearch-AskAiScreen-Sources-Action-icon svg {
-  height: 1rem;
-  width: 1rem;
+  height: 0.875rem;
+  width: 0.875rem;
   stroke-width: var(--docsearch-icon-stroke-width);
 }
 
