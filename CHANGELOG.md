@@ -396,6 +396,64 @@ Users are encouraged to use the [lite client](https://www.algolia.com/doc/librar
 * prevent calling `onClose()` when `shiftKey`, `ctrlKey` or `metaKey` is pressed ([#1870](https://github.com/algolia/docsearch/issues/1870)) ([b9a3899](https://github.com/algolia/docsearch/commit/b9a38991e411c969459c2bac8a75f29576b46906))
 * type of lvl0 ([#1859](https://github.com/algolia/docsearch/issues/1859)) ([8f48ebb](https://github.com/algolia/docsearch/commit/8f48ebb330c01be426f06d0dea2855e4ca65834b))
 
+---
+
+## Typesense fork releases (2022–2023)
+
+> The entries below are preserved from the changelog of the Typesense DocSearch fork ([typesense/typesense-docsearch.js](https://github.com/typesense/typesense-docsearch.js)), which tracked its own release trains before v5: `typesense-docsearch.js` / `typesense-docsearch-react` 3.x and `typesense-docsearch-css` 0.x. Later fork releases (`3.4.0-8`, `3.4.0-9`, `3.4.0`, `3.4.1`, and `typesense-docsearch-css` `0.4.0` / `0.4.1`) were published to npm without changelog entries.
+
+# [3.4.0-7](https://github.com/typesense/docsearch.js/compare/v3.4.0-5...v3.4.0-7) (2023-03-21)
+
+# [3.4.0-6](https://github.com/typesense/docsearch.js/compare/v3.4.0-5...v3.4.0-6) (2023-03-21)
+
+# [3.4.0-5](https://github.com/typesense/docsearch.js/compare/v0.4.0-3...v3.4.0-5) (2023-03-21)
+
+# [0.4.0-3](https://github.com/typesense/docsearch.js/compare/v3.4.0-4...v0.4.0-3) (2023-03-21)
+
+# [3.4.0-4](https://github.com/typesense/docsearch.js/compare/v0.4.0-2...v3.4.0-4) (2023-03-21)
+
+# [0.4.0-2](https://github.com/typesense/docsearch.js/compare/v3.4.0-3...v0.4.0-2) (2023-03-21)
+
+# [3.4.0-3](https://github.com/typesense/docsearch.js/compare/v3.4.0-2...v3.4.0-3) (2023-03-20)
+
+# [3.4.0-2](https://github.com/typesense/docsearch.js/compare/v0.4.0-1...v3.4.0-2) (2023-03-20)
+
+# [0.4.0-1](https://github.com/typesense/docsearch.js/compare/v3.4.0-1...v0.4.0-1) (2023-03-20)
+
+# [3.4.0-1](https://github.com/typesense/docsearch.js/compare/v0.4.0-0...v3.4.0-1) (2023-03-20)
+
+# [0.4.0-0](https://github.com/typesense/docsearch.js/compare/v3.4.0-0...v0.4.0-0) (2023-03-20)
+
+# [3.4.0-0](https://github.com/typesense/docsearch.js/compare/v0.3.0...v3.4.0-0) (2023-03-20)
+
+# [0.3.0](https://github.com/typesense/docsearch.js/compare/v3.3.3...v0.3.0) (2023-03-08)
+
+## [3.0.1](https://github.com/typesense/docsearch.js/compare/v0.2.3...v3.0.1) (2022-07-25)
+
+## [0.2.3](https://github.com/typesense/docsearch.js/compare/v0.2.2...v0.2.3) (2022-07-25)
+
+## [0.2.2](https://github.com/typesense/docsearch.js/compare/v3.0.0...v0.2.2) (2022-07-25)
+
+# [3.0.0](https://github.com/typesense/docsearch.js/compare/v0.2.1...v3.0.0) (2022-07-25)
+
+## [0.2.1](https://github.com/typesense/docsearch.js/compare/v0.2.1-0...v0.2.1) (2022-07-25)
+
+## [0.2.1-0](https://github.com/typesense/docsearch.js/compare/v3.0.0-3...v0.2.1-0) (2022-07-25)
+
+
+### Features
+
+* **ui:** use Typesense color as primary color ([ad7e045](https://github.com/typesense/docsearch.js/commit/ad7e045f64e0baedef1cc6e014d8519c3d3e246e))
+* **ui:** use Typesense color in logo ([fe45232](https://github.com/typesense/docsearch.js/commit/fe452323e5537e2bcb84e3725b6bc0e918b30f2a))
+
+# [3.0.0-3](https://github.com/typesense/docsearch.js/compare/v3.0.0-2...v3.0.0-3) (2022-07-22)
+
+# [3.0.0-2](https://github.com/typesense/docsearch.js/compare/v3.0.0-1...v3.0.0-2) (2022-07-22)
+
+# [3.0.0-1](https://github.com/typesense/docsearch.js/compare/v3.1.1...v3.0.0-1) (2022-07-22)
+
+---
+
 ## [3.3.3](https://github.com/algolia/docsearch/compare/v3.3.2...v3.3.3) (2023-02-06)
 
 ### Bug Fixes
