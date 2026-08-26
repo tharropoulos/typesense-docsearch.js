@@ -37,6 +37,7 @@ interface ResultsProps<TItem extends BaseItem> extends AutocompleteApi<
   hitComponent: DocSearchProps['hitComponent'];
   state: AutocompleteState<TItem>;
   sourceIcon?: JSX.Element;
+  showHitBreadcrumbs?: boolean;
 }
 
 export function Results<TItem extends StoredDocSearchHit>(
@@ -151,6 +152,7 @@ function Result<TItem extends StoredDocSearchHit>({
   hitComponent,
   translations = {},
   renderResultBadge,
+  showHitBreadcrumbs = false,
 }: ResultProps<TItem>): JSX.Element {
   const Hit = hitComponent!;
   const { recentConversationTimestampFallback = 'A while ago' } = translations;
@@ -158,7 +160,9 @@ function Result<TItem extends StoredDocSearchHit>({
     item.type === 'content' || item.type === 'askAI'
       ? ('content' as const)
       : (`hierarchy.${item.type}` as const);
-  const breadcrumbs = getHitItemBreadcrumbs(item);
+  const breadcrumbs = showHitBreadcrumbs
+    ? getHitItemBreadcrumbs(item)
+    : undefined;
 
   return (
     <li

@@ -83,6 +83,12 @@ export interface DocSearchProps {
   placeholder?: string;
   /** Maximum number of hits to display per source/group. */
   maxResultsPerGroup?: number;
+  /**
+   * Show the hierarchy breadcrumb next to each hit's title.
+   *
+   * @default false
+   */
+  showHitBreadcrumbs?: boolean;
   /** Hook to post-process hits before rendering. */
   transformItems?: (items: DocSearchHit[]) => DocSearchHit[];
   /** Custom component to render an individual hit. */

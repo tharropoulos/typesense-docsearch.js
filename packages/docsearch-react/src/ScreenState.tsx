@@ -49,6 +49,7 @@ export interface ScreenStateProps<
   getMissingResultsUrl?: DocSearchProps['getMissingResultsUrl'];
   hasCollections: boolean;
   resultBadgeKey?: string;
+  showHitBreadcrumbs?: boolean;
 }
 
 export const ScreenState = React.memo(

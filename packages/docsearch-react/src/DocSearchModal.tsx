@@ -68,6 +68,7 @@ export function DocSearchModal({
   insights = false,
   recentSearchesLimit = 7,
   recentSearchesWithFavoritesLimit = 4,
+  showHitBreadcrumbs = false,
   facets,
   footerAction,
   ...props
@@ -279,6 +280,7 @@ export function DocSearchModal({
           getMissingResultsUrl={getMissingResultsUrl}
           hasCollections={hasCollections}
           resultBadgeKey={props.resultBadgeKey}
+          showHitBreadcrumbs={showHitBreadcrumbs}
           onItemClick={(item, event) => {
             sendItemClickEvent(item);
             saveRecentSearch(item);
