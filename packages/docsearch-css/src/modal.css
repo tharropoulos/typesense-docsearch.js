@@ -459,7 +459,6 @@
   align-items: center;
   background: var(--docsearch-searchbox-focus-background);
   border-block-end: 1px solid var(--docsearch-subtle-color);
-  border-radius: var(--docsearch-modal-radius) var(--docsearch-modal-radius) 0 0;
   display: flex;
   min-height: var(--docsearch-searchbox-initial-height);
   height: var(--docsearch-searchbox-height,
@@ -1108,7 +1107,6 @@
   align-items: center;
   background: var(--docsearch-footer-background);
   border-block-start: 1px solid var(--docsearch-subtle-color);
-  border-radius: 0 0 var(--docsearch-modal-radius) var(--docsearch-modal-radius);
   display: flex;
   flex-shrink: 0;
   height: var(--docsearch-footer-height);
