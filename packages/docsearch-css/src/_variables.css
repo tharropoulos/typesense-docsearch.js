@@ -157,7 +157,7 @@ html[data-theme='dark'],
   --docsearch-soft-primary-color: rgb(192 255 88 / 8%);
   --docsearch-hit-highlight-color: rgb(192 255 88 / 16%);
   --docsearch-searchbox-background: var(--typesense-surface);
-  --docsearch-searchbox-focus-background: var(--typesense-surface-line);
+  --docsearch-searchbox-focus-background: var(--typesense-surface);
   --docsearch-dropdown-menu-background: var(--typesense-surface-dim);
   --docsearch-dropdown-menu-item-hover-background: var(
     --typesense-surface-line

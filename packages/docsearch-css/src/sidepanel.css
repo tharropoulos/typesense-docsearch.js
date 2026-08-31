@@ -3,15 +3,15 @@
 :root {
   /* Theme colors */
   --docsearch-sidepanel-background: var(--docsearch-modal-background);
-  --docsearch-sidepanel-background-dark: var(--docsearch-searchbox-background);
+  --docsearch-sidepanel-background-dark: var(--typesense-surface-dim);
   --docsearch-sidepanel-white: #fff;
   --docsearch-sidepanel-primary: var(--docsearch-primary-color);
-  --docsearch-sidepanel-primary-dark: rgb(2 46 185 / 100%);
-  --docsearch-sidepanel-primary-disabled: rgb(187 209 255 / 100%);
+  --docsearch-sidepanel-primary-dark: var(--typesense-primary-muted);
+  --docsearch-sidepanel-primary-disabled: var(--typesense-primary-muted);
   --docsearch-sidepanel-accent: var(--docsearch-highlight-color);
-  --docsearch-sidepanel-accent-muted: rgb(187 209 255 / 100%);
+  --docsearch-sidepanel-accent-muted: var(--docsearch-soft-primary-color);
   --docsearch-sidepanel-border: var(--docsearch-subtle-color);
-  --docsearch-sidepanel-text-base: rgb(35 38 59 / 100%);
+  --docsearch-sidepanel-text-base: var(--docsearch-text-color);
   --docsearch-sidepanel-text-muted: var(--docsearch-secondary-text-color);
   --docsearch-sidepanel-scrollbar-color: var(--docsearch-muted-color);
   --docsearch-sidepanel-scrollbar-bg: var(--docsearch-modal-background);
@@ -20,12 +20,7 @@
   --docsearch-sidepanel-hit-highlight-color: var(--docsearch-hit-highlight-color);
   --docsearch-sidepanel-button-background: var(--docsearch-sidepanel-background);
   --docsearch-sidepanel-button-background-dark: var(--docsearch-sidepanel-background);
-}
-
-:root[data-theme='dark'] {
-  --docsearch-sidepanel-text-base: var(--docsearch-text-color);
-  --docsearch-sidepanel-primary-disabled: rgb(1 45 186 / 60%);
-  --docsearch-sidepanel-button-background-dark: rgb(4 4 8 / 100%);
+  --docsearch-sidepanel-button-icon-color: #000;
 }
 
 .DocSearch-SidepanelButton {
@@ -35,7 +30,6 @@
   user-select: none;
   border: 0;
   transition: all 150ms ease-in-out;
-  font-family: var(--docsearch-font-family);
 }
 
 .DocSearch-SidepanelButton.floating {
@@ -48,8 +42,11 @@
   bottom: 1rem;
   right: 1rem;
   z-index: 380;
-  background-color: var(--docsearch-sidepanel-primary);
-  color: var(--docsearch-sidepanel-white);
+  background-color: var(--typesense-brand);
+  color: var(--docsearch-sidepanel-button-icon-color);
+  box-shadow:
+    0 4px 8px rgb(0 0 0 / 10%),
+    0 8px 16px rgb(0 0 0 / 5%);
 }
 
 .DocSearch-SidepanelButton.floating:hover,
@@ -253,7 +250,6 @@
 }
 
 .DocSearch-Sidepanel-Header {
-  background-color: var(--docsearch-sidepanel-background-dark);
   display: flex;
   align-items: center;
   padding: 0.2rem 1rem;
@@ -384,25 +380,26 @@
 }
 
 .DocSearch-Sidepanel-Prompt {
-  border-top: 1px solid var(--docsearch-sidepanel-border);
   padding: 1rem;
   padding-bottom: 0;
-  background-color: var(--docsearch-sidepanel-background-dark);
+  background-color: transparent;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
 .DocSearch-Sidepanel-Prompt--form {
-  --prompt-form-padding: 0.75rem;
-
-  border: 1px solid #777aaf;
-  padding: var(--prompt-form-padding);
-  border-radius: 0.25rem;
+  border: 1px solid var(--docsearch-sidepanel-border);
+  padding: 0.625rem 0.625rem 0.625rem 1rem;
+  border-radius: var(--docsearch-border-radius);
   display: flex;
-  flex-direction: column;
-  position: relative;
+  flex-direction: row;
+  align-items: flex-end;
   gap: 0.5rem;
+  background-color: var(--docsearch-sidepanel-background-dark);
+  transition:
+    box-shadow 150ms ease-in-out,
+    border-color 150ms ease-in-out;
 }
 
 .DocSearch-Sidepanel-PromptBlockingBanner {
@@ -427,11 +424,8 @@
   outline-offset: 2px;
 }
 
-.DocSearch-Sidepanel-Prompt--form:focus-within {
-  border-color: var(--docsearch-sidepanel-primary);
-}
-
 .DocSearch-Sidepanel-Prompt--textarea {
+  flex: 1;
   border: 0;
   width: 100%;
   resize: none;
@@ -439,36 +433,37 @@
   outline: none;
   background: none;
   appearance: none;
-  font-size: 1rem;
+  font-size: 0.9375rem;
   line-height: 1.5rem;
-  padding-right: 1.75rem;
-  min-height: 1.5rem;
-  height: 1.5rem;
-  overflow: hidden;
+  min-height: 2rem;
+  height: 2rem;
+  max-height: 6rem;
+  overflow-y: auto !important;
+  padding: 0.25rem 0;
   font-family: var(--docsearch-font-family);
 }
 
 .DocSearch-Sidepanel-Prompt--textarea::placeholder {
   color: var(--docsearch-muted-color);
-  opacity: 1;
+  opacity: 0.6;
 }
 
 .DocSearch-Sidepanel-Prompt--actions {
-  position: absolute;
-  right: var(--prompt-form-padding);
-  bottom: var(--prompt-form-padding);
-  height: 1.5rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
 }
 
 .DocSearch-Sidepanel-Prompt--stop,
 .DocSearch-Sidepanel-Prompt--submit {
   display: inline-flex;
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 2rem;
+  height: 2rem;
   align-items: center;
   justify-content: center;
-  border-radius: 0.25rem;
+  border-radius: 0.5rem;
   cursor: pointer;
+  border: 0;
   transition: all 150ms ease-in-out;
 }
 
@@ -480,13 +475,15 @@
 }
 
 .DocSearch-Sidepanel-Prompt--stop {
-  background-color: var(--docsearch-sidepanel-white);
+  background-color: var(--typesense-brand);
   border: 1px solid var(--docsearch-sidepanel-border);
   color: var(--docsearch-sidepanel-text-muted);
 }
 
 :root[data-theme='dark'] .DocSearch-Sidepanel-Prompt--stop {
   background-color: var(--docsearch-sidepanel-background);
+  border: 1px solid var(--docsearch-sidepanel-border);
+  color: var(--docsearch-sidepanel-button-icon-color);
 }
 
 .DocSearch-Sidepanel-Prompt--stop:hover {
@@ -503,9 +500,9 @@
 }
 
 .DocSearch-Sidepanel-Prompt--submit {
-  background-color: var(--docsearch-sidepanel-primary);
-  border: 0;
-  color: var(--docsearch-sidepanel-white);
+  background-color: var(--typesense-brand);
+  border: 1px solid rgb(0 0 0 / 10%);
+  color: var(--docsearch-sidepanel-button-icon-color);
 }
 
 .DocSearch-Sidepanel-Prompt--submit:hover {
@@ -515,6 +512,7 @@
 .DocSearch-Sidepanel-Prompt--submit:disabled,
 .DocSearch-Sidepanel-Prompt--submit[aria-disabled='true'] {
   background-color: var(--docsearch-sidepanel-primary-disabled);
+  opacity: 0.5;
   user-select: none;
   cursor: not-allowed;
 }
@@ -540,12 +538,30 @@
 .DocSearch-Sidepanel-Footer {
   display: flex;
   justify-content: flex-end;
-  background-color: var(--docsearch-sidepanel-background-dark);
-  padding: 0.75rem 1rem 1rem;
+  align-items: center;
+  padding: 0.5rem 1.25rem 1rem;
 }
 
 .DocSearch-Sidepanel--powered-by {
-  align-self: flex-end;
+  font-size: 0.85rem;
+  color: var(--docsearch-sidepanel-text-muted);
+  opacity: 0.8;
+  margin: 0.75rem 0 0.25rem;
+  transition: opacity 0.15s ease-out;
+}
+
+@media screen and (width <= 768px) {
+  .DocSearch-Sidepanel--powered-by {
+    margin: 0.5rem 0 0;
+  }
+}
+
+.DocSearch-Sidepanel--powered-by:hover {
+  opacity: 1;
+}
+
+.DocSearch-Sidepanel--powered-by svg {
+  height: 20px;
 }
 
 .DocSearch-Sidepanel-Screen--title {
@@ -753,4 +769,30 @@
   padding: 0;
   position: absolute;
   overflow: hidden;
+}
+
+/* stylelint-disable selector-no-qualifying-type, selector-class-pattern --
+   `html.dark` and `html[data-theme]` are the dark-mode conventions used by
+   Docusaurus and VitePress, so consumers get themed without extra config. */
+.DocSearch-Sidepanel-Header .DocSearch-Hit-icon-sparkles {
+  filter: drop-shadow(
+    0 0 3px color-mix(in srgb, var(--typesense-brand) 30%, transparent)
+  )
+    drop-shadow(0 0 4px var(--typesense-brand))
+    drop-shadow(
+    0 0 5px color-mix(in srgb, var(--typesense-brand) 20%, transparent)
+  )
+    drop-shadow(
+    0 0 6px color-mix(in srgb, var(--typesense-brand) 70%, transparent)
+  );
+}
+
+:where(html.dark, html[data-theme='dark'], :root[data-theme='dark'])
+.DocSearch-Sidepanel-Header .DocSearch-Hit-icon-sparkles {
+  filter: drop-shadow(
+    0 0 4px color-mix(in srgb, var(--typesense-brand) 40%, transparent)
+  )
+    drop-shadow(
+    0 0 6px color-mix(in srgb, var(--typesense-brand) 60%, transparent)
+  );
 }

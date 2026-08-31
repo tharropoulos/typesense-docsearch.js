@@ -479,7 +479,7 @@
   color: var(--docsearch-text-color);
   flex: 1;
   font: inherit;
-  font-size: 1rem;
+  font-size: 18px;
   font-weight: 400;
   height: 100%;
   outline: none;
@@ -536,7 +536,7 @@
   margin: 0;
   padding: 2px;
   border: 0;
-  border-radius: var(--docsearch-border-radius);
+  border-radius: calc(var(--docsearch-border-radius) / 2);
   cursor: pointer;
   inset-inline-end: 0;
   stroke-width: var(--docsearch-icon-stroke-width);
@@ -602,8 +602,8 @@
 .DocSearch-LoadingIndicator svg,
 .DocSearch-MagnifierLabel svg {
   color: var(--docsearch-icon-color);
-  height: 1rem;
-  width: 1rem;
+  height: 1.5rem;
+  width: 1.5rem;
 }
 
 /* highlight icon color when search input is focused */
@@ -797,7 +797,7 @@
   background: transparent;
   border-radius: var(--docsearch-hit-radius);
   display: block;
-  padding-inline-start: 0.5rem;
+  padding: 0 0.75rem;
   width: 100%;
   cursor: pointer;
   transition: background-color 120ms var(--ease-smooth);
@@ -831,10 +831,6 @@
   stroke-width: var(--docsearch-icon-stroke-width);
 }
 
-.DocSearch-Dropdown-Container .DocSearch-Hits-padded {
-  padding-inline-start: 4px;
-}
-
 .DocSearch-Hit-Tree {
   color: var(--docsearch-muted-color);
   height: var(--docsearch-hit-height);
@@ -859,7 +855,6 @@
   display: flex;
   flex-direction: row;
   height: var(--docsearch-hit-height);
-  padding: 0 0.5rem 0 0;
 }
 
 .DocSearch-Hit-icon {
@@ -867,6 +862,8 @@
   height: 24px;
   stroke-width: var(--docsearch-icon-stroke-width);
   width: 24px;
+  display: grid;
+  place-items: center;
 
   svg {
     height: 20px;
@@ -1059,8 +1056,8 @@
   stroke: var(--docsearch-icon-color);
 }
 
-.DocSearch-Screen-Icon {
-  color: var(--docsearch-icon-color);
+.DocSearch-Screen-Icon svg {
+  stroke: var(--docsearch-primary-color);
 }
 
 .DocSearch-NoResults-Prefill-List {
@@ -1121,6 +1118,7 @@
   user-select: none;
   width: 100%;
   z-index: 300;
+  margin-top: -1px; /* Prevent the thick double border when the dropdown collapses */
 }
 
 .DocSearch-Commands {
@@ -1139,8 +1137,8 @@
 
 .DocSearch-Commands-Key {
   align-items: center;
-  border-radius: 2px;
-  background-color: var(--docsearch-background-color);
+  border-radius: 4px;
+  background-color: var(--docsearch-key-background);
   display: flex;
   height: 24px;
   justify-content: center;
