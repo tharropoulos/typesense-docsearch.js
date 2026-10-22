@@ -5,6 +5,9 @@ name: Upstream alerts
 on:
   schedule:
     - cron: '17 * * * *'
+  # Throwaway: run on push to test before merge. Never merge this commit.
+  push:
+    branches: [upstream-alerts-test]
   workflow_dispatch:
     inputs:
       since:
@@ -35,4 +38,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ASSIGNEES: tharropoulos
-          UPSTREAM_SINCE: ${{ inputs.since }}
+          UPSTREAM_SINCE: ${{ inputs.since || '2026-09-30T00:00:00Z' }}
